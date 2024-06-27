@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/06/27 11:03:44 by edouard          ###   ########.fr       */
+/*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
+/*   Updated: 2024/06/27 12:07:23 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#include "./includes/minishell.h"
+int main(void)
+{
+	char *input;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-void display_prompt(void);
-
-#endif // MINISHELL_H
+	while (1)
+	{
+		display_prompt();
+		input = readline(NULL);
+		if (!input)
+		{
+			printf("exit\n");
+			break;
+		}
+		add_history(input);
+		free(input);
+	}
+	return 0;
+}
