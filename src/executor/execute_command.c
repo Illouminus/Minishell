@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   display_prompt.c                                   :+:      :+:    :+:   */
+/*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 10:57:26 by edouard           #+#    #+#             */
-/*   Updated: 2024/06/27 12:07:16 by edouard          ###   ########.fr       */
+/*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
+/*   Updated: 2024/07/02 14:05:59 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void display_prompt(void)
+void execute_command(t_command *cmd)
 {
-	printf("minishell> ");
+	(void)cmd;
 }
