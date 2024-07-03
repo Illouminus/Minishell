@@ -6,11 +6,13 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/02 14:06:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:14:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_exit_code;
 
 int minishell(char **env)
 {
@@ -20,14 +22,14 @@ int minishell(char **env)
 		return (1);
 	while (1)
 	{
-		shell.user_input = readline("minishell$ ");
-		if (shell.user_input == NULL)
-			break;
-		if (shell.user_input[0] == '\0' || shell.user_input[0] == '#')
+		shell.user_input = readline("minishell >>  ");
+		if (g_exit_code == 130)
 		{
-			free(shell.user_input);
-			continue;
+			shell.last_exit_status = 130;
+			g_exit_code = 0;
 		}
+
+		handle_exit(&shell);
 		// Check if the user input is empty
 		// Check if the user input is a comment
 		// Check if the user input is a builtin command

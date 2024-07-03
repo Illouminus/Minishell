@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/02 14:35:34 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/03 16:27:20 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int init_shell(t_shell *shell, char **env)
 {
-	(void)env;
 	shell->env_var_list = init_env_vars(env);
 	if (shell->env_var_list == NULL)
 		return (1);

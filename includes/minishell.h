@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/02 14:37:18 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:18:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,7 @@ t_env *create_default_env_var_node(char *var_name, char *value);
 t_env *init_default_env_vars(void);
 void add_env_var_to_list(t_env **head, t_env *new_var);
 t_env *create_default_env_var_node(char *var_name, char *value);
-void free_env_var_list(t_env *head);
+void handle_exit(t_shell *shell);
+void global_exit(t_shell *shell, int status);
+
 #endif // MINISHELL_H
