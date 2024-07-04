@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_exit.c                                       :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 12:54:07 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:40 by edouard          ###   ########.fr       */
+/*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
+/*   Updated: 2024/07/04 16:17:37 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_exit(t_shell *shell)
+int lexer(t_shell *shell)
 {
+
+	printf("User input: %s\n", shell->user_input);
+
 	if (!shell->user_input)
-	{
-		if (isatty(STDIN_FILENO))
-			printf(" exit\n");
-		global_exit_env(shell, shell->last_exit_status);
-	}
+		return (EXIT_FAILURE);
+	else if (ft_strcmp(shell->user_input, "/0") == 0)
+		return (EXIT_FAILURE);
+	add_history(shell->user_input);
+	return 0;
 }

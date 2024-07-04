@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/03 18:18:51 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/04 16:02:47 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,15 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <string.h>
+#include <signal.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <stdbool.h>
+#include "../libft/libft.h"
 
 #define MAX_ARGS 100
+
+extern int g_exit_code;
 
 typedef struct s_token
 {
@@ -82,6 +86,12 @@ t_env *init_default_env_vars(void);
 void add_env_var_to_list(t_env **head, t_env *new_var);
 t_env *create_default_env_var_node(char *var_name, char *value);
 void handle_exit(t_shell *shell);
-void global_exit(t_shell *shell, int status);
+void global_exit_env(t_shell *shell, int status);
+void free_env_var_list(t_env *env);
+int lexer(t_shell *shell);
+int parser(t_shell *shell);
+int executor(t_shell *shell);
+void handle_sigint(int sig);
+void setup_signal_handlers(void);
 
 #endif // MINISHELL_H

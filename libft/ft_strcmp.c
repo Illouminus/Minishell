@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_exit.c                                       :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 12:54:07 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:40 by edouard          ###   ########.fr       */
+/*   Created: 2024/07/04 12:54:27 by edouard           #+#    #+#             */
+/*   Updated: 2024/07/04 12:54:42 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-void handle_exit(t_shell *shell)
+int ft_strcmp(const char *s1, const char *s2)
 {
-	if (!shell->user_input)
+	while (*s1 && *s2 && *s1 == *s2)
 	{
-		if (isatty(STDIN_FILENO))
-			printf(" exit\n");
-		global_exit_env(shell, shell->last_exit_status);
+		s1++;
+		s2++;
 	}
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/03 18:19:32 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/04 16:02:13 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void free_env_node(t_env *env)
 	free(env);
 }
 
-static void free_env_var_list(t_env *env)
+void free_env_var_list(t_env *env)
 {
 	t_env *current;
 	t_env *next;
@@ -33,14 +33,29 @@ static void free_env_var_list(t_env *env)
 	}
 }
 
-void global_exit(t_shell *shell, int status)
+void global_exit_env(t_shell *shell, int status)
 {
 	if (shell)
 	{
-		free(shell);
 		if (shell->env_var_list)
 			free_env_var_list(shell->env_var_list);
 	}
 	clear_history();
 	exit(status);
+}
+
+void free_shell(t_shell *shell)
+{
+	if (shell)
+	{
+		if (shell->heredoc_tempfile)
+		{
+			free(shell->heredoc_tempfile);
+			shell->heredoc_tempfile = NULL;
+		}
+		if (shell->token_list)
+			free_tokens(&(shell->token_list));
+		if (shell->command_list)
+			free_commands(&(shell->command_list));
+	}
 }

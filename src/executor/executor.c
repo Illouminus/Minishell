@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_exit.c                                       :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 12:54:07 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:40 by edouard          ###   ########.fr       */
+/*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
+/*   Updated: 2024/07/04 13:09:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_exit(t_shell *shell)
+int executor(t_shell *shell)
 {
-	if (!shell->user_input)
-	{
-		if (isatty(STDIN_FILENO))
-			printf(" exit\n");
-		global_exit_env(shell, shell->last_exit_status);
-	}
+	(void)shell;
+
+	return 0;
 }

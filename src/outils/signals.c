@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_free.c                                         :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 14:33:56 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/02 14:43:28 by edouard          ###   ########.fr       */
+/*   Created: 2024/07/04 13:43:31 by edouard           #+#    #+#             */
+/*   Updated: 2024/07/04 14:47:38 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_env_var_list(t_env *head)
+void handle_sigint(int sig)
 {
-	t_env *tmp;
-	while (head)
+	if (sig == SIGINT)
 	{
-		tmp = head;
-		head = head->next_env;
-		free(tmp->env_var_name);
-		free(tmp->env_value);
-		free(tmp);
+		// Refresh for new line
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
+}
+
+void setup_signal_handlers(void)
+{
+	struct sigaction sa;
+
+	sa.sa_handler = handle_sigint;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+
+	sigaction(SIGINT, &sa, NULL);
 }

@@ -1,8 +1,8 @@
 NAME = minishell
 CC = cc -g
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -lreadline
+CFLAGS = -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
+LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline
 
 SRCS = $(wildcard src/**/*.c) main.c
 OBJ_DIR = obj

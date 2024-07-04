@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:29:45 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/02 14:49:53 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:08:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ t_env *create_default_env_var_node(char *var_name, char *value)
 	if (!node)
 		return NULL;
 
-	node->env_var_name = strdup(var_name);
-	node->env_value = strdup(value);
+	node->env_var_name = ft_strdup(var_name);
+	node->env_value = ft_strdup(value);
 	node->next_env = NULL;
 	return node;
 }
@@ -71,16 +71,16 @@ t_env *create_env_var_node(char *env_str)
 	if (!node)
 		return NULL;
 
-	char *delimiter_pos = strchr(env_str, '=');
+	char *delimiter_pos = ft_strchr(env_str, '=');
 	if (delimiter_pos)
 	{
 		size_t name_len = delimiter_pos - env_str;
-		node->env_var_name = strndup(env_str, name_len);
-		node->env_value = strdup(delimiter_pos + 1);
+		node->env_var_name = ft_strndup(env_str, name_len);
+		node->env_value = ft_strdup(delimiter_pos + 1);
 	}
 	else
 	{
-		node->env_var_name = strdup(env_str);
+		node->env_var_name = ft_strdup(env_str);
 		node->env_value = NULL;
 	}
 	node->next_env = NULL;

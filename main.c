@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/03 18:14:49 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/04 15:19:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int minishell(char **env)
 
 	if (init_shell(&shell, env) == 1)
 		return (1);
+	setup_signal_handlers();
 	while (1)
 	{
 		shell.user_input = readline("minishell >>  ");
@@ -28,24 +29,13 @@ int minishell(char **env)
 			shell.last_exit_status = 130;
 			g_exit_code = 0;
 		}
-
 		handle_exit(&shell);
-		// Check if the user input is empty
-		// Check if the user input is a comment
-		// Check if the user input is a builtin command
-		// Check if the user input is a binary
-		// Check if the user input is a path
-		// Check if the user input is a variable assignment
-		// Check if the user input is a redirection
-		// Check if the user input is a pipe
-		// Check if the user input is a heredoc
-		// Check if the user input is a separator
-		// Check if the user input is a list
-		// Check if the user input is a command
-		// Check if the user input is a syntax error
-		// Check if the user input is a permission error
 
-		add_history(shell.user_input);
+		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
+			g_exit_code = executor(&shell);
+		else
+			g_exit_code = 1;
+		// TODO free_shell(shell) function is not implemented
 	}
 	return 0;
 }
