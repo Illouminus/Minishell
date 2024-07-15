@@ -12,3 +12,4 @@ obj/
 minishell
 
 # Unwanted Files after compiling
+.vscode/settings.json

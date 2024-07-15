@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/15 14:41:49 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/15 15:07:20 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ extern int g_exit_code;
 -------------------------------------------------------------
 */
 
+// Structure d'un token
 typedef struct s_token
 {
 	int tok_type;				  // Type de token (commande, argument, opérateur de redirection)
@@ -50,6 +51,8 @@ typedef struct s_token
 	struct s_token *prev_tok; // Pointeur vers le token précédent
 } t_token;
 
+
+// Structure d'une commande 
 typedef struct s_command
 {
 	char **cmd_args;				 // Nom de la commande et ses arguments
@@ -59,12 +62,14 @@ typedef struct s_command
 	struct s_command *prev_cmd; // Pointeur vers la commande précédente
 } t_command;
 
+// Structyre pour env
 typedef struct s_env
 {
 	char *env_var_name;		// Nom de la variable d'environnement
 	char *env_value;			// Valeur de la variable d'environnement
 	struct s_env *next_env; // Pointeur vers la variable d'environnement suivante
 } t_env;
+
 
 typedef struct s_shell
 {

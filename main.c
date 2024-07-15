@@ -6,11 +6,12 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/15 14:54:35 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/15 15:44:07 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <ncurses.h>
 
 int g_exit_code;
 
@@ -33,11 +34,15 @@ int minishell(char **env)
 
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
 			g_exit_code = executor(&shell);
+			
 		else
+		{
 			g_exit_code = 1;
+			printf("Parser or lexer presented an issue\n");
+		}
 		// TODO free_shell(shell) function is not implemented
 	}
-	return 0;
+	return (0);
 }
 
 int main(int argc, char **argv, char **env)
