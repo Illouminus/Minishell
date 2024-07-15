@@ -1,0 +1,8 @@
+# Ignoring all executables 
+libft/libft.a
+libft/*.o
+obj/src/env/*.o
+obj/src/executor/*.o
+obj/src/init/*.o
+obj/src/lexer/*.o
+obj/src/outils/*.o
