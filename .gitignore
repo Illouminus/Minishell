@@ -1,4 +1,4 @@
-# Ignoring all executables 
+# Ignoring all .o files 
 libft/libft.a
 libft/*.o
 obj/src/env/*.o
@@ -6,3 +6,9 @@ obj/src/executor/*.o
 obj/src/init/*.o
 obj/src/lexer/*.o
 obj/src/outils/*.o
+obj/
+
+# Ignoring executable
+minishell
+
+# Unwanted Files after compiling

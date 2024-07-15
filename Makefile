@@ -23,7 +23,7 @@ $(NAME): $(OBJS) $(LIBFT)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	@echo "Compiling $<..."
+	@echo "Compiling $<"
 	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 clean:

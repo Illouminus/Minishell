@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:13 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/15 14:55:33 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void free_shell(t_shell *shell)
 			free(shell->heredoc_tempfile);
 			shell->heredoc_tempfile = NULL;
 		}
-		if (shell->token_list)
-			free_tokens(&(shell->token_list));
-		if (shell->command_list)
-			free_commands(&(shell->command_list));
+		// if (shell->token_list)
+		// 	free_tokens(&(shell->token_list));
+		// if (shell->command_list)
+		// 	free_commands(&(shell->command_list));
 	}
 }

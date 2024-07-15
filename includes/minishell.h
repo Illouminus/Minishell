@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:47 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/15 14:41:49 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
+
+/*
+-------------------------------------------------------------
+|                       LIBRAIRIE                            |
+-------------------------------------------------------------
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +34,12 @@
 #define MAX_ARGS 100
 
 extern int g_exit_code;
+
+/*
+-------------------------------------------------------------
+|                       STRUCTURE                            |
+-------------------------------------------------------------
+*/
 
 typedef struct s_token
 {
@@ -71,6 +83,14 @@ typedef struct s_shell
 	int last_exit_status;	 // Statut de sortie de la dernière commande exécutée
 	t_env *env_var_list;		 // Liste des variables d'environnement
 } t_shell;
+
+
+/*
+-------------------------------------------------------------
+|                       FONCTIONS                            |
+-------------------------------------------------------------
+*/
+
 
 char **parse_input(char *input);		  // Fonction pour analyser l'entrée utilisateur
 void execute_command(t_command *cmd); // Fonction pour exécuter une commande
