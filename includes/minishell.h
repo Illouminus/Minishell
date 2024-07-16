@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/04 16:02:47 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/16 13:47:38 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
+
+/*
+-------------------------------------------------------------
+|                       LIBRAIRIE                            |
+-------------------------------------------------------------
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +35,18 @@
 
 extern int g_exit_code;
 
+/*
+-------------------------------------------------------------
+|                       STRUCTURE                            |
+-------------------------------------------------------------
+*/
+
+#define TOK_TYPE_CMD     1
+#define TOK_TYPE_ARG     2
+#define TOK_TYPE_REDIR   3
+#define TOK_TYPE_PIPE    4
+
+// Structure d'un token
 typedef struct s_token
 {
 	int tok_type;				  // Type de token (commande, argument, opérateur de redirection)
@@ -38,6 +56,10 @@ typedef struct s_token
 	struct s_token *prev_tok; // Pointeur vers le token précédent
 } t_token;
 
+
+
+
+// Structure d'une commande 
 typedef struct s_command
 {
 	char **cmd_args;				 // Nom de la commande et ses arguments
@@ -47,12 +69,14 @@ typedef struct s_command
 	struct s_command *prev_cmd; // Pointeur vers la commande précédente
 } t_command;
 
+// Structyre pour env
 typedef struct s_env
 {
 	char *env_var_name;		// Nom de la variable d'environnement
 	char *env_value;			// Valeur de la variable d'environnement
 	struct s_env *next_env; // Pointeur vers la variable d'environnement suivante
 } t_env;
+
 
 typedef struct s_shell
 {
@@ -72,13 +96,23 @@ typedef struct s_shell
 	t_env *env_var_list;		 // Liste des variables d'environnement
 } t_shell;
 
+
+/*
+-------------------------------------------------------------
+|                       FONCTIONS                            |
+-------------------------------------------------------------
+*/
+
+
+// Parsing
 char **parse_input(char *input);		  // Fonction pour analyser l'entrée utilisateur
+
+// Exec
 void execute_command(t_command *cmd); // Fonction pour exécuter une commande
 
 int init_shell(t_shell *shell, char **env);
 
-// fonction for env var
-
+// Env Var
 t_env *init_env_vars(char **env);
 t_env *create_env_var_node(char *env_str);
 t_env *create_default_env_var_node(char *var_name, char *value);

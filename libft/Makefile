@@ -34,7 +34,7 @@ clean:
 	@$(RM) $(OBJS) $(BONUS_OBJS) 
 
 fclean: clean
-	@echo "Cleaning libft.a..."
+	@echo "Cleaning libft.a"
 	@$(RM) $(NAME)
 
 re: fclean all
