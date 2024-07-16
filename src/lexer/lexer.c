@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 14:12:00 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/16 14:13:26 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_token *ft_create_token(int type, char *value, int quote_status)
 }
 
 
-//Add token to tokens_list
+//Add token to shell->tokens_list
 void ft_add_token(t_shell *shell, t_token *new_token)
 {
 	t_token *temp;
@@ -129,7 +129,7 @@ void ft_print_tokens(t_token *token_list) {
     }
 }
 
-// Generation of tokens
+// Generate the tokens from the shell->user_input
 int lexer(t_shell *shell)
 {
 	printf("User input: %s\n", shell->user_input);
@@ -147,7 +147,7 @@ int lexer(t_shell *shell)
 	ft_tokenize_input(shell->user_input, shell);
 	ft_print_tokens(shell->token_list);
 	add_history(shell->user_input);	
-	//Lines to free token_list between each command
+	//Lines to free token_list between each command --> Mettre dans une fonction a part
 	t_token *temp;
 	while (shell->token_list != NULL) {
 		temp = shell->token_list;
