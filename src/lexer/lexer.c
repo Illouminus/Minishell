@@ -6,46 +6,17 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 14:13:26 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/16 16:16:31 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Create a single token
-t_token *ft_create_token(int type, char *value, int quote_status) 
+
+
+// Fonction pour tokenizer l'entrée utilisateur
+void ft_tokenize_input(char *input, t_shell *shell) 
 {
-    t_token *new_token;
-	
-	new_token = (t_token *)malloc(sizeof(t_token));
-    new_token->tok_type = type;
-    new_token->tok_value = ft_strdup(value);
-    new_token->quote_status = quote_status;
-    new_token->next_tok = NULL;
-    new_token->prev_tok = NULL;
-    return (new_token);
-}
-
-
-//Add token to shell->tokens_list
-void ft_add_token(t_shell *shell, t_token *new_token)
-{
-	t_token *temp;
-	 
-	if (shell->token_list == NULL) {
-        shell->token_list = new_token;
-    } else {
-        temp = shell->token_list;
-        while (temp->next_tok != NULL) {
-            temp = temp->next_tok;
-        }
-        temp->next_tok = new_token;
-        new_token->prev_tok = temp;
-    }
-}
-
-
-void ft_tokenize_input(char *input, t_shell *shell) {
     char buffer[1024];
     int buf_index = 0;
     int quote_status = 0; // 0 = no quote, 1 = single quote, 2 = double quote
@@ -53,55 +24,14 @@ void ft_tokenize_input(char *input, t_shell *shell) {
 
     while (input[i] != '\0') {
         char c = input[i];
+        char next_c = input[i + 1];
 
-        if (c == ' ' && quote_status == 0) {
-            if (buf_index > 0) {
-                buffer[buf_index] = '\0';
-                if (shell->token_list == NULL) {
-                    ft_add_token(shell, ft_create_token(TOK_TYPE_CMD, buffer, quote_status));
-                } else {
-                    ft_add_token(shell, ft_create_token(TOK_TYPE_ARG, buffer, quote_status));
-                }
-                buf_index = 0;
-            }
-        } else if (c == '\'') {
-            if (quote_status == 1) {
-                quote_status = 0;
-            } else if (quote_status == 0) {
-                quote_status = 1;
-            } else {
-                buffer[buf_index++] = c;
-            }
-        } else if (c == '\"') {
-            if (quote_status == 2) {
-                quote_status = 0;
-            } else if (quote_status == 0) {
-                quote_status = 2;
-            } else {
-                buffer[buf_index++] = c;
-            }
-        } else if (c == '|' && quote_status == 0) {
-            if (buf_index > 0) {
-                buffer[buf_index] = '\0';
-                ft_add_token(shell, ft_create_token(TOK_TYPE_ARG, buffer, quote_status));
-                buf_index = 0;
-            }
-            ft_add_token(shell, ft_create_token(TOK_TYPE_PIPE, "|", quote_status));
-        } else if ((c == '>' || c == '<') && quote_status == 0) {
-            if (buf_index > 0) {
-                buffer[buf_index] = '\0';
-                ft_add_token(shell, ft_create_token(TOK_TYPE_ARG, buffer, quote_status));
-                buf_index = 0;
-            }
-            char next_c = input[i + 1];
-            if (next_c == c) {
-                i++;
-                char redir_op[3] = {c, c, '\0'};
-                ft_add_token(shell, ft_create_token(TOK_TYPE_REDIR, redir_op, quote_status));
-            } else {
-                char redir_op[2] = {c, '\0'};
-                ft_add_token(shell, ft_create_token(TOK_TYPE_REDIR, redir_op, quote_status));
-            }
+        quote_status = ft_process_quotes(c, quote_status);
+        ft_process_redirection(c, next_c, shell, buffer, &buf_index, quote_status, &i);
+        ft_process_spaces(c, shell, buffer, &buf_index, quote_status);
+
+        if (quote_status == 0 && c == '|') {
+            ft_create_add_pipe_token(shell);
         } else {
             buffer[buf_index++] = c;
         }
@@ -112,15 +42,13 @@ void ft_tokenize_input(char *input, t_shell *shell) {
     if (buf_index > 0) {
         buffer[buf_index] = '\0';
         if (shell->token_list == NULL) {
-            ft_add_token(shell, ft_create_token(TOK_TYPE_CMD, buffer, quote_status));
+            ft_create_add_command_token(shell, buffer, quote_status);
         } else {
-            ft_add_token(shell, ft_create_token(TOK_TYPE_ARG, buffer, quote_status));
+            ft_create_add_argument_token(shell, buffer, quote_status);
         }
     }
 }
 
-
-//Testing Tokens are good 
 void ft_print_tokens(t_token *token_list) {
     t_token *current = token_list;
     while (current != NULL) {
