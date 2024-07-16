@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/15 15:44:07 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/16 13:46:58 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <ncurses.h>
 
 int g_exit_code;
+
+
 
 int minishell(char **env)
 {

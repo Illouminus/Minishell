@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/15 15:07:20 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/16 13:47:38 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ extern int g_exit_code;
 -------------------------------------------------------------
 */
 
+#define TOK_TYPE_CMD     1
+#define TOK_TYPE_ARG     2
+#define TOK_TYPE_REDIR   3
+#define TOK_TYPE_PIPE    4
+
 // Structure d'un token
 typedef struct s_token
 {
@@ -50,6 +55,8 @@ typedef struct s_token
 	struct s_token *next_tok; // Pointeur vers le token suivant
 	struct s_token *prev_tok; // Pointeur vers le token précédent
 } t_token;
+
+
 
 
 // Structure d'une commande 
@@ -97,13 +104,15 @@ typedef struct s_shell
 */
 
 
+// Parsing
 char **parse_input(char *input);		  // Fonction pour analyser l'entrée utilisateur
+
+// Exec
 void execute_command(t_command *cmd); // Fonction pour exécuter une commande
 
 int init_shell(t_shell *shell, char **env);
 
-// fonction for env var
-
+// Env Var
 t_env *init_env_vars(char **env);
 t_env *create_env_var_node(char *env_str);
 t_env *create_default_env_var_node(char *var_name, char *value);
