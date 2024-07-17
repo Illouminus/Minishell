@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/07/16 16:15:50 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 10:14:52 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,18 @@ int ft_process_quotes(char c, int quote_status)
     if (c == '\'') 
     {
         if (quote_status == 1)
-            return 0;  // Fermeture des guillemets simples
+            return (0);  // Fermeture des guillemets simples
         else if (quote_status == 0) 
-            return 1;  // Ouverture des guillemets simples
+            return (1);  // Ouverture des guillemets simples
     } 
     else if (c == '\"') 
     {
         if (quote_status == 2)
-            return 0;  // Fermeture des guillemets doubles
+            return (0);  // Fermeture des guillemets doubles
         else if (quote_status == 0) 
-            return 2;  // Ouverture des guillemets doubles
+            return (2);  // Ouverture des guillemets doubles
     }
-    return quote_status;  // Aucun changement de statut de guillemets
+    return (quote_status);  // Aucun changement de statut de guillemets
 }
 
 // Fonction pour traiter les opérateurs de redirection dans le shell->user_input
@@ -90,14 +90,15 @@ void ft_process_redirection(char c, char next_c, t_shell *shell, char *buffer, i
     }
 }
 
-// Fonction pour traiter les espaces et construire les tokens
+// Fonction pour traiter les espaces et construire les tokensc
 void ft_process_spaces(char c, t_shell *shell, char *buffer, int *buf_index, int quote_status) 
 {
     if (c == ' ' && quote_status == 0) 
     {
         if (*buf_index > 0) {
             buffer[*buf_index] = '\0';
-            if (shell->token_list == NULL) 
+            //Ce if ne suffit pas il faut une autre condition 
+            if (shell->token_list == NULL)
                 ft_create_add_command_token(shell, buffer, quote_status);
             else 
                 ft_create_add_argument_token(shell, buffer, quote_status);

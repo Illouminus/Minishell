@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 13:05:59 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/16 16:33:19 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 int parser(t_shell *shell)
 {
 	if (!shell->user_input)
-		return (1);
+		return (EXIT_FAILURE);
 	else if (ft_strcmp(shell->user_input, "/0") == 0)
-		return (1);
-	return (0);
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

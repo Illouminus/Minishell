@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/16 16:15:20 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 11:35:36 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,26 @@ extern int g_exit_code;
 #define TOK_TYPE_REDIR   3
 #define TOK_TYPE_PIPE    4
 
+// Enum Token Type
+typedef enum    e_token_type
+  {
+	TOKEN_TYPE_CMD, 
+	TOKEN_TYPE_ARG, 
+	TOKEN_TYPE_REDIR, 
+	TOKEN_TYPE_PIPE, 
+    TOKEN_NEWLINE,
+    TOKEN_EOF,
+    TOKEN_PAR_OPEN,
+    TOKEN_PAR_CLOSE,
+    TOKEN_IF_AND,
+    TOKEN_IF_OR,
+    TOKEN_SEMICOLON,
+}	t_token_type;
+
 // Structure d'un token
 typedef struct s_token
 {
-	int				tok_type;			// Type de token (commande, argument, opérateur de redirection)
+	t_token_type	tok_type;			// Type de token (commande, argument, opérateur de redirection)
 	char			*tok_value;			// Valeur du token (texte de la commande ou de l'argument)
 	int				quote_status;		// Statut des guillemets (simple, double ou aucun)
 	struct s_token *next_tok;			// Pointeur vers le token suivant
@@ -120,9 +136,9 @@ void ft_tokenize_input(char *input, t_shell *shell);
 
 
 
-char **parse_input(char *input);		  // Fonction pour analyser l'entrée utilisateur
-int lexer(t_shell *shell);
-int parser(t_shell *shell);
+char **parse_input(char *input);		// Fonction pour analyser l'entrée utilisateur
+int lexer(t_shell *shell);				// Generation des tokens
+int parser(t_shell *shell);				// Generation de l'AST
 
 
 // Exec

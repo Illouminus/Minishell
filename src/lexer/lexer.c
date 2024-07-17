@@ -6,25 +6,29 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 16:16:31 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/16 16:33:21 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
 // Fonction pour tokenizer l'entrée utilisateur
 void ft_tokenize_input(char *input, t_shell *shell) 
 {
     char buffer[1024];
-    int buf_index = 0;
-    int quote_status = 0; // 0 = no quote, 1 = single quote, 2 = double quote
-    int i = 0;
+    int buf_index;
+    int quote_status; // 0 = no quote, 1 = single quote, 2 = double quote
+    int i;
+    char c; 
+    char next_c;
 
-    while (input[i] != '\0') {
-        char c = input[i];
-        char next_c = input[i + 1];
+    buf_index = 0;
+    quote_status = 0;
+    i = 0;
+    while (input[i] != '\0') 
+    {
+        c = input[i];
+        next_c = input[i + 1];
 
         quote_status = ft_process_quotes(c, quote_status);
         ft_process_redirection(c, next_c, shell, buffer, &buf_index, quote_status, &i);
@@ -83,5 +87,5 @@ int lexer(t_shell *shell)
 		free(temp->tok_value);
 		free(temp);
 	}
-	return 0;
+	return (0);
 }
