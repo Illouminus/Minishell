@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/17 13:46:51 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 15:15:12 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ typedef enum    e_token_type
   {
 	TOKEN_TYPE_CMD, 
 	TOKEN_TYPE_ARG, 
-	TOKEN_TYPE_REDIR, 
+	TOKEN_TYPE_REDIR_IN,
+	TOKEN_TYPE_REDIR_OUT, 
 	TOKEN_TYPE_PIPE, 
     TOKEN_TYPE_NEWLINE,
     TOKEN_TYPE_EOF,
@@ -122,11 +123,9 @@ t_token *ft_create_token(int type, char *value, int quote_status);
 void ft_add_token(t_shell *shell, t_token *new_token);
 void ft_create_add_command_token(t_shell *shell, char *value, int quote_status);
 void ft_create_add_argument_token(t_shell *shell, char *value, int quote_status) ;
-void ft_create_add_redirection_token(t_shell *shell, char *value, int quote_status) ;
-void ft_create_add_pipe_token(t_shell *shell) ;
-int	ft_process_quotes(char c, int quote_status);
-void ft_process_redirection(char c, char next_c, t_shell *shell, char *buffer, int *buf_index, int quote_status, int *i) ;
-void ft_process_spaces(char c, t_shell *shell, char *buffer, int *buf_index, int quote_status) ;
+void ft_create_add_redirection_in_token(t_shell *shell, char *value, int quote_status);
+void ft_create_add_redirection_out_token(t_shell *shell, char *value, int quote_status);
+void ft_create_add_pipe_token(t_shell *shell);
 void ft_tokenize_input(char *input, t_shell *shell);
 
 

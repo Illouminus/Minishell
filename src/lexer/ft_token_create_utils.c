@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:50:44 by ahors             #+#    #+#             */
-/*   Updated: 2024/07/17 13:45:55 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 15:14:49 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,16 @@ void ft_create_add_argument_token(t_shell *shell, char *value, int quote_status)
     ft_add_token(shell, ft_create_token(TOKEN_TYPE_ARG, value, quote_status));
 }
 
-// Fonction pour creer et ajouter un token de type redirection
-void ft_create_add_redirection_token(t_shell *shell, char *value, int quote_status) 
+// Fonction pour creer et ajouter un token de type redirection in
+void ft_create_add_redirection_in_token(t_shell *shell, char *value, int quote_status) 
 {
-    ft_add_token(shell, ft_create_token(TOKEN_TYPE_REDIR, value, quote_status));
+    ft_add_token(shell, ft_create_token(TOKEN_TYPE_REDIR_IN, value, quote_status));
+}
+
+// Fonction pour creer et ajouter un token de type redirection out
+void ft_create_add_redirection_out_token(t_shell *shell, char *value, int quote_status) 
+{
+    ft_add_token(shell, ft_create_token(TOKEN_TYPE_REDIR_OUT, value, quote_status));
 }
 
 // Fonction pour creer et ajouter un token de type pipe
