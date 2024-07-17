@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/17 11:35:36 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 13:46:51 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,6 @@ extern int g_exit_code;
 -------------------------------------------------------------
 */
 
-#define TOK_TYPE_CMD     1
-#define TOK_TYPE_ARG     2
-#define TOK_TYPE_REDIR   3
-#define TOK_TYPE_PIPE    4
 
 // Enum Token Type
 typedef enum    e_token_type
@@ -53,13 +49,13 @@ typedef enum    e_token_type
 	TOKEN_TYPE_ARG, 
 	TOKEN_TYPE_REDIR, 
 	TOKEN_TYPE_PIPE, 
-    TOKEN_NEWLINE,
-    TOKEN_EOF,
-    TOKEN_PAR_OPEN,
-    TOKEN_PAR_CLOSE,
-    TOKEN_IF_AND,
-    TOKEN_IF_OR,
-    TOKEN_SEMICOLON,
+    TOKEN_TYPE_NEWLINE,
+    TOKEN_TYPE_EOF,
+    TOKEN_TYPE_PAR_OPEN,
+    TOKEN_TYPE_PAR_CLOSE,
+    TOKEN_TYPE_IF_AND,
+    TOKEN_TYPE_IF_OR,
+    TOKEN_TYPE_SEMICOLON,
 }	t_token_type;
 
 // Structure d'un token
@@ -144,6 +140,9 @@ int parser(t_shell *shell);				// Generation de l'AST
 // Exec
 void execute_command(t_command *cmd); // Fonction pour exécuter une commande
 int executor(t_shell *shell);
+// Built-In
+void ft_export(t_shell *shell);
+
 
 int init_shell(t_shell *shell, char **env);
 
@@ -155,6 +154,11 @@ t_env *create_default_env_var_node(char *var_name, char *value);
 void add_env_var_to_list(t_env **head, t_env *new_var);
 void global_exit_env(t_shell *shell, int status);
 void free_env_var_list(t_env *env);
+
+
+// Display
+void ft_print_tokens(t_token *token_list);
+
 
 
 // Exit

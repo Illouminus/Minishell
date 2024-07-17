@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 16:33:21 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/17 13:45:14 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void ft_tokenize_input(char *input, t_shell *shell)
     buf_index = 0;
     quote_status = 0;
     i = 0;
+    while(input[i] == ' ')
+        i++;
     while (input[i] != '\0') 
     {
         c = input[i];
@@ -53,9 +55,11 @@ void ft_tokenize_input(char *input, t_shell *shell)
     }
 }
 
-void ft_print_tokens(t_token *token_list) {
+void ft_print_tokens(t_token *token_list)
+{
     t_token *current = token_list;
-    while (current != NULL) {
+    while (current != NULL) 
+    {
         printf("Token: %s, Type: %d, Quote Status: %d\n", current->tok_value, current->tok_type, current->quote_status);
         current = current->next_tok;
     }
@@ -79,7 +83,7 @@ int lexer(t_shell *shell)
 	ft_tokenize_input(shell->user_input, shell);
 	ft_print_tokens(shell->token_list);
 	add_history(shell->user_input);	
-	//Lines to free token_list between each command --> Mettre dans une fonction a part
+	//Lines to free token_list between each command --> Put in a separate function
 	t_token *temp;
 	while (shell->token_list != NULL) {
 		temp = shell->token_list;
