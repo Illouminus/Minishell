@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 13:38:59 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 14:12:36 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,34 +25,32 @@ void ft_print_tokens(t_token *token_list)
 
 // Fonction principale de tokenisation
 void ft_tokenize_input(char *input, t_shell *shell) {
-    int i = 0;
-    int start = 0;
-    char quote_char = '\0';
+    int i; 
+    int start; 
+    char quote_char; 
     t_token_type type;
-    int is_first_token = 1;
+    int is_first_token; 
+    char *token_value; 
+    t_token *eof_token;
 
+    i = 0; 
+    start = 0; 
+    quote_char = '\0';
+    is_first_token = 1;
     while (input[i] != '\0') {
         // Skip whitespace
         i = ft_skip_whitespace(input, i);
-        
-        if (input[i] == '\0') {
+        if (input[i] == '\0') 
             break;
-        }
-
         start = i;
-
         // Handle quotes
         if (input[i] == '"' || input[i] == '\'') {
             i = ft_handle_quotes(input, i, &quote_char);
-            if (i == -1) {
+            if (i == -1)
                 return; // Unmatched quote error
-            }
-        } else {
-            while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'') {
+        } else
+            while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'')
                 i++;
-            }
-        }
-
         // Determine the type of the token
         type = ft_determine_token_type(input, start, is_first_token); 
         if (type ==  TOKEN_TYPE_PIPE)
@@ -61,15 +59,11 @@ void ft_tokenize_input(char *input, t_shell *shell) {
             is_first_token = 0;
 
         // Create and add the token
-        char *token_value = strndup(&input[start], i - start);
-        t_token *new_token = ft_create_token(type, token_value);
-        ft_add_token(shell, new_token);
+        token_value = strndup(&input[start], i - start);
+        ft_create_add_token(shell, type, token_value);
         free(token_value);
     }
-
-    // Add end-of-file token
-    t_token *eof_token = ft_create_token(TOKEN_TYPE_EOF, "EOF");
-    ft_add_token(shell, eof_token);
+    ft_create_add_token(shell, TOKEN_TYPE_EOF, "EOF");
 }
 
 

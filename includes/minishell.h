@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/18 13:36:32 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 14:09:53 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,18 +113,12 @@ typedef struct s_shell
 t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
 //Fonctions pour create et add simultanément un token
-void ft_create_add_command_token(t_shell *shell, char *value, int quote_status);
-void ft_create_add_argument_token(t_shell *shell, char *value, int quote_status) ;
-void ft_create_add_redirection_in_token(t_shell *shell, char *value, int quote_status);
-void ft_create_add_redirection_out_token(t_shell *shell, char *value, int quote_status);
-void ft_create_add_pipe_token(t_shell *shell);
+void ft_create_add_token(t_shell *shell, int type, char *value); 
 
 // Utils
 int ft_skip_whitespace(char *input, int i); 
 int ft_handle_quotes(char *input, int i, char *quote_char); 
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token); 
-
-
 void ft_tokenize_input(char *input, t_shell *shell);
 
 

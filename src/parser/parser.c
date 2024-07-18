@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/17 13:36:02 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/18 14:03:32 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,7 @@ int parser(t_shell *shell)
 		return (EXIT_FAILURE);
 	else if (ft_strcmp(shell->user_input, "/0") == 0)
 		return (EXIT_FAILURE);
+	else
+		
 	return (EXIT_SUCCESS);
 }
