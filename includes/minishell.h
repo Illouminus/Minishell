@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/18 14:09:53 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 14:23:03 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef struct s_token
 	struct s_token *next_tok;			// Pointeur vers le token suivant
 	struct s_token *prev_tok;			// Pointeur vers le token précédent
 } t_token;
-
 
 
 // Structure d'une commande 

@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 14:12:36 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 14:32:39 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@
 void ft_print_tokens(t_token *token_list)
 {
     t_token *current = token_list;
+    printf("RÉSULTAT DU LEXER\n");
     while (current != NULL) 
     {
+
         printf("Token: %s, Type: %d\n", current->tok_value, current->tok_type);
         current = current->next_tok;
     }
+    printf("\n\n");
 }
 
 // Fonction principale de tokenisation
@@ -31,7 +34,6 @@ void ft_tokenize_input(char *input, t_shell *shell) {
     t_token_type type;
     int is_first_token; 
     char *token_value; 
-    t_token *eof_token;
 
     i = 0; 
     start = 0; 
@@ -66,7 +68,6 @@ void ft_tokenize_input(char *input, t_shell *shell) {
     ft_create_add_token(shell, TOKEN_TYPE_EOF, "EOF");
 }
 
-
 // Generate the tokens from the shell->user_input
 int lexer(t_shell *shell)
 {
@@ -85,13 +86,5 @@ int lexer(t_shell *shell)
 	ft_tokenize_input(shell->user_input, shell);
 	ft_print_tokens(shell->token_list);
 	add_history(shell->user_input);	
-	//Lines to free token_list between each command --> Put in a separate function
-	t_token *temp;
-	while (shell->token_list != NULL) {
-		temp = shell->token_list;
-		shell->token_list = shell->token_list->next_tok;
-		free(temp->tok_value);
-		free(temp);
-	}
 	return (0);
 }
