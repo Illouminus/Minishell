@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tokenise_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/07/17 15:11:48 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/18 13:38:17 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //Create a single token
-t_token *ft_create_token(int type, char *value, int quote_status) 
+t_token *ft_create_token(int type, char *value)
 {
     t_token *new_token;
 	
@@ -22,12 +22,57 @@ t_token *ft_create_token(int type, char *value, int quote_status)
         return(NULL);
     new_token->tok_type = type;
     new_token->tok_value = ft_strdup(value);
-    new_token->quote_status = quote_status;
     new_token->next_tok = NULL;
     new_token->prev_tok = NULL;
     return (new_token);
 }
 
+//Determine the type of token
+t_token_type ft_determine_token_type(char *input, int start, int is_first_token)
+{
+    t_token_type type;
+
+    if (input[start] == '|') {
+        type = TOKEN_TYPE_PIPE;
+    } else if (input[start] == '<') {
+        type = TOKEN_TYPE_REDIR_IN;
+    } else if (input[start] == '>') {
+        type = TOKEN_TYPE_REDIR_OUT;
+    } else if (is_first_token) {
+        type = TOKEN_TYPE_CMD;
+    } else {
+        type = TOKEN_TYPE_ARG;
+    }
+    return type;
+}
+
+
+// Function to ignore whitespaces
+int ft_skip_whitespace(char *input, int i)
+{
+    while (ft_isspace(input[i])) 
+        i++;
+    return i;
+}
+
+// Function to hanles quotes
+int ft_handle_quotes(char *input, int i, char *quote_char) 
+{
+    *quote_char = input[i];
+    i++;
+    while (input[i] != '\0' && input[i] != *quote_char) 
+    {
+        i++;
+    }
+    if (input[i] == *quote_char) 
+        i++; // Move past the closing quote
+    else {
+        // Handle error for unmatched quotes
+        printf("Error: Unmatched quote\n");
+        return -1;
+    }
+    return i;
+}
 
 //Add token to shell->tokens_list
 void ft_add_token(t_shell *shell, t_token *new_token)
@@ -47,12 +92,3 @@ void ft_add_token(t_shell *shell, t_token *new_token)
     }
 }
 
-// Fonction pour déterminer le type d'un token
-t_token_type ft_determine_token_type(const char *str) 
-{
-    if (strcmp(str, "|") == 0) return TOKEN_TYPE_PIPE;
-    if (strcmp(str, "<") == 0) return TOKEN_TYPE_REDIR_IN;
-    if (strcmp(str, ">") == 0) return TOKEN_TYPE_REDIR_IN;
-    if (str[0] == '-') return TOKEN_TYPE_ARG;
-    return TOKEN_TYPE_CMD;
-}

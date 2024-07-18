@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/17 15:15:12 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/18 13:36:32 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ extern int g_exit_code;
 -------------------------------------------------------------
 */
 
-
 // Enum Token Type
 typedef enum    e_token_type
   {
@@ -50,13 +49,7 @@ typedef enum    e_token_type
 	TOKEN_TYPE_REDIR_IN,
 	TOKEN_TYPE_REDIR_OUT, 
 	TOKEN_TYPE_PIPE, 
-    TOKEN_TYPE_NEWLINE,
     TOKEN_TYPE_EOF,
-    TOKEN_TYPE_PAR_OPEN,
-    TOKEN_TYPE_PAR_CLOSE,
-    TOKEN_TYPE_IF_AND,
-    TOKEN_TYPE_IF_OR,
-    TOKEN_TYPE_SEMICOLON,
 }	t_token_type;
 
 // Structure d'un token
@@ -64,11 +57,9 @@ typedef struct s_token
 {
 	t_token_type	tok_type;			// Type de token (commande, argument, opérateur de redirection)
 	char			*tok_value;			// Valeur du token (texte de la commande ou de l'argument)
-	int				quote_status;		// Statut des guillemets (simple, double ou aucun)
 	struct s_token *next_tok;			// Pointeur vers le token suivant
 	struct s_token *prev_tok;			// Pointeur vers le token précédent
 } t_token;
-
 
 
 
@@ -119,13 +110,21 @@ typedef struct s_shell
 
 // PARSING
 // Tokens
-t_token *ft_create_token(int type, char *value, int quote_status);
+t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
+//Fonctions pour create et add simultanément un token
 void ft_create_add_command_token(t_shell *shell, char *value, int quote_status);
 void ft_create_add_argument_token(t_shell *shell, char *value, int quote_status) ;
 void ft_create_add_redirection_in_token(t_shell *shell, char *value, int quote_status);
 void ft_create_add_redirection_out_token(t_shell *shell, char *value, int quote_status);
 void ft_create_add_pipe_token(t_shell *shell);
+
+// Utils
+int ft_skip_whitespace(char *input, int i); 
+int ft_handle_quotes(char *input, int i, char *quote_char); 
+t_token_type ft_determine_token_type(char *input, int start, int is_first_token); 
+
+
 void ft_tokenize_input(char *input, t_shell *shell);
 
 
@@ -158,6 +157,8 @@ void free_env_var_list(t_env *env);
 // Display
 void ft_print_tokens(t_token *token_list);
 
+// Utils
+int ft_isspace(char c); 
 
 
 // Exit

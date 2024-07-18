@@ -3,64 +3,73 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/17 15:18:00 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/18 13:38:59 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+//Fonction d'affichage temporaire | A supprimer plus tard
 void ft_print_tokens(t_token *token_list)
 {
     t_token *current = token_list;
     while (current != NULL) 
     {
-        printf("Token: %s, Type: %d, Quote Status: %d\n", current->tok_value, current->tok_type, current->quote_status);
+        printf("Token: %s, Type: %d\n", current->tok_value, current->tok_type);
         current = current->next_tok;
     }
 }
 
-void ft_tokenize_input(char *input, t_shell *shell)
-{
-    t_token *tokens = NULL;
-    char buffer[256];
-    int buffer_index = 0;
-    int length = ft_strlen(shell->user_input);
+// Fonction principale de tokenisation
+void ft_tokenize_input(char *input, t_shell *shell) {
     int i = 0;
+    int start = 0;
+    char quote_char = '\0';
+    t_token_type type;
+    int is_first_token = 1;
 
-    while (i <= length)
-    {
-        i++;
-         if (isspace(input[i]) || input[i] == '\0') {
-            if (buffer_index > 0) {
-                buffer[buffer_index] = '\0';
-                t_token type = ft_determine_token_type(buffer);
-                t_token *new_token = create_token(type, buffer);
-                append_token(&tokens, new_token);
-                buffer_index = 0;
-            }
-        } else if (input[i] == '|' || input[i] == '<' || input[i] == '>' || input[i] == '&') {
-            if (buffer_index > 0) {
-                buffer[buffer_index] = '\0';
-                t_token type = ft_determine_token_type(buffer);
-                Token *new_token = create_token(type, buffer);
-                append_token(&tokens, new_token);
-                buffer_index = 0;
-            }
-            buffer[0] = input[i];
-            buffer[1] = '\0';
-            t_token type = ft_determine_token_type(buffer);
-            Token *new_token = create_token(type, buffer);
-            append_token(&tokens, new_token);
-        } else {
-            buffer[buffer_index++] = input[i];
+    while (input[i] != '\0') {
+        // Skip whitespace
+        i = ft_skip_whitespace(input, i);
+        
+        if (input[i] == '\0') {
+            break;
         }
+
+        start = i;
+
+        // Handle quotes
+        if (input[i] == '"' || input[i] == '\'') {
+            i = ft_handle_quotes(input, i, &quote_char);
+            if (i == -1) {
+                return; // Unmatched quote error
+            }
+        } else {
+            while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'') {
+                i++;
+            }
+        }
+
+        // Determine the type of the token
+        type = ft_determine_token_type(input, start, is_first_token); 
+        if (type ==  TOKEN_TYPE_PIPE)
+            is_first_token = 1;
+        else   
+            is_first_token = 0;
+
+        // Create and add the token
+        char *token_value = strndup(&input[start], i - start);
+        t_token *new_token = ft_create_token(type, token_value);
+        ft_add_token(shell, new_token);
+        free(token_value);
     }
-    
-    return tokens;    
+
+    // Add end-of-file token
+    t_token *eof_token = ft_create_token(TOKEN_TYPE_EOF, "EOF");
+    ft_add_token(shell, eof_token);
 }
 
 
