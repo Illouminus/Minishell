@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 14:32:39 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 17:33:19 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void ft_tokenize_input(char *input, t_shell *shell) {
     start = 0; 
     quote_char = '\0';
     is_first_token = 1;
-    while (input[i] != '\0') {
+    while (input[i] != '\0') 
+    {
         // Skip whitespace
         i = ft_skip_whitespace(input, i);
         if (input[i] == '\0') 
@@ -49,7 +50,7 @@ void ft_tokenize_input(char *input, t_shell *shell) {
         if (input[i] == '"' || input[i] == '\'') {
             i = ft_handle_quotes(input, i, &quote_char);
             if (i == -1)
-                return; // Unmatched quote error
+                return; // A corresponding closing quote was not found
         } else
             while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'')
                 i++;
@@ -61,7 +62,7 @@ void ft_tokenize_input(char *input, t_shell *shell) {
             is_first_token = 0;
 
         // Create and add the token
-        token_value = strndup(&input[start], i - start);
+        token_value = ft_strndup(&input[start], i - start);
         ft_create_add_token(shell, type, token_value);
         free(token_value);
     }

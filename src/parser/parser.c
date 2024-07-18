@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 15:35:10 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 17:31:53 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int ft_cmd_is_built_in(char *value)
 t_command	*ft_new_command_init(t_command *command, t_command *last_command, t_token *current_token)
 {
 	command = malloc(sizeof(t_command));
-	 if (!command) 
+	if (!command) 
 	{
 		printf("Error in parser, during malloc for a new_command\n");
 		return (NULL);
@@ -42,9 +42,9 @@ t_command	*ft_new_command_init(t_command *command, t_command *last_command, t_to
 void 	ft_display_command_resume(t_command *command)
 {
 	if (command->is_builtin_cmd)
-		printf("La commande %s est built-in. Elle pointe sur %s\n\n", command->cmd_value); 
+		printf("La commande '%s' est built-in.\n\n", command->cmd_value); 
 	else
-		printf("La commande %s n'est pas built-in\n\n", command->cmd_value); 
+		printf("La commande '%s' n'est pas built-in\n\n", command->cmd_value); 
 }
 
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
@@ -69,7 +69,6 @@ int parser(t_shell *shell)
 			// Création d'une nouvelle instance de structure de commande
 			if (current_token->tok_type == TOKEN_TYPE_CMD)
 			{
-				printf("Le token: %s est un %u\n", current_token->tok_value, current_token->tok_type); 
 				// Création d'une instance de structure de commande  || Voir la fonction ci-dessus command init
 				new_command = ft_new_command_init(new_command, last_command, current_token); 
 				//On définit le pointeur de shell->command_list pour pointer sur notre 1ère commande et lié shell->command_list à notre liste chaînée de commandes
@@ -86,19 +85,21 @@ int parser(t_shell *shell)
 				{
 					new_command->prev_cmd = last_command; // Donc est égal à NULL  
 					new_command->next_cmd = NULL; 
+					last_command = new_command; 
 				}
 				ft_display_command_resume(new_command); 
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
 				printf("Le token: %s est un %u\n", current_token->tok_value, current_token->tok_type); 
-				// On l'ajoute au tableau de tableau cmd_args de la commande correspondante
+				// On ajoute le token->value au tableau de tableau cmd_args de la commande correspondante
+
 				
 			}
 			else 
 			{
-				printf("Nous avons reçu un pipe ou un redirect ou EOF\n"); 
-				// La je sais pas trop
+				printf("Nous avons reçu un pipe, un redirect ou EOF\n"); 
+					// La je sais pas trop
 			}
 			current_token = current_token->next_tok; 
 		}

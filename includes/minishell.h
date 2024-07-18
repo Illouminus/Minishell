@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/18 14:47:09 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/07/18 17:27:18 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_token
 typedef struct s_command
 {
 	char				*cmd_value;			// Nom de la commande et ses arguments
-	char				**cmd_args;			// Nom de la commande et ses arguments
+	char				*cmd_args;			// Nom de la commande et ses arguments
 	bool				is_builtin_cmd;		// Indicateur si la commande est une commande intégrée
 	t_token				*redir_tokens;		// Liste des redirections associées à la commande || Pas sur de à quoi ça sert ça 
 	struct s_command	*next_cmd;			// Pointeur vers la commande suivante
