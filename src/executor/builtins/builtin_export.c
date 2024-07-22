@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:22 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/22 14:36:08 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/22 19:41:35 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,13 @@ static int ft_check_var_name(char *var_name)
 	int i;
 
 	i = 0;
-	if (!ft_isalpha(var_name[i]) && var_name[i] != '_')
-	{
+	if (!ft_isalpha(var_name[i]))
 		return 1;
-	}
 	i++;
 	while (var_name[i])
 	{
-		if (!ft_isalnum(var_name[i]) && var_name[i] != '_')
-		{
-			ft_putstr_fd("export: `", STDERR_FILENO);
-			ft_putstr_fd(var_name, STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+		if (!ft_isalnum(var_name[i]))
 			return 1;
-		}
 		i++;
 	}
 	return 0;
@@ -62,6 +55,8 @@ static void ft_export_variable(t_env *env_list, char *var)
 		return;
 	}
 	var_value = ft_strchr(var, '=') + 1;
+
+	ft_setenv(env_list, var_name, var_value);
 }
 
 int ft_builtin_export(t_command *cmd, t_env *env_list)
