@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:29:45 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/03 19:08:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/21 08:52:40 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,15 @@ t_env *create_env_var_node(char *env_str)
 	}
 	node->next_env = NULL;
 	return node;
+}
+
+t_env *ft_get_env_var_by_name(t_env *head, const char *name)
+{
+	while (head)
+	{
+		if (ft_strcmp(head->env_var_name, name) == 0)
+			return head;
+		head = head->next_env;
+	}
+	return NULL;
 }

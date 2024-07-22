@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 13:46:58 by ahors            ###   ########.fr       */
+/*   Updated: 2024/07/18 11:21:41 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include <ncurses.h>
 
 int g_exit_code;
-
-
 
 int minishell(char **env)
 {
@@ -36,7 +34,7 @@ int minishell(char **env)
 
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
 			g_exit_code = executor(&shell);
-			
+
 		else
 		{
 			g_exit_code = 1;
