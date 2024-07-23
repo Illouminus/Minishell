@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 16:41:57 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/23 11:01:04 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void ft_update_pwd(t_shell *shell, const char *command)
 	ft_setenv(&shell->env_var_list, "PWD", cwd);
 }
 
-int cft_fd_minus(t_shell *shell, int option)
+int ft_fd_minus(t_shell *shell, int option)
 {
 	char *curr_dir = ft_getenv(shell->env_var_list, "OLDPWD");
 	char *old_dir = ft_getenv(shell->env_var_list, "PWD");
@@ -87,7 +87,7 @@ int check_for_arguments(t_command *commands, t_shell *shell)
 			perror(commands->cmd_args[1]);
 			return 1;
 		}
-		update_pwd(shell, commands->cmd_args[1]);
+		ft_update_pwd(shell, commands->cmd_args[1]);
 	}
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:22 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/22 19:41:35 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/23 11:07:56 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int ft_builtin_export(t_command *cmd, t_env *env_list)
 	int i;
 
 	i = 0;
-	// TODO : Gérer les erreurs de cmd (NULL, pas de cmd_args, etc)
 
 	if (!cmd->cmd_args)
 	{
