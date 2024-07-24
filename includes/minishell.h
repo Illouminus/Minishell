@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/22 12:50:30 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/24 11:18:04 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,12 @@ void setup_signal_handlers(void);
 void print_error(char *cmd, char *error_message);
 int ft_builtin_pwd(t_command *commands);
 void ft_get_all_env_vars(t_env *env_list);
+
+int ft_builtin_cd(t_command *cmd, t_shell *shell);
+int ft_builtin_echo(t_command *cmd);
+int ft_builtin_env(t_env *env);
+void ft_builtin_exit(t_env *env);
+int ft_builtin_export(t_command *cmd, t_env *env_list);
+int ft_builtin_pwd(t_command *commands);
+int ft_builtin_unset(t_command *cmd, t_env **env_list);
 #endif // MINISHELL_H
