@@ -6,11 +6,30 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/25 12:20:11 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/25 14:29:20 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void ft_execute_command(t_command *current, t_shell *shell)
+{
+	char **env;
+
+	env = NULL;
+	signal(SIGQUIT, SIG_DFL);
+	char **args = ft_get_args(current);
+	char *path = ft_get_path(current, shell);
+	if (execve(path, args, shell->env_var_list) == -1)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(current->cmd_name, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(strerror(errno), STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
+		exit(1);
+	}
+}
 
 void ft_exec_builtins(t_shell *shell)
 {
@@ -40,6 +59,23 @@ void ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 	}
 	ft_redirect_input(current, shell, prev_fd);
 	ft_execute_command(current, shell);
+}
+
+int ft_parent_process(t_command *current, t_shell *shell, int prev_fd)
+{
+
+	if (prev_fd != 0)
+		close(prev_fd);
+	if (current->next_cmd)
+	{
+		close(shell->pipe_fds[1]);
+		prev_fd = shell->pipe_fds[0];
+	}
+	if (shell->input_fd)
+		close(shell->input_fd);
+	if (shell->output_fd)
+		close(shell->output_fd);
+	return prev_fd;
 }
 
 int ft_executor(t_shell *shell)
