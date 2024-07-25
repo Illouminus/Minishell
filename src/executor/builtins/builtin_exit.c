@@ -6,12 +6,13 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/23 14:11:54 by edouard          ###   ########.fr       */
+/*   Updated: 2024/07/24 11:36:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_builtin_exit(t_env *env)
+int ft_builtin_exit(t_env *env)
 {
+	return 0;
 }
