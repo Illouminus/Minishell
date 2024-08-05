@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 17:33:19 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/05 14:55:17 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void ft_tokenize_input(char *input, t_shell *shell) {
     start = 0; 
     quote_char = '\0';
     is_first_token = 1;
-    while (input[i] != '\0') 
+    while (input[i]) 
     {
         // Skip whitespace
         i = ft_skip_whitespace(input, i);
@@ -66,7 +66,6 @@ void ft_tokenize_input(char *input, t_shell *shell) {
         ft_create_add_token(shell, type, token_value);
         free(token_value);
     }
-    ft_create_add_token(shell, TOKEN_TYPE_EOF, "EOF");
 }
 
 // Generate the tokens from the shell->user_input

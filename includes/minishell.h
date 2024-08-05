@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/18 17:27:18 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/02 17:15:27 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ typedef struct s_token
 // Structure d'une commande 
 typedef struct s_command
 {
-	char				*cmd_value;			// Nom de la commande et ses arguments
-	char				*cmd_args;			// Nom de la commande et ses arguments
+	char				*cmd_value;			// Nom de la commande
+	char				**cmd_args;			// Arguments de la commande
 	bool				is_builtin_cmd;		// Indicateur si la commande est une commande intégrée
 	t_token				*redir_tokens;		// Liste des redirections associées à la commande || Pas sur de à quoi ça sert ça 
 	struct s_command	*next_cmd;			// Pointeur vers la commande suivante
@@ -153,6 +153,13 @@ void ft_print_tokens(t_token *token_list);
 
 // Utils
 int ft_isspace(char c); 
+
+
+// Cleaning
+void ft_free_cmd_args(char **cmd_args);
+// void ft_free_command_list(t_command *command_list); Pas utilisée pour l'instant 
+void   	ft_free_commands_args(char **args); 
+
 
 
 // Exit

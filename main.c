@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 17:24:22 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/02 16:14:05 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int minishell(char **env)
 {
 	t_shell shell;
 	t_token *temp; 
+	t_command *temp_command; 
 
 	if (init_shell(&shell, env) == 1)
 		return (1);
@@ -41,9 +42,20 @@ int minishell(char **env)
 			{
 				temp = shell.token_list;
 				shell.token_list = shell.token_list->next_tok;
-				free(temp->tok_value);
+				free(temp->tok_value); 
 				free(temp);
 			}
+			while (shell.command_list != NULL)
+			{
+				temp_command = shell.command_list;
+				shell.command_list = shell.command_list->next_cmd;
+				free(temp_command->cmd_value);
+				printf("Command Value was freed\n"); 
+				ft_free_cmd_args(temp_command->cmd_args); 
+				printf("Command Args was freed\n"); 
+				free(temp_command);
+				printf("Command was freed\n"); 
+			}	
 		}
 		else
 		{
