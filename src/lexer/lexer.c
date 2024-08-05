@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/05 14:55:17 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/05 16:32:57 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,37 @@ void ft_tokenize_input(char *input, t_shell *shell) {
             break;
         start = i;
         // Handle quotes
-        if (input[i] == '"' || input[i] == '\'') {
+        if (input[i] == '"' || input[i] == '\'') 
+        {
             i = ft_handle_quotes(input, i, &quote_char);
             if (i == -1)
                 return; // A corresponding closing quote was not found
-        } else
-            while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'')
+        } 
+        else
+        {
+            // Check for special characters
+            if (input[i] == '|' || input[i] == '<' || input[i] == '>') 
+            {
+                // If it's a special character, we treat it as a separate token
                 i++;
+            }
+            else 
+            {
+                // Regular token parsing
+                while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'' && input[i] != '|' && input[i] != '<' && input[i] != '>')
+                    i++;
+            }
+        }
         // Determine the type of the token
         type = ft_determine_token_type(input, start, is_first_token); 
-        if (type ==  TOKEN_TYPE_PIPE)
+        if (type == TOKEN_TYPE_PIPE)
             is_first_token = 1;
         else   
             is_first_token = 0;
 
         // Create and add the token
         token_value = ft_strndup(&input[start], i - start);
+        
         ft_create_add_token(shell, type, token_value);
         free(token_value);
     }

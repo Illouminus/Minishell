@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/07/18 14:12:27 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/05 16:24:50 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ int ft_handle_quotes(char *input, int i, char *quote_char)
     *quote_char = input[i];
     i++;
     while (input[i] != '\0' && input[i] != *quote_char) 
-    {
         i++;
-    }
     if (input[i] == *quote_char) 
         i++; // Move past the closing quote
     else {

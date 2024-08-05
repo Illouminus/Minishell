@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/05 15:26:11 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/05 15:37:02 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,5 +149,7 @@ int parser(t_shell *shell)
 			last_command->cmd_args[i] = NULL; // Ensure the last command args are properly terminated
         ft_afficher_command_list(shell->command_list, i);
 	}
+	
+	 
 	return (EXIT_SUCCESS);
 }
