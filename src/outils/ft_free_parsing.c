@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 16:04:29 by adrienhors        #+#    #+#             */
-/*   Updated: 2024/08/05 15:36:55 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/06 16:29:14 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,22 @@ void    ft_free_commands_args(char **args)
     free(args);
 }
 
+int ft_determine_len_cmd_args(char **cmd_args)
+{
+    int i; 
+
+    i = 0;
+    while (cmd_args[i + 1])
+        i++;
+    return (i);
+}
+
+
 // Fonction pour libérer les arguments de la commande
 void ft_free_cmd_args(char **cmd_args) 
 {
     int i;
+    int len_cmd_args; 
     
     if (cmd_args == NULL)
     {
@@ -39,12 +51,12 @@ void ft_free_cmd_args(char **cmd_args)
     }
     
     i = 0; 
-    while (cmd_args[i])
+    len_cmd_args = ft_determine_len_cmd_args(cmd_args);
+    while (i < len_cmd_args)
     {
         free(cmd_args[i]);
         i++;
     }
-    printf("Libération du tableau cmd_args\n");
     free(cmd_args);
 }
 

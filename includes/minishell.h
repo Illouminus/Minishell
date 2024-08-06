@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/02 17:15:27 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/06 15:28:11 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void ft_tokenize_input(char *input, t_shell *shell);
 char **parse_input(char *input);		// Fonction pour analyser l'entrée utilisateur
 int lexer(t_shell *shell);				// Generation des tokens
 int parser(t_shell *shell);				// Generation de l'AST
+
 
 
 // Exec

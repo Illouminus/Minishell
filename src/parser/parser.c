@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/05 15:37:02 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/06 22:53:19 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ t_command	*ft_new_command_init(t_command *command, t_token *current_token, int n
 	}
 	command->cmd_value = ft_strdup(current_token->tok_value);
 	command->cmd_args = malloc(nb_of_args * sizeof(char *));
-	command->is_builtin_cmd = ft_cmd_is_built_in(current_token->tok_value);
+	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->redir_tokens = NULL;
+	command->prev_cmd = NULL; 
+	command->next_cmd = NULL; 
 	return (command); 
 }
 
@@ -74,82 +76,69 @@ void ft_afficher_command_list(t_command *command_list, int i )
     }
 }
 
+int	ft_determine_nb_args(t_token *token_list)
+{
+	int i; 
+	t_token *current_token;
+
+	i = 0; 
+	current_token = token_list; 
+	while (current_token->next_tok != NULL && current_token->next_tok->tok_type == TOKEN_TYPE_ARG)
+	{
+		i++;
+		current_token = current_token->next_tok;
+	}
+	printf("Number of args: %d\n", i);
+	return (i); 
+}
+
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
 {
 	t_token		*current_token; 
-	t_token		*tmp_token; 
 	t_command	*new_command; 
-	t_command	*last_command; 
+	t_command	*last_command;
 	int	cmd_nb_args; 
 	int i; 
 	
 
 	last_command = NULL; 
+	current_token = shell->token_list;
 	if (!shell->user_input)
 		return (EXIT_FAILURE);
 	else if (ft_strcmp(shell->user_input, "/0") == 0)
 		return (EXIT_FAILURE);
 	else
 	{
-    	printf("RÉSULTAT DU PARSER\n");
-		current_token = shell->token_list; 
-		while (current_token != NULL)
+		while (current_token)
 		{
-			// Création d'une nouvelle instance de structure de commande
-			if (current_token->tok_type == TOKEN_TYPE_CMD)
+			if(current_token->tok_type == TOKEN_TYPE_CMD)
 			{
-				cmd_nb_args = 0;
-				tmp_token = current_token->next_tok; 
-				while (tmp_token != NULL && tmp_token->tok_type == TOKEN_TYPE_ARG)
-				{
-					cmd_nb_args++;
-					tmp_token = tmp_token->next_tok;
-				}
-				// Création d'une instance de structure de commande  || Voir la fonction ci-dessus command init
+				cmd_nb_args = ft_determine_nb_args(current_token); 
+				i = 0; // On mets i à 0 pour le tableau d'args de la commande
 				new_command = ft_new_command_init(new_command, current_token, cmd_nb_args); 
-				if (!new_command)
-					return (EXIT_FAILURE);
-				//On définit le pointeur de shell->command_list pour pointer sur notre 1ère commande et lié shell->command_list à notre liste chaînée de commandes
-				if(shell->command_list == NULL && last_command == NULL)
-				{
-					shell->command_list = new_command; 
-					new_command->prev_cmd = last_command; // Donc est égal à NULL  
-					new_command->next_cmd = NULL; 
-				}
-				// Si last_command n'est pas égal ==> Nous avons déja créer une commande, donc nous sommes apès un pipe par exemple
-				else
+				if(last_command != NULL)
 				{
 					new_command->prev_cmd = last_command; 
-					last_command->next_cmd = new_command; 
+					new_command->next_cmd = NULL; 
 				}
-				last_command = new_command;
-				i = 0;
+				last_command = new_command; 
+				shell->command_list = new_command; 
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
 				last_command->cmd_args[i] = ft_strdup(current_token->tok_value);
 				i++;
 			}
-			else 
+			else if (current_token->tok_type == TOKEN_TYPE_PIPE)
 			{
-				//Créer une instance de commande, qui en soit n'est pas une commande avec une commande value à "pipe"
-				if (current_token->tok_type == TOKEN_TYPE_PIPE)
-				{
-					new_command = ft_new_command_init(new_command, current_token, 0); 	
-					if (!new_command)
-                        return (EXIT_FAILURE); 
-					new_command->prev_cmd = last_command;  
-					last_command->next_cmd = new_command; 
-				}
+				new_command = ft_new_command_init(new_command, current_token, 0); // On créer une nouvelle commande
+				new_command->prev_cmd = last_command;  // On relie le pipe à la dernière commande
+				last_command = new_command; // Le pipe devient la dernière commande
 			}
 			current_token = current_token->next_tok;
 		}
-		if (last_command != NULL)
-			last_command->cmd_args[i] = NULL; // Ensure the last command args are properly terminated
-        ft_afficher_command_list(shell->command_list, i);
-	}
-	
-	 
+		ft_afficher_command_list(shell->command_list, i); 
+	}	 
 	return (EXIT_SUCCESS);
 }
