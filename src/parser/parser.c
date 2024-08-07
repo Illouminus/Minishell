@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 22:53:19 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/07 12:06:08 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,17 @@ int ft_cmd_is_built_in(char *value)
 {
 	if (ft_strcmp(value, "cd") == 0)
 		return (1); 
+	else if (ft_strcmp(value, "echo") == 0)
+		return (1);
+	else if (ft_strcmp(value, "env") == 0)
+		return (1);
+	else if (ft_strcmp(value, "exit") == 0)
+		return (1);
+	else if (ft_strcmp(value, "export") == 0)
+		return (1);
 	else if (ft_strcmp(value, "pwd") == 0)
+		return (1);
+	else if (ft_strcmp(value, "unset") == 0)
 		return (1);
 	return (0);
 }
@@ -57,7 +67,7 @@ void ft_afficher_cmd_args(char **cmd_args, int len)
 }
 
 // Fonction pour afficher une liste de commandes
-void ft_afficher_command_list(t_command *command_list, int i ) 
+void ft_afficher_command_list(t_command *command_list) 
 {
     t_command *current_command = command_list;
     int index;
@@ -68,15 +78,13 @@ void ft_afficher_command_list(t_command *command_list, int i )
         printf("Commande numéro %d:\n", index);
         printf("  cmd_value: %s\n", current_command->cmd_value);
         printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
-        printf("  cmd_args:\n");
-        ft_afficher_cmd_args(current_command->cmd_args, i);
-        
         current_command = current_command->next_cmd;
         index++;
     }
 }
 
-int	ft_determine_nb_args(t_token *token_list)
+//Nombre d'arguments depuis la liste de tokens
+int	ft_determine_nb_args(t_token *token_list) 
 {
 	int i; 
 	t_token *current_token;
@@ -88,7 +96,6 @@ int	ft_determine_nb_args(t_token *token_list)
 		i++;
 		current_token = current_token->next_tok;
 	}
-	printf("Number of args: %d\n", i);
 	return (i); 
 }
 
@@ -123,7 +130,8 @@ int parser(t_shell *shell)
 					new_command->next_cmd = NULL; 
 				}
 				last_command = new_command; 
-				shell->command_list = new_command; 
+				if(last_command->prev_cmd == NULL)
+					shell->command_list = last_command; 				
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
@@ -138,7 +146,7 @@ int parser(t_shell *shell)
 			}
 			current_token = current_token->next_tok;
 		}
-		ft_afficher_command_list(shell->command_list, i); 
+		ft_afficher_command_list(shell->command_list); 
 	}	 
 	return (EXIT_SUCCESS);
 }
