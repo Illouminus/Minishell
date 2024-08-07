@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/15 14:55:33 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/02 11:18:40 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,38 @@ void global_exit_env(t_shell *shell, int status)
 
 void free_shell(t_shell *shell)
 {
-	if (shell)
+	// Очистка списка команд
+	t_command *cmd_temp;
+	char **args;
+	while (shell->command_list)
 	{
-		if (shell->heredoc_tempfile)
+		cmd_temp = shell->command_list;
+		shell->command_list = shell->command_list->next_cmd;
+		free(cmd_temp->cmd_name);
+		args = cmd_temp->cmd_args;
+		while (*args)
 		{
-			free(shell->heredoc_tempfile);
-			shell->heredoc_tempfile = NULL;
+			free(*args);
+			args++;
 		}
-		// if (shell->token_list)
-		// 	free_tokens(&(shell->token_list));
-		// if (shell->command_list)
-		// 	free_commands(&(shell->command_list));
+		free(cmd_temp->cmd_args);
+		free(cmd_temp);
+	}
+
+	// Очистка списка токенов
+	t_token *tok_temp;
+	while (shell->token_list)
+	{
+		tok_temp = shell->token_list;
+		shell->token_list = shell->token_list->next_tok;
+		free(tok_temp->tok_value);
+		free(tok_temp);
+	}
+
+	// Очистка пользовательского ввода
+	if (shell->user_input)
+	{
+		free(shell->user_input);
+		shell->user_input = NULL;
 	}
 }

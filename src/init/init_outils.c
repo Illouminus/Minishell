@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_outils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/16 14:07:51 by ahors            ###   ########.fr       */
+/*   Updated: 2024/08/06 10:59:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ int init_shell(t_shell *shell, char **env)
 	shell->token_list = NULL;
 	shell->command_list = NULL;
 	shell->last_process_id = -2;
-	shell->input_fd = -2;
-	shell->output_fd = -2;
-	shell->pipe_fds[0] = -2;
-	shell->pipe_fds[1] = -2;
 	shell->last_exit_status = 0;
 	shell->heredoc_tempfile = NULL;
 	shell->saved_stdin_fd = -1;
