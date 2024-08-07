@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:50:44 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/07 11:19:10 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/07 12:28:32 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ t_token *ft_create_token(int type, char *value)
 	
 	new_token = (t_token *)malloc(sizeof(t_token));
     if (!new_token)
+    {
+		printf("Error in tokens creation, during create_token\n");
         return(NULL);
+    }
     new_token->tok_type = type;
     new_token->tok_value = ft_strdup(value);
     new_token->next_tok = NULL;
@@ -33,15 +36,20 @@ t_token_type ft_determine_token_type(char *input, int start, int is_first_token)
 {
     t_token_type type;
 
-    if (input[start] == '|') {
+    if (input[start] == '|')
+    {
         type = TOKEN_TYPE_PIPE;
-    } else if (input[start] == '<') {
+    } else if (input[start] == '<') 
+    {
         type = TOKEN_TYPE_REDIR_IN;
-    } else if (input[start] == '>') {
+    } else if (input[start] == '>') 
+    {
         type = TOKEN_TYPE_REDIR_OUT;
-    } else if (is_first_token) {
+    } else if (is_first_token) 
+    {
         type = TOKEN_TYPE_CMD;
-    } else {
+    } else 
+    {
         type = TOKEN_TYPE_ARG;
     }
     return type;
@@ -57,9 +65,8 @@ void ft_add_token(t_shell *shell, t_token *new_token)
     else 
     {
         temp = shell->token_list;
-        while (temp->next_tok != NULL) {
+        while (temp->next_tok != NULL)
             temp = temp->next_tok;
-        }
         temp->next_tok = new_token;
         new_token->prev_tok = temp;
     }
