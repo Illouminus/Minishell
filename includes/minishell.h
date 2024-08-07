@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/07 10:40:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 11:02:16 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
 // Fonctions pour create et add simultanément un token
 void ft_create_add_token(t_shell *shell, int type, char *value);
+void ft_free_cmd_args(char **cmd_args);
 
 // Utils
 int ft_skip_whitespace(char *input, int i);
@@ -170,4 +171,6 @@ void ft_free_array(char **split);
 void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 void ft_close_all_fds(t_shell *shell);
+int ft_isspace(char c);
+void handle_exit(t_shell *shell);
 #endif // MINISHELL_H

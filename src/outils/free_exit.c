@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/02 11:18:40 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 10:46:28 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void free_shell(t_shell *shell)
 	{
 		cmd_temp = shell->command_list;
 		shell->command_list = shell->command_list->next_cmd;
-		free(cmd_temp->cmd_name);
+		free(cmd_temp->cmd_value);
 		args = cmd_temp->cmd_args;
 		while (*args)
 		{

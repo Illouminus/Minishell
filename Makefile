@@ -24,9 +24,13 @@ SRCS = main.c \
        $(SRC_DIR)/executor/outils.c \
        $(SRC_DIR)/init/init_outils.c \
        $(SRC_DIR)/lexer/lexer.c \
+		 $(SRC_DIR)/lexer/ft_token_create_utils.c \
+		 $(SRC_DIR)/lexer/ft_tokenise_utils.c \
        $(SRC_DIR)/outils/error_exit.c \
        $(SRC_DIR)/outils/free_exit.c \
        $(SRC_DIR)/outils/signals.c \
+		 $(SRC_DIR)/outils/ft_free_parsing.c \
+		 $(SRC_DIR)/outils/ft_isspace.c \
        $(SRC_DIR)/parser/parser.c \
 		 $(SRC_DIR)/parser/expander/expander.c \
 

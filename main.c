@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 10:41:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 11:01:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int minishell(char **env)
 
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
 		{
-			g_exit_code = executor(&shell);
+			g_exit_code = ft_executor(&shell, env);
 			// Lines to free token_list between each command --> Put in a separate function
 			while (shell.token_list != NULL)
 			{

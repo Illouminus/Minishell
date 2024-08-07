@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 17:16:46 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 10:49:04 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 	if (!path)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(current->cmd_name, STDERR_FILENO);
+		ft_putstr_fd(current->cmd_value, STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
-	cmd_args = ft_construct_cmd_args(current->cmd_name, current->cmd_args);
+	cmd_args = ft_construct_cmd_args(current->cmd_value, current->cmd_args);
 	if (execve(path, cmd_args, env) == -1)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(current->cmd_name, STDERR_FILENO);
+		ft_putstr_fd(current->cmd_value, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putstr_fd(strerror(errno), STDERR_FILENO);
 		ft_putstr_fd("\n", STDERR_FILENO);
@@ -41,19 +41,19 @@ void ft_exec_builtins(t_shell *shell)
 {
 	t_command *current = shell->command_list;
 
-	if (ft_strcmp(current->cmd_name, "echo") == 0)
+	if (ft_strcmp(current->cmd_value, "echo") == 0)
 		shell->last_exit_status = ft_builtin_echo(current);
-	else if (ft_strcmp(current->cmd_name, "cd") == 0)
+	else if (ft_strcmp(current->cmd_value, "cd") == 0)
 		shell->last_exit_status = ft_builtin_cd(current, shell);
-	else if (ft_strcmp(current->cmd_name, "pwd") == 0)
+	else if (ft_strcmp(current->cmd_value, "pwd") == 0)
 		shell->last_exit_status = ft_builtin_pwd(current);
-	else if (ft_strcmp(current->cmd_name, "export") == 0)
+	else if (ft_strcmp(current->cmd_value, "export") == 0)
 		shell->last_exit_status = ft_builtin_export(current, shell->env_var_list);
-	else if (ft_strcmp(current->cmd_name, "unset") == 0)
+	else if (ft_strcmp(current->cmd_value, "unset") == 0)
 		shell->last_exit_status = ft_builtin_export(current, shell->env_var_list);
-	else if (ft_strcmp(current->cmd_name, "env") == 0)
+	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
-	else if (ft_strcmp(current->cmd_name, "exit") == 0)
+	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		shell->last_exit_status = ft_builtin_exit();
 }
 

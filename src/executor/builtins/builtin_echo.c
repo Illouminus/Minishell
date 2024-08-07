@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:15 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/01 16:35:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 10:48:06 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int ft_builtin_echo(t_command *cmd)
 	i = 0;
 	newline = true;
 
-	if (cmd->cmd_name && !ft_strcmp(cmd->cmd_args[0], "-n"))
+	if (cmd->cmd_value && !ft_strcmp(cmd->cmd_args[0], "-n"))
 	{
 		newline = false;
 		i++;

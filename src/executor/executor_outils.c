@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 11:10:53 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 10:48:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char *ft_get_path(t_command *current, t_shell *shell)
 	while (split[i])
 	{
 		path_part = ft_strjoin(split[i], "/");
-		exec = ft_strjoin(path_part, current->cmd_name);
+		exec = ft_strjoin(path_part, current->cmd_value);
 		free(path_part);
 		if (access(exec, F_OK) == 0)
 		{
