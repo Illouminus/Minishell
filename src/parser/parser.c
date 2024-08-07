@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 11:49:00 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/07 12:06:08 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void ft_afficher_cmd_args(char **cmd_args, int len)
 }
 
 // Fonction pour afficher une liste de commandes
-void ft_afficher_command_list(t_command *command_list, int i ) 
+void ft_afficher_command_list(t_command *command_list) 
 {
     t_command *current_command = command_list;
     int index;
@@ -78,9 +78,6 @@ void ft_afficher_command_list(t_command *command_list, int i )
         printf("Commande numéro %d:\n", index);
         printf("  cmd_value: %s\n", current_command->cmd_value);
         printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
-        printf("  cmd_args:\n");
-        ft_afficher_cmd_args(current_command->cmd_args, i);
-        
         current_command = current_command->next_cmd;
         index++;
     }
@@ -99,7 +96,6 @@ int	ft_determine_nb_args(t_token *token_list)
 		i++;
 		current_token = current_token->next_tok;
 	}
-	printf("Number of args: %d\n", i);
 	return (i); 
 }
 
@@ -135,7 +131,7 @@ int parser(t_shell *shell)
 				}
 				last_command = new_command; 
 				if(last_command->prev_cmd == NULL)
-					shell->command_list = last_command; 
+					shell->command_list = last_command; 				
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
@@ -145,13 +141,12 @@ int parser(t_shell *shell)
 			else if (current_token->tok_type == TOKEN_TYPE_PIPE)
 			{
 				new_command = ft_new_command_init(new_command, current_token, 0); // On créer une nouvelle commande
-				printf("Pipe was created with '%s' as his value\n", new_command->cmd_value);
 				new_command->prev_cmd = last_command;  // On relie le pipe à la dernière commande
 				last_command = new_command; // Le pipe devient la dernière commande
 			}
 			current_token = current_token->next_tok;
 		}
-		ft_afficher_command_list(shell->command_list, i); 
+		ft_afficher_command_list(shell->command_list); 
 	}	 
 	return (EXIT_SUCCESS);
 }
