@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 10:48:39 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 12:28:42 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ void ft_pipe(t_command *current, t_shell *shell)
 	{
 		if (pipe(current->pipe_fds) == -1)
 			ft_exit_error(shell, "pipe failed"); // TODO: handle error
+		else
+		{
+			printf("Pipe created: %d, %d\n", current->pipe_fds[0], current->pipe_fds[1]);
+		}
 	}
 	shell->last_process_id = fork();
 

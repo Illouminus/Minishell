@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 12:06:08 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/07 13:00:26 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int ft_cmd_is_built_in(char *value)
 {
 	if (ft_strcmp(value, "cd") == 0)
-		return (1); 
+		return (1);
 	else if (ft_strcmp(value, "echo") == 0)
 		return (1);
 	else if (ft_strcmp(value, "env") == 0)
@@ -31,10 +31,10 @@ int ft_cmd_is_built_in(char *value)
 	return (0);
 }
 
-t_command	*ft_new_command_init(t_command *command, t_token *current_token, int nb_of_args)
+t_command *ft_new_command_init(t_command *command, t_token *current_token, int nb_of_args)
 {
 	command = malloc(sizeof(t_command));
-	if (!command) 
+	if (!command)
 	{
 		printf("Error in parser, during new_command_init\n");
 		return (NULL);
@@ -43,73 +43,72 @@ t_command	*ft_new_command_init(t_command *command, t_token *current_token, int n
 	command->cmd_args = malloc(nb_of_args * sizeof(char *));
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->redir_tokens = NULL;
-	command->prev_cmd = NULL; 
-	command->next_cmd = NULL; 
-	return (command); 
+	command->prev_cmd = NULL;
+	command->next_cmd = NULL;
+	return (command);
 }
 
-void ft_afficher_cmd_args(char **cmd_args, int len) 
+void ft_afficher_cmd_args(char **cmd_args, int len)
 {
-	int i; 
+	int i;
 
-    if (cmd_args == NULL) 
+	if (cmd_args == NULL)
 	{
-        printf("Le tableau est vide.\n");
-        return;
-    }
-    
-	i = 0; 
+		printf("Le tableau est vide.\n");
+		return;
+	}
+
+	i = 0;
 	while (i < len)
 	{
-        printf("cmd_args[%d]: %s\n", i, cmd_args[i]);
+		printf("cmd_args[%d]: %s\n", i, cmd_args[i]);
 		i++;
-    }
+	}
 }
 
 // Fonction pour afficher une liste de commandes
-void ft_afficher_command_list(t_command *command_list) 
+void ft_afficher_command_list(t_command *command_list)
 {
-    t_command *current_command = command_list;
-    int index;
-    
-	index = 0; 
-    while (current_command)
+	t_command *current_command = command_list;
+	int index;
+
+	index = 0;
+	while (current_command)
 	{
-        printf("Commande numéro %d:\n", index);
-        printf("  cmd_value: %s\n", current_command->cmd_value);
-        printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
-        current_command = current_command->next_cmd;
-        index++;
-    }
+		printf("Commande numéro %d:\n", index);
+		printf("  cmd_value: %s\n", current_command->cmd_value);
+		printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
+		current_command = current_command->next_cmd;
+		index++;
+	}
 }
 
-//Nombre d'arguments depuis la liste de tokens
-int	ft_determine_nb_args(t_token *token_list) 
+// Nombre d'arguments depuis la liste de tokens
+int ft_determine_nb_args(t_token *token_list)
 {
-	int i; 
+	int i;
 	t_token *current_token;
 
-	i = 0; 
-	current_token = token_list; 
+	i = 0;
+	current_token = token_list;
 	while (current_token->next_tok != NULL && current_token->next_tok->tok_type == TOKEN_TYPE_ARG)
 	{
 		i++;
 		current_token = current_token->next_tok;
 	}
-	return (i); 
+	return (i);
 }
 
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
 {
-	t_token		*current_token; 
-	t_command	*new_command; 
-	t_command	*last_command;
-	int	cmd_nb_args; 
-	int i; 
-	
+	t_token *current_token;
+	t_command *new_command;
+	t_command *last_command;
+	int cmd_nb_args;
+	int i;
 
-	last_command = NULL; 
+	last_command = NULL;
 	current_token = shell->token_list;
 	if (!shell->user_input)
 		return (EXIT_FAILURE);
@@ -119,19 +118,19 @@ int parser(t_shell *shell)
 	{
 		while (current_token)
 		{
-			if(current_token->tok_type == TOKEN_TYPE_CMD)
+			if (current_token->tok_type == TOKEN_TYPE_CMD)
 			{
-				cmd_nb_args = ft_determine_nb_args(current_token); 
+				cmd_nb_args = ft_determine_nb_args(current_token);
 				i = 0; // On mets i à 0 pour le tableau d'args de la commande
-				new_command = ft_new_command_init(new_command, current_token, cmd_nb_args); 
-				if(last_command != NULL)
+				new_command = ft_new_command_init(new_command, current_token, cmd_nb_args);
+				if (last_command != NULL)
 				{
-					new_command->prev_cmd = last_command; 
-					new_command->next_cmd = NULL; 
+					new_command->prev_cmd = last_command;
+					new_command->next_cmd = NULL;
 				}
-				last_command = new_command; 
-				if(last_command->prev_cmd == NULL)
-					shell->command_list = last_command; 				
+				last_command = new_command;
+				if (last_command->prev_cmd == NULL)
+					shell->command_list = last_command;
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
@@ -141,12 +140,12 @@ int parser(t_shell *shell)
 			else if (current_token->tok_type == TOKEN_TYPE_PIPE)
 			{
 				new_command = ft_new_command_init(new_command, current_token, 0); // On créer une nouvelle commande
-				new_command->prev_cmd = last_command;  // On relie le pipe à la dernière commande
-				last_command = new_command; // Le pipe devient la dernière commande
+				new_command->prev_cmd = last_command;										// On relie le pipe à la dernière commande
+				last_command = new_command;													// Le pipe devient la dernière commande
 			}
 			current_token = current_token->next_tok;
 		}
-		ft_afficher_command_list(shell->command_list); 
-	}	 
+		ft_afficher_command_list(shell->command_list);
+	}
 	return (EXIT_SUCCESS);
 }

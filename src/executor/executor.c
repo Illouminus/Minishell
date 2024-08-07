@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 11:43:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 12:38:07 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int ft_executor(t_shell *shell, char **env)
 	{
 		while (current)
 		{
+			printf("Command: %s\n", current->cmd_value);
 			ft_pipe(current, shell);
 			if (shell->last_process_id == 0)
 				ft_child_process(current, shell, prev_fd, env);
