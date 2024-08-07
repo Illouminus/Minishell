@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 10:43:11 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/07 12:28:33 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void ft_tokenize_input(char *input, t_shell *shell)
 		ft_create_add_token(shell, type, token_value);
 		free(token_value);
 	}
+	
 }
 
 // Generate the tokens from the shell->user_input
