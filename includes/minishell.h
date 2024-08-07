@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/24 11:37:05 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/06 17:11:06 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,10 @@ typedef struct s_command
 	t_token *redir_tokens;		 // Liste des redirections associées à la commande
 	struct s_command *next_cmd; // Pointeur vers la commande suivante
 	struct s_command *prev_cmd; // Pointeur vers la commande précédente
+	char *heredoc_marker;		 // Marqueur pour le heredoc
+	char *input_file;				 // Descripteur de fichier pour la redirection d'entrée
+	char *output_file;			 // Descripteur de fichier pour la redirection de sortie
+	int pipe_fds[2];				 // Descripteurs pour les pipes
 } t_command;
 
 // Structyre pour env
@@ -81,10 +85,7 @@ typedef struct s_shell
 	char *user_input;			 // Entrée de l'utilisateur
 	t_token *token_list;		 // Liste des tokens générés par le lexer
 	t_command *command_list; // Liste des commandes générées par le parser
-	int input_fd;				 // Descripteur de fichier pour la redirection d'entrée
-	int output_fd;				 // Descripteur de fichier pour la redirection de sortie
 	pid_t last_process_id;	 // PID du dernier processus exécuté
-	int pipe_fds[2];			 // Descripteurs pour les pipes
 	int wait_status;			 // Statut de la dernière commande exécutée
 	char *command_path;		 // Chemin complet vers l'exécutable de la commande
 	char **env_vars;			 // Tableau des variables d'environnement
@@ -123,18 +124,29 @@ void global_exit_env(t_shell *shell, int status);
 void free_env_var_list(t_env *env);
 int lexer(t_shell *shell);
 int parser(t_shell *shell);
-int executor(t_shell *shell);
 void handle_sigint(int sig);
 void setup_signal_handlers(void);
 void print_error(char *cmd, char *error_message);
-int ft_builtin_pwd(t_command *commands);
-void ft_get_all_env_vars(t_env *env_list);
+// void ft_get_all_env_vars(t_env *env_list);
 
+// Builtin functions
 int ft_builtin_cd(t_command *cmd, t_shell *shell);
 int ft_builtin_echo(t_command *cmd);
 int ft_builtin_env(t_env *env);
-int ft_builtin_exit(t_env *env);
+int ft_builtin_exit();
 int ft_builtin_export(t_command *cmd, t_env *env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
+
+// Executor functions
+int ft_executor(t_shell *shell, char **env);
+char **ft_construct_cmd_args(char *cmd_name, char **cmd_args);
+char *ft_get_path(t_command *current, t_shell *shell);
+void handle_redirections(t_command *current, int prev_fd);
+void ft_pipe(t_command *current, t_shell *shell);
+void ft_free_array(char **split);
+
+void free_shell(t_shell *shell);
+int ft_heredoc_handler(t_command *command, t_shell *shell);
+void ft_close_all_fds(t_shell *shell);
 #endif // MINISHELL_H

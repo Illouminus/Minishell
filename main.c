@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/18 11:21:41 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/02 11:19:53 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ int minishell(char **env)
 		handle_exit(&shell);
 
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
-			g_exit_code = executor(&shell);
-
+			g_exit_code = ft_executor(&shell, env);
 		else
 		{
 			g_exit_code = 1;
 			printf("Parser or lexer presented an issue\n");
 		}
-		// TODO free_shell(shell) function is not implemented
+		free_shell(&shell);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/24 11:20:00 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/01 11:21:33 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int check_for_arguments(t_command *commands, t_shell *shell)
 	if (commands->cmd_args[1])
 	{
 		if (commands->cmd_args[1][0] == '-' && !commands->cmd_args[1][1])
-			return ft_cd_minus(shell, 1);
+			return ft_fd_minus(shell, 1);
 		else if (commands->cmd_args[1][0] == '-' && commands->cmd_args[1][1] == '-' && !commands->cmd_args[1][2])
-			return ft_cd_minus(shell, 0);
+			return ft_fd_minus(shell, 0);
 		else if (commands->cmd_args[1][0] == '-' && commands->cmd_args[1][1])
 		{
 			print_error("cd", "invalid option");

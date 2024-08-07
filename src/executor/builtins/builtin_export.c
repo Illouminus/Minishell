@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:22 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/23 11:07:56 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/01 11:26:38 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static void ft_export_variable(t_env *env_list, char *var)
 {
 	char *var_name;
 	char *var_value;
-	t_env *current;
 
 	var_name = ft_strndup(var, ft_strchr(var, '=') - var);
 	if (!var_name || ft_check_var_name(var_name) == 1)
@@ -56,7 +55,7 @@ static void ft_export_variable(t_env *env_list, char *var)
 	}
 	var_value = ft_strchr(var, '=') + 1;
 
-	ft_setenv(env_list, var_name, var_value);
+	ft_setenv(&env_list, var_name, var_value);
 }
 
 int ft_builtin_export(t_command *cmd, t_env *env_list)
