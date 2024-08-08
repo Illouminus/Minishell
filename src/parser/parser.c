@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 13:00:26 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 07:59:45 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ void ft_afficher_cmd_args(char **cmd_args, int len)
 // Fonction pour afficher une liste de commandes
 void ft_afficher_command_list(t_command *command_list)
 {
-	t_command *current_command = command_list;
+	t_command *current_command;
 	int index;
 
 	index = 0;
+	current_command = command_list;
 	while (current_command)
 	{
 		printf("Commande numéro %d:\n", index);
@@ -96,6 +97,7 @@ int ft_determine_nb_args(t_token *token_list)
 		i++;
 		current_token = current_token->next_tok;
 	}
+	printf("Nb of args : %d\n", i);
 	return (i);
 }
 
@@ -123,29 +125,27 @@ int parser(t_shell *shell)
 				cmd_nb_args = ft_determine_nb_args(current_token);
 				i = 0; // On mets i à 0 pour le tableau d'args de la commande
 				new_command = ft_new_command_init(new_command, current_token, cmd_nb_args);
-				if (last_command != NULL)
+				if (last_command)
 				{
+					last_command->next_cmd = new_command;
 					new_command->prev_cmd = last_command;
-					new_command->next_cmd = NULL;
+				}
+				else
+				{
+					shell->command_list = new_command;
 				}
 				last_command = new_command;
-				if (last_command->prev_cmd == NULL)
-					shell->command_list = last_command;
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
 				last_command->cmd_args[i] = ft_strdup(current_token->tok_value);
 				i++;
 			}
-			else if (current_token->tok_type == TOKEN_TYPE_PIPE)
-			{
-				new_command = ft_new_command_init(new_command, current_token, 0); // On créer une nouvelle commande
-				new_command->prev_cmd = last_command;										// On relie le pipe à la dernière commande
-				last_command = new_command;													// Le pipe devient la dernière commande
-			}
 			current_token = current_token->next_tok;
 		}
 		ft_afficher_command_list(shell->command_list);
 	}
+	if (last_command && last_command->cmd_args)
+		last_command->cmd_args[i] = NULL;
 	return (EXIT_SUCCESS);
 }

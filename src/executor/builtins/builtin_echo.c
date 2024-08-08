@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:15 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 11:54:31 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/07 12:41:29 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int ft_builtin_echo(t_command *cmd)
 		newline = false;
 		i++;
 	}
-	while (cmd->cmd_args[i + 1])
+	while (cmd->cmd_args[i])
 	{
 		ft_putstr_fd(cmd->cmd_args[i], STDOUT_FILENO);
 		if (cmd->cmd_args[i + 1])
