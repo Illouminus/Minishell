@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/07 12:48:15 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/08 14:26:11 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,5 +163,6 @@ void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
+char *ft_expander(char *str, t_shell *shell);
 
 #endif // MINISHELL_H

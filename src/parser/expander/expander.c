@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 17:18:21 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 14:27:09 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *expander(char *str, t_shell *shell)
+char *ft_expander(char *str, t_shell *shell)
 {
 	int i = 0;
 	int len = ft_strlen(str);
@@ -39,9 +39,7 @@ char *expander(char *str, t_shell *shell)
 			free(var_name);
 		}
 		else
-		{
-			result[j++] = str[i++];
-		}
+			return (ft_strdup(str)); 
 	}
 	result[j] = '\0';
 	free(str);

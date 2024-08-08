@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 12:54:48 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/08 14:55:35 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ t_command	*ft_new_command_init(t_command *command, t_token *current_token, int n
 		return (NULL);
 	}
 	command->cmd_value = ft_strdup(current_token->tok_value);
-	command->cmd_args = malloc(nb_of_args * sizeof(char *));
+	command->cmd_args = malloc((nb_of_args + 1 )* sizeof(char *));
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->redir_tokens = NULL;
 	command->prev_cmd = NULL; 
 	command->next_cmd = NULL; 
+	command->input_file = NULL; 
+	command->output_file = NULL; 
 	return (command); 
 }
 
@@ -139,7 +141,23 @@ int parser(t_shell *shell)
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
-				last_command->cmd_args[i] = ft_strdup(current_token->tok_value);
+				//last_command->cmd_args[i] = ft_strdup(current_token->tok_value);
+				//TODO - Expander of variables 
+				last_command->cmd_args[i] = ft_expander(current_token->tok_value, shell); 
+				i++;
+			}
+			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
+			{
+				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
+				{
+					last_command->input_file = ft_expander(current_token->next_tok->tok_value, shell); 
+					printf("Last Command Input File : %s\n", last_command->input_file); 
+				}
+				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
+				{
+					last_command->output_file = ft_expander(current_token->next_tok->tok_value, shell); 
+					printf("Last Command Output File : %s\n", last_command->output_file); 
+				}
 				i++;
 			}
 			current_token = current_token->next_tok;
