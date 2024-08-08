@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 14:46:45 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 15:35:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int parser(t_shell *shell)
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG)
 			{
-				last_command->cmd_args[i] = ft_strdup(current_token->tok_value);
+				last_command->cmd_args[i] = ft_expander(current_token->tok_value, shell);
 				i++;
 			}
 			current_token = current_token->next_tok;

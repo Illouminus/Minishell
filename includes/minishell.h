@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/08 10:15:18 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 17:41:07 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,4 +164,10 @@ int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
 
+/*Expander */
+
+char *ft_expander(char *str, t_shell *shell);
+void add_char_to_result(char **result, int *j, char c);
+int is_var_char(char c);
+char *extract_var_name(const char *str, int *i);
 #endif // MINISHELL_H
