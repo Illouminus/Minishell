@@ -13,3 +13,7 @@ minishell
 
 # Unwanted Files after compiling
 .vscode/settings.json
+
+
+#testing Code
+input.txt

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 11:01:51 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 15:14:22 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,15 @@ int minishell(char **env)
 				temp_command = shell.command_list;
 				shell.command_list = shell.command_list->next_cmd;
 				free(temp_command->cmd_value);
-				printf("Command Value was freed\n");
+				// printf("Command Value was freed\n");
 				ft_free_cmd_args(temp_command->cmd_args);
-				printf("Command Args was freed\n");
+				// printf("Command Args was freed\n");
+				if (temp_command->input_file)
+					free(temp_command->input_file);
+				if (temp_command->output_file)
+					free(temp_command->output_file);
 				free(temp_command);
-				printf("Command was freed\n");
+				// printf("Command was freed\n");
 			}
 		}
 		else
