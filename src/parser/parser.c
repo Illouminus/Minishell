@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 07:59:45 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 14:46:45 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ t_command *ft_new_command_init(t_command *command, t_token *current_token, int n
 		return (NULL);
 	}
 	command->cmd_value = ft_strdup(current_token->tok_value);
-	command->cmd_args = malloc(nb_of_args * sizeof(char *));
+	command->cmd_args = malloc((nb_of_args + 1) * sizeof(char *));
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->redir_tokens = NULL;
 	command->prev_cmd = NULL;
 	command->next_cmd = NULL;
+	command->output_file = NULL;
+	command->input_file = NULL;
 	return (command);
 }
 
@@ -97,7 +99,6 @@ int ft_determine_nb_args(t_token *token_list)
 		i++;
 		current_token = current_token->next_tok;
 	}
-	printf("Nb of args : %d\n", i);
 	return (i);
 }
 
@@ -143,7 +144,7 @@ int parser(t_shell *shell)
 			}
 			current_token = current_token->next_tok;
 		}
-		ft_afficher_command_list(shell->command_list);
+		// ft_afficher_command_list(shell->command_list);
 	}
 	if (last_command && last_command->cmd_args)
 		last_command->cmd_args[i] = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 12:28:33 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/08 12:55:08 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void ft_print_tokens(t_token *token_list)
 {
 	t_token *current = token_list;
-	printf("RÉSULTAT DU LEXER\n");
 	while (current != NULL)
 	{
 
@@ -82,14 +81,12 @@ void ft_tokenize_input(char *input, t_shell *shell)
 		ft_create_add_token(shell, type, token_value);
 		free(token_value);
 	}
-	
 }
 
 // Generate the tokens from the shell->user_input
 int lexer(t_shell *shell)
 {
 
-	printf("User input: %s\n", shell->user_input);
 	if (!shell->user_input)
 	{
 		printf("No user input received in lexer\n");
@@ -102,7 +99,7 @@ int lexer(t_shell *shell)
 	}
 
 	ft_tokenize_input(shell->user_input, shell);
-	ft_print_tokens(shell->token_list);
+	// ft_print_tokens(shell->token_list);
 	add_history(shell->user_input);
 	return (0);
 }

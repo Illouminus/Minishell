@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/01 11:21:33 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 12:44:33 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,24 @@ int ft_fd_minus(t_shell *shell, int option)
 
 int check_for_arguments(t_command *commands, t_shell *shell)
 {
-	if (commands->cmd_args[1])
+	if (commands->cmd_args[0])
 	{
-		if (commands->cmd_args[1][0] == '-' && !commands->cmd_args[1][1])
+		if ((ft_strcmp(commands->cmd_args[0], "-") == 0))
 			return ft_fd_minus(shell, 1);
-		else if (commands->cmd_args[1][0] == '-' && commands->cmd_args[1][1] == '-' && !commands->cmd_args[1][2])
+		else if ((ft_strcmp(commands->cmd_args[0], "--") == 0))
 			return ft_fd_minus(shell, 0);
-		else if (commands->cmd_args[1][0] == '-' && commands->cmd_args[1][1])
-		{
-			print_error("cd", "invalid option");
-			return 2;
-		}
-		else if (chdir(commands->cmd_args[1]) == -1)
+		else if (chdir(commands->cmd_args[0]) == -1)
 		{
 			ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
 			perror(commands->cmd_args[1]);
 			return 1;
 		}
-		ft_update_pwd(shell, commands->cmd_args[1]);
+		else
+		{
+			print_error("cd", "invalid option");
+			return 1;
+		}
+		ft_update_pwd(shell, commands->cmd_args[0]);
 	}
 	return 0;
 }
@@ -96,11 +96,13 @@ int ft_builtin_cd(t_command *cmd, t_shell *shell)
 {
 	char *value;
 
-	if (cmd->cmd_args[2])
+	if (cmd->cmd_args[1] != NULL)
+	{
 		print_error("cd", "too many arguments");
-	return 1;
+		return 1;
+	}
 
-	if (!cmd->cmd_args[1])
+	if (!cmd->cmd_args[0])
 	{
 		value = ft_getenv(shell->env_var_list, "HOME");
 		if (!value)
