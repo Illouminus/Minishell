@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 13:49:51 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/09 09:10:52 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int g_exit_code;
 int minishell(char **env)
 {
 	t_shell shell;
-	t_token *temp;
-	t_command *temp_command;
 
 	if (init_shell(&shell, env) == 1)
 		return (1);
@@ -39,22 +37,6 @@ int minishell(char **env)
 			g_exit_code = ft_executor(&shell, env);
 			printf("exit status %d\n", g_exit_code);
 			shell.last_exit_status = g_exit_code;
-			// Lines to free token_list between each command --> Put in a separate function
-			while (shell.token_list != NULL)
-			{
-				temp = shell.token_list;
-				shell.token_list = shell.token_list->next_tok;
-				free(temp->tok_value);
-				free(temp);
-			}
-			while (shell.command_list != NULL)
-			{
-				temp_command = shell.command_list;
-				shell.command_list = shell.command_list->next_cmd;
-				free(temp_command->cmd_value);
-				ft_free_cmd_args(temp_command->cmd_args);
-				free(temp_command);
-			}
 		}
 		else
 		{
@@ -64,8 +46,6 @@ int minishell(char **env)
 		}
 	}
 	free_shell(&shell);
-	exit(shell.last_exit_status);
-	printf("exit status %d\n", shell.last_exit_status);
 	return (EXIT_SUCCESS);
 }
 
