@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/08 14:26:11 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/09 16:17:03 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void ft_free_cmd_args(char **cmd_args);
 
 /* Utils */
 int ft_skip_whitespace(char *input, int i);
-int ft_handle_quotes(char *input, int i, char *quote_char);
+int ft_handle_quotes(char *input, int i);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token); // TODO check if it's needed
 void ft_tokenize_input(char *input, t_shell *shell);
 int lexer(t_shell *shell);

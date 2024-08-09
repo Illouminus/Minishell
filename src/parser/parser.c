@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 15:56:10 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/09 17:39:16 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ void ft_afficher_command_list(t_command *command_list)
         printf("Commande numéro %d:\n", index);
         printf("  cmd_value: %s\n", current_command->cmd_value);
         printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
+		printf("  command Input File: %s\n", current_command->input_file);
+		printf("  command Output File: %s\n", current_command->output_file);
+		printf("  command args: %s\n", current_command->cmd_args[0]);
+		printf("  command args: %s\n", current_command->cmd_args[1]);
         current_command = current_command->next_cmd;
         index++;
     }
@@ -127,7 +131,7 @@ char *ft_clean_token_value(const char *token)
         return cleaned;
     } else {
         // Retourner une copie de la chaîne originale si elle n'est pas entourée de guillemets
-        return strdup(token);
+        return ft_strdup(token);
     }
 }
 
@@ -169,25 +173,23 @@ int parser(t_shell *shell)
 				}
 				last_command = new_command;				
 			}
-			else if (current_token->tok_type == TOKEN_TYPE_ARG)
-			{
-				//TO FIX - Expander of variables 
-				printf("Command Value Cleaned: %s\n", cmd_value_clean); 
-				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell); 
-				i++;
-			}
 			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 			{
 				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
 				{
 					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell); 
-					printf("Last Command Input File : %s\n", last_command->input_file); 
+					printf("Command Input File : %s\n", last_command->input_file);
 				}
 				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 				{
-					last_command->output_file = ft_expander(current_token->next_tok->tok_value, shell); 
-					// printf("Last Command Output File : %s\n", last_command->output_file); 
+					last_command->output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell); 
+					printf("Command Output File : %s\n", last_command->output_file);
 				}
+			}
+			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
+			{
+				printf("Command Arg Cleaned: %s\n", cmd_value_clean); 
+				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell); 
 				i++;
 			}
 			current_token = current_token->next_tok;
