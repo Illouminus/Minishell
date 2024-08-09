@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 17:42:11 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/09 11:39:37 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,21 @@ void handle_env_variable(const char *str, int *i, char **result, int *j, int *le
 	}
 }
 
+void handle_exit_status(char **result, int *j, t_shell *shell)
+{
+	char *exit_status_str;
+	int exit_len;
+
+	exit_status_str = ft_itoa(shell->last_exit_status);
+	if (exit_status_str)
+	{
+		exit_len = ft_strlen(exit_status_str);
+		ft_strncpy(&(*result)[*j], exit_status_str, exit_len);
+		*j += exit_len;
+		free(exit_status_str);
+	}
+}
+
 char *ft_expander(char *str, t_shell *shell)
 {
 	int i;
@@ -88,6 +103,11 @@ char *ft_expander(char *str, t_shell *shell)
 	{
 		if (str[i] == '$' && is_var_char(str[i + 1]))
 			handle_env_variable(str, &i, &result, &j, &final_len, shell);
+		else if (str[i] == '$' && str[i + 1] == '?')
+		{
+			i += 2;
+			handle_exit_status(&result, &j, shell);
+		}
 		else
 			add_char_to_result(&result, &j, str[i++]);
 	}

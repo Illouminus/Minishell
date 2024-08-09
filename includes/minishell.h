@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/08 17:41:07 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/09 11:19:15 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct s_shell
 	char **env_vars;
 	char *heredoc_tempfile;
 	int saved_stdin_fd;
+	int tmp_proccess_status;
 	int last_exit_status;
 	t_env *env_var_list;
 } t_shell;
@@ -157,6 +158,7 @@ char *ft_get_path(t_command *current, t_shell *shell);
 void handle_redirections(t_command *current, int prev_fd);
 void ft_pipe(t_command *current, t_shell *shell);
 void ft_free_array(char **split);
+void wait_commands(t_shell *shell);
 
 /* Fonctions utilitaires */
 void free_shell(t_shell *shell);
