@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/09 11:23:41 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 09:19:25 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int minishell(char **env)
 			g_exit_code = 1;
 			shell.last_exit_status = g_exit_code;
 		}
+		free_shell(&shell);
 	}
 	free_shell(&shell);
 	return (EXIT_SUCCESS);

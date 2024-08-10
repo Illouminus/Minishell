@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 12:44:33 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 12:37:34 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,6 @@ int check_for_arguments(t_command *commands, t_shell *shell)
 		{
 			ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
 			perror(commands->cmd_args[1]);
-			return 1;
-		}
-		else
-		{
-			print_error("cd", "invalid option");
 			return 1;
 		}
 		ft_update_pwd(shell, commands->cmd_args[0]);

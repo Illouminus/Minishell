@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/09 11:19:15 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 13:46:29 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,10 +146,10 @@ void print_error(char *cmd, char *error_message);
 int ft_builtin_cd(t_command *cmd, t_shell *shell);
 int ft_builtin_echo(t_command *cmd);
 int ft_builtin_env(t_env *env);
-int ft_builtin_exit(void);
 int ft_builtin_export(t_command *cmd, t_env *env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
+void ft_builtin_exit(t_command *commands, t_shell *shell);
 
 /* Fonctions d'exécution */
 int ft_executor(t_shell *shell, char **env);

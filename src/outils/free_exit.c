@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/09 10:59:20 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 09:19:28 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,5 @@ void free_shell(t_shell *shell)
 		free(shell->user_input);
 		shell->user_input = NULL;
 	}
-	exit(shell->last_exit_status);
+	//	exit(shell->last_exit_status);
 }
