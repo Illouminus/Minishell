@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/10 13:54:34 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/11 10:05:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,24 @@ static void handle_exit_error(const char *arg, t_shell *shell)
 
 static int get_exit_status(const char *arg, t_shell *shell)
 {
-	int stat = ft_atoi(arg);
+	long stat = ft_atol(arg);
 
 	if (errno == ERANGE)
 		handle_exit_error(arg, shell);
+	const char *ptr = arg;
+	while (*ptr && (*ptr == ' ' || *ptr == '\t' || *ptr == '\n' ||
+						 *ptr == '+' || *ptr == '-'))
+		ptr++;
+	while (*ptr && (*ptr >= '0' && *ptr <= '9'))
+		ptr++;
 
-	if (stat > 255)
-		return (stat % 256);
-	else if (stat < 0)
-		return ((stat % 256) + 256);
+	if (*ptr != '\0')
+		handle_exit_error(arg, shell);
 
-	return stat;
+	if (stat > 255 || stat < 0)
+		stat = (unsigned char)stat;
+
+	return (int)stat;
 }
 
 void ft_builtin_exit(t_command *commands, t_shell *shell)

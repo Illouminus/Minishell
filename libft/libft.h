@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 13:39:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/07/04 12:54:57 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/11 10:02:55 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,5 +122,7 @@ char *ft_strndup(const char *str, size_t n);
 char *get_next_line(int fd);
 
 int ft_strcmp(const char *s1, const char *s2);
+
+long ft_atol(const char *str);
 
 #endif

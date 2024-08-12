@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/10 12:34:31 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/12 15:16:04 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void ft_setenv(t_env **env_list, const char *name, const char *value)
 }
 
 // Функция для обработки сигнала завершения процесса
-static void handle_exit_status(t_shell *shell)
+/*static void handle_exit_status(t_shell *shell)
 {
 	if (WIFEXITED(shell->tmp_proccess_status))
 	{
@@ -79,9 +79,10 @@ static void handle_exit_status(t_shell *shell)
 		}
 	}
 }
+*/
 
 // Функция ожидания завершения всех дочерних процессов
-void wait_commands(t_shell *shell)
+/*void wait_commands(t_shell *shell)
 {
 	signal(SIGINT, SIG_IGN); // Игнорируем сигнал SIGINT (Ctrl+C) во время ожидания
 
@@ -99,4 +100,34 @@ void wait_commands(t_shell *shell)
 	{
 		shell->last_exit_status = 130;
 	}
+}*/
+void wait_commands(t_shell *shell)
+{
+	signal(SIGINT, SIG_IGN);
+	int result;
+
+	while (errno != ECHILD)
+	{
+		result = wait(&shell->tmp_proccess_status);
+		if (result == shell->last_process_id)
+		{
+			if (WIFEXITED(shell->tmp_proccess_status))
+			{
+				shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
+			}
+			else
+			{
+				shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
+				if (shell->last_exit_status == 131)
+					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+				else if (shell->last_exit_status == 139)
+					ft_putstr_fd("Segmentation fault (core dumped)\n", STDERR_FILENO);
+			}
+			if (shell->last_exit_status == 130)
+				ft_putstr_fd("\n", STDERR_FILENO);
+		}
+	}
+
+	if (g_exit_code == 130)
+		shell->last_exit_status = 130;
 }
