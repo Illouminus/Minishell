@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/11 10:05:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/12 18:55:47 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void ft_builtin_exit(t_command *commands, t_shell *shell)
 	{
 		if (commands->cmd_args[1])
 		{
-			perror("too many arguments");
+			ft_putstr_fd(" too many arguments", STDERR_FILENO);
 			shell->last_exit_status = 1;
 			return;
 		}
