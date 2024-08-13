@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 10:36:51 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/13 10:40:05 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,6 @@ int parser(t_shell *shell)
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
 			{
-				printf("Command Arg Cleaned: %s\n", cmd_value_clean);
 				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell);
 				i++;
 			}
