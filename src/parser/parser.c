@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 10:57:00 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/13 17:11:05 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,33 +110,45 @@ int ft_determine_nb_args(t_token *token_list)
 // Gestion des guillemets dans les value des tokens | Value propre prête à envoyer à la création de commandes
 char *ft_clean_token_value(const char *token)
 {
-	size_t len = strlen(token);
+    size_t len = ft_strlen(token);
+    size_t i = 0;
+    size_t j = 0;
+    int inside_single_quote = 0;
+    int inside_double_quote = 0;
 
-	// Vérifier que la chaîne est entourée de guillemets simples ou doubles
-	if (len >= 2 &&
-		 ((token[0] == '"' && token[len - 1] == '"') ||
-		  (token[0] == '\'' && token[len - 1] == '\'')))
-	{
+    // Allouer une nouvelle chaîne pour stocker le résultat (taille maximale = len)
+    char *cleaned = (char *)malloc(len + 1);
+    if (!cleaned)
+    {
+        return NULL; // Gestion de l'erreur si l'allocation échoue
+    }
 
-		// Allouer une nouvelle chaîne pour stocker le résultat
-		char *cleaned = (char *)malloc(len - 1);
-		if (!cleaned)
-		{
-			return NULL; // Gestion de l'erreur si l'allocation échoue
-		}
+    // Parcourir chaque caractère de la chaîne d'entrée
+    while (i < len)
+    {
+        if (token[i] == '\'' && !inside_double_quote)
+        {
+            inside_single_quote = !inside_single_quote; // Alterne l'état des guillemets simples
+        }
+        else if (token[i] == '"' && !inside_single_quote)
+        {
+            inside_double_quote = !inside_double_quote; // Alterne l'état des guillemets doubles
+        }
+        else
+        {
+            cleaned[j] = token[i];
+            j++;
+        }
+        i++;
+    }
 
-		// Copier la chaîne sans les guillemets
-		strncpy(cleaned, token + 1, len - 2);
-		cleaned[len - 2] = '\0'; // Ajouter le caractère nul de fin
+    // Ajouter le caractère nul de fin
+    cleaned[j] = '\0';
 
-		return cleaned;
-	}
-	else
-	{
-		// Retourner une copie de la chaîne originale si elle n'est pas entourée de guillemets
-		return ft_strdup(token);
-	}
+    return cleaned;
 }
+
+
 
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
