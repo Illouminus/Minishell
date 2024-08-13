@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/09 17:48:08 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/12 15:38:36 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int minishell(char **env)
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
 		{
 			g_exit_code = ft_executor(&shell, env);
+			printf("exit status %d\n", g_exit_code);
+			shell.last_exit_status = g_exit_code;
 			// Lines to free token_list between each command --> Put in a separate function
 			while (shell.token_list != NULL)
 			{
@@ -65,11 +67,13 @@ int minishell(char **env)
 		{
 			g_exit_code = 1;
 			printf("Parser or lexer presented an issue\n");
+			shell.last_exit_status = g_exit_code;
 		}
-		free_shell(&shell);
 	}
-
-	return (0);
+	free_shell(&shell);
+	exit(shell.last_exit_status);
+	printf("exit status %d\n", shell.last_exit_status);
+	return (EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv, char **env)

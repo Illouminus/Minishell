@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 10:59:44 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 15:48:42 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,17 @@ int init_shell(t_shell *shell, char **env)
 
 	return (0);
 }
+void print_env_vars(t_env *head)
+{
+	while (head)
+	{
+		printf("Variable: %s=%s\n", head->env_var_name, head->env_value);
+		head = head->next_env;
+	}
+}
 
 t_env *init_env_vars(char **env)
 {
-	if (!env || !*env)
-		return init_default_env_vars();
 
 	t_env *head = NULL;
 	t_env *new_var = NULL;
@@ -50,6 +56,9 @@ t_env *init_env_vars(char **env)
 		add_env_var_to_list(&head, new_var);
 		i++;
 	}
-
+	// add_env_var_to_list(&head, NULL);
+	if (!head)
+		head = init_default_env_vars();
+	// print_env_vars(head);
 	return head;
 }

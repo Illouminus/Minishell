@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:29:45 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/21 08:52:40 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 17:41:14 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 
 void add_env_var_to_list(t_env **head, t_env *new_var)
 {
-	if (!head || !new_var)
+
+	t_env *current;
+
+	if (!new_var)
 		return;
 
-	if (!*head)
-	{
+	if (*head == NULL)
 		*head = new_var;
-	}
 	else
 	{
-		t_env *current = *head;
+		current = *head;
 		while (current->next_env)
 			current = current->next_env;
 		current->next_env = new_var;
@@ -89,7 +90,7 @@ t_env *create_env_var_node(char *env_str)
 
 t_env *ft_get_env_var_by_name(t_env *head, const char *name)
 {
-	while (head)
+	while (head != NULL)
 	{
 		if (ft_strcmp(head->env_var_name, name) == 0)
 			return head;

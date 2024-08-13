@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/09 17:48:29 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/12 15:38:48 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,4 +170,10 @@ int ft_isspace(char c);
 void handle_exit(t_shell *shell);
 char *ft_expander(char *str, t_shell *shell);
 
+/*Expander */
+
+char *ft_expander(char *str, t_shell *shell);
+void add_char_to_result(char **result, int *j, char c);
+int is_var_char(char c);
+char *extract_var_name(const char *str, int *i);
 #endif // MINISHELL_H

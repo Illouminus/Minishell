@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/18 14:12:15 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 10:42:29 by edouard          ###   ########.fr       */
+/*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
+/*   Updated: 2024/08/08 17:41:58 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_builtin_echo(t_command *cmd)
+void add_char_to_result(char **result, int *j, char c)
 {
-	int i;
-	bool newline;
-	i = 0;
-	newline = true;
+	(*result)[(*j)++] = c;
+}
 
-	if (cmd->cmd_value && !ft_strcmp(cmd->cmd_args[0], "-n"))
-	{
-		newline = false;
-		i++;
-	}
-	while (cmd->cmd_args[i])
-	{
-		ft_putstr_fd(cmd->cmd_args[i], STDOUT_FILENO);
-		if (cmd->cmd_args[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
-	}
-	if (newline)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (0);
+int is_var_char(char c)
+{
+	return ft_isalnum(c) || c == '_';
+}
+
+char *extract_var_name(const char *str, int *i)
+{
+	int start;
+
+	start = *i;
+	while (str[*i] && is_var_char(str[*i]))
+		(*i)++;
+	return ft_substr(str, start, *i - start);
 }

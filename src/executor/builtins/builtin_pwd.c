@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:24 by edouard           #+#    #+#             */
-/*   Updated: 2024/07/23 12:26:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 11:23:37 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ static char *get_current_directory(void)
 
 int ft_builtin_pwd(t_command *commands)
 {
-	if (commands->cmd_args[1] && commands->cmd_args[1][0] == '-')
+	if (commands->cmd_args[0] != NULL)
 	{
+
 		print_error(commands->cmd_args[0], "invalid option");
-		return 2;
+		return 1;
 	}
 
 	char *cwd = get_current_directory();
