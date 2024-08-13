@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 17:42:11 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/08 14:27:09 by adrienhors       ###   ########.fr       */
+
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 char *get_env_value(const char *var_name, t_shell *shell)
 {

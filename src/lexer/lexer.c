@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 12:55:08 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/12 15:37:47 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,63 +25,39 @@ void ft_print_tokens(t_token *token_list)
 	printf("\n\n");
 }
 
+
+
 // Fonction principale de tokenisation
 void ft_tokenize_input(char *input, t_shell *shell)
 {
-	int i;
-	int start;
-	char quote_char;
-	t_token_type type;
-	int is_first_token;
-	char *token_value;
+    int i = 0;
+    int is_first_token = 1;
 
-	i = 0;
-	start = 0;
-	quote_char = '\0';
-	is_first_token = 1;
-	while (input[i])
-	{
-		// Skip whitespace
-		i = ft_skip_whitespace(input, i);
-		if (input[i] == '\0')
-			break;
-		start = i;
-		// Handle quotes
-		if (input[i] == '"' || input[i] == '\'')
-		{
-			i = ft_handle_quotes(input, i, &quote_char);
-			if (i == -1)
-				return; // A corresponding closing quote was not found
-		}
-		else
-		{
-			// Check for special characters
-			if (input[i] == '|' || input[i] == '<' || input[i] == '>')
-			{
-				// If it's a special character, we treat it as a separate token
-				i++;
-			}
-			else
-			{
-				// Regular token parsing
-				while (input[i] != '\0' && !ft_isspace(input[i]) && input[i] != '"' && input[i] != '\'' && input[i] != '|' && input[i] != '<' && input[i] != '>')
-					i++;
-			}
-		}
-		// Determine the type of the token
-		type = ft_determine_token_type(input, start, is_first_token);
-		if (type == TOKEN_TYPE_PIPE)
-			is_first_token = 1;
-		else
-			is_first_token = 0;
+    while (input[i])
+    {
+        i = ft_skip_whitespace(input, i);
+        if (input[i] == '\0')
+            break;
 
-		// Create and add the token
-		token_value = ft_strndup(&input[start], i - start);
+        int start = i;
+        if (input[i] == '"' || input[i] == '\'')
+            i = ft_handle_quotes(input, i);
+        else if (ft_is_special_char(input[i]))
+            i++;  // Handle single special character as token
+        else
+            i = ft_parse_regular_token(input, i);
 
-		ft_create_add_token(shell, type, token_value);
-		free(token_value);
-	}
+        t_token_type type = ft_determine_token_type(input, start, is_first_token);
+        is_first_token = (type == TOKEN_TYPE_PIPE);
+
+        char *token_value = ft_strndup(&input[start], i - start);
+        ft_create_add_token(shell, type, token_value);
+        free(token_value);
+    }
 }
+
+
+
 
 // Generate the tokens from the shell->user_input
 int lexer(t_shell *shell)

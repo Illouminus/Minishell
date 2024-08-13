@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/08 17:41:07 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/12 15:38:48 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,18 +107,23 @@ typedef struct s_shell
 -------------------------------------------------------------
 */
 
-/* Parsing */
+/* PARSING */
+/* Tokens - Utils */
 t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
 void ft_create_add_token(t_shell *shell, int type, char *value);
-void ft_free_cmd_args(char **cmd_args);
-
-/* Utils */
+void ft_free_cmd_args(char **cmd_args); 
+int ft_is_special_char(char c);
 int ft_skip_whitespace(char *input, int i);
-int ft_handle_quotes(char *input, int i, char *quote_char);
-t_token_type ft_determine_token_type(char *input, int start, int is_first_token); // TODO check if it's needed
+int ft_parse_regular_token(char *input, int i); 
+int ft_handle_quotes(char *input, int i);
+t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
+
+// Tokens - Main Functions
 void ft_tokenize_input(char *input, t_shell *shell);
 int lexer(t_shell *shell);
+
+// Parsing
 int parser(t_shell *shell);
 
 /* Execution */
@@ -163,6 +168,7 @@ void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
+char *ft_expander(char *str, t_shell *shell);
 
 /*Expander */
 

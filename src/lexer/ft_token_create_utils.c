@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:50:44 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/07 12:28:32 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/09 17:47:17 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,7 @@ t_token *ft_create_token(int type, char *value)
     return (new_token);
 }
 
-//Determine the type of token
-t_token_type ft_determine_token_type(char *input, int start, int is_first_token)
-{
-    t_token_type type;
 
-    if (input[start] == '|')
-    {
-        type = TOKEN_TYPE_PIPE;
-    } else if (input[start] == '<') 
-    {
-        type = TOKEN_TYPE_REDIR_IN;
-    } else if (input[start] == '>') 
-    {
-        type = TOKEN_TYPE_REDIR_OUT;
-    } else if (is_first_token) 
-    {
-        type = TOKEN_TYPE_CMD;
-    } else 
-    {
-        type = TOKEN_TYPE_ARG;
-    }
-    return type;
-}
 
 //Add token to shell->tokens_list
 void ft_add_token(t_shell *shell, t_token *new_token)
