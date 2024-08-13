@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:22 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/01 11:26:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 13:01:40 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,37 +25,61 @@ static void ft_print_env_list(t_env *env_list)
 	}
 }
 
-static int ft_check_var_name(char *var_name)
+static int ft_check_var_name(const char *var_name)
 {
-	int i;
+	int i = 0;
 
-	i = 0;
-	if (!ft_isalpha(var_name[i]))
+	if (!ft_isalpha(var_name[i]) && var_name[i] != '_')
 		return 1;
+
 	i++;
 	while (var_name[i])
 	{
-		if (!ft_isalnum(var_name[i]))
+		if (!ft_isalnum(var_name[i]) && var_name[i] != '_')
 			return 1;
 		i++;
 	}
 	return 0;
 }
 
-static void ft_export_variable(t_env *env_list, char *var)
+static int ft_export_variable(t_env *env_list, char *var)
 {
 	char *var_name;
 	char *var_value;
 
-	var_name = ft_strndup(var, ft_strchr(var, '=') - var);
+	if (!var)
+		return 1;
+	var_value = ft_strchr(var, '=');
+	if (var_value)
+	{
+		var_name = ft_strndup(var, var_value - var);
+		var_value++;
+	}
+	else
+	{
+		var_name = ft_strdup(var);
+		var_value = NULL;
+	}
 	if (!var_name || ft_check_var_name(var_name) == 1)
 	{
+		ft_putstr_fd("export: not a valid identifier\n", STDERR_FILENO);
 		free(var_name);
-		return;
+		return 1;
 	}
-	var_value = ft_strchr(var, '=') + 1;
 
-	ft_setenv(&env_list, var_name, var_value);
+	if (var_value && *var_value != '\0')
+	{
+		char *trimmed_value = ft_strtrim(var_value, "\"\'");
+		ft_setenv(&env_list, var_name, trimmed_value);
+		free(trimmed_value);
+	}
+	else
+	{
+		ft_setenv(&env_list, var_name, "");
+	}
+
+	free(var_name);
+	return 0;
 }
 
 int ft_builtin_export(t_command *cmd, t_env *env_list)
@@ -73,7 +97,8 @@ int ft_builtin_export(t_command *cmd, t_env *env_list)
 	{
 		while (cmd->cmd_args[i])
 		{
-			ft_export_variable(env_list, cmd->cmd_args[i]);
+			if (ft_export_variable(env_list, cmd->cmd_args[i]))
+				return 1;
 			i++;
 		}
 	}

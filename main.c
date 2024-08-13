@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 15:38:36 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/13 10:36:27 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int g_exit_code;
 int minishell(char **env)
 {
 	t_shell shell;
-	t_token *temp;
-	t_command *temp_command;
 
 	if (init_shell(&shell, env) == 1)
 		return (1);
@@ -37,42 +35,16 @@ int minishell(char **env)
 		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
 		{
 			g_exit_code = ft_executor(&shell, env);
-			printf("exit status %d\n", g_exit_code);
 			shell.last_exit_status = g_exit_code;
-			// Lines to free token_list between each command --> Put in a separate function
-			while (shell.token_list != NULL)
-			{
-				temp = shell.token_list;
-				shell.token_list = shell.token_list->next_tok;
-				free(temp->tok_value);
-				free(temp);
-			}
-			while (shell.command_list != NULL)
-			{
-				temp_command = shell.command_list;
-				shell.command_list = shell.command_list->next_cmd;
-				free(temp_command->cmd_value);
-				// printf("Command Value was freed\n");
-				ft_free_cmd_args(temp_command->cmd_args);
-				// printf("Command Args was freed\n");
-				if(temp_command->input_file)
-					free(temp_command->input_file);
-				if(temp_command->output_file)
-					free(temp_command->output_file);
-				free(temp_command);
-				// printf("Command was freed\n");
-			}
 		}
 		else
 		{
 			g_exit_code = 1;
-			printf("Parser or lexer presented an issue\n");
 			shell.last_exit_status = g_exit_code;
 		}
+		free_shell(&shell);
 	}
 	free_shell(&shell);
-	exit(shell.last_exit_status);
-	printf("exit status %d\n", shell.last_exit_status);
 	return (EXIT_SUCCESS);
 }
 
@@ -82,5 +54,7 @@ int main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 
-	return minishell(env);
+	minishell(env);
+
+	return (0);
 }

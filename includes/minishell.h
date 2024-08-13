@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/12 15:38:48 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/13 10:36:33 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct s_shell
 	char **env_vars;
 	char *heredoc_tempfile;
 	int saved_stdin_fd;
+	int tmp_proccess_status;
 	int last_exit_status;
 	t_env *env_var_list;
 } t_shell;
@@ -112,10 +113,10 @@ typedef struct s_shell
 t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
 void ft_create_add_token(t_shell *shell, int type, char *value);
-void ft_free_cmd_args(char **cmd_args); 
+void ft_free_cmd_args(char **cmd_args);
 int ft_is_special_char(char c);
 int ft_skip_whitespace(char *input, int i);
-int ft_parse_regular_token(char *input, int i); 
+int ft_parse_regular_token(char *input, int i);
 int ft_handle_quotes(char *input, int i);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
 
@@ -150,10 +151,10 @@ void print_error(char *cmd, char *error_message);
 int ft_builtin_cd(t_command *cmd, t_shell *shell);
 int ft_builtin_echo(t_command *cmd);
 int ft_builtin_env(t_env *env);
-int ft_builtin_exit(void);
 int ft_builtin_export(t_command *cmd, t_env *env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
+void ft_builtin_exit(t_command *commands, t_shell *shell);
 
 /* Fonctions d'exécution */
 int ft_executor(t_shell *shell, char **env);
@@ -162,6 +163,7 @@ char *ft_get_path(t_command *current, t_shell *shell);
 void handle_redirections(t_command *current, int prev_fd);
 void ft_pipe(t_command *current, t_shell *shell);
 void ft_free_array(char **split);
+void wait_commands(t_shell *shell);
 
 /* Fonctions utilitaires */
 void free_shell(t_shell *shell);

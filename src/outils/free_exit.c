@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/07 10:46:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/10 09:19:28 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void global_exit_env(t_shell *shell, int status)
 
 void free_shell(t_shell *shell)
 {
-	// Очистка списка команд
 	t_command *cmd_temp;
 	char **args;
 	while (shell->command_list)
@@ -64,7 +63,6 @@ void free_shell(t_shell *shell)
 		free(cmd_temp);
 	}
 
-	// Очистка списка токенов
 	t_token *tok_temp;
 	while (shell->token_list)
 	{
@@ -74,10 +72,10 @@ void free_shell(t_shell *shell)
 		free(tok_temp);
 	}
 
-	// Очистка пользовательского ввода
 	if (shell->user_input)
 	{
 		free(shell->user_input);
 		shell->user_input = NULL;
 	}
+	//	exit(shell->last_exit_status);
 }

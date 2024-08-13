@@ -6,38 +6,13 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/08 13:07:29 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/12 14:09:04 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void ft_execute_command(t_command *current, t_shell *shell, char **env)
-{
-	char *path;
-	char **cmd_args;
-	signal(SIGQUIT, SIG_DFL);
-	path = ft_get_path(current, shell);
-	if (!path)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(current->cmd_value, STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exit(127);
-	}
-	cmd_args = ft_construct_cmd_args(current->cmd_value, current->cmd_args);
-	if (execve(path, cmd_args, env) == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(current->cmd_value, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		exit(1);
-	}
-}
-
-void ft_exec_builtins(t_shell *shell)
+void ft_exec_builtins(t_shell *shell, bool next_cmd)
 {
 	t_command *current = shell->command_list;
 
@@ -54,19 +29,60 @@ void ft_exec_builtins(t_shell *shell)
 	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
-		shell->last_exit_status = ft_builtin_exit();
+		ft_builtin_exit(current, shell);
+	if (!next_cmd)
+		free_shell(shell);
+}
+
+static void ft_execute_command(t_command *current, t_shell *shell, char **env)
+{
+	char *path;
+	char **cmd_args;
+	signal(SIGQUIT, SIG_DFL);
+
+	if (!current->cmd_value)
+	{
+		shell->last_exit_status = 0;
+		free_shell(shell);
+	}
+	if (current->is_builtin_cmd && current->next_cmd)
+		ft_exec_builtins(shell, true);
+	else if (current->is_builtin_cmd)
+		ft_exec_builtins(shell, false);
+	else
+	{
+		path = ft_get_path(current, shell);
+		printf("GOING IN EXECUTE");
+		if (!path)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(current->cmd_value, STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			exit(127);
+		}
+		cmd_args = ft_construct_cmd_args(current->cmd_value, current->cmd_args);
+		if (execve(path, cmd_args, env) == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(current->cmd_value, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putstr_fd(strerror(errno), STDERR_FILENO);
+			ft_putstr_fd("\n", STDERR_FILENO);
+			exit(1);
+		}
+	}
 }
 
 static void ft_child_process(t_command *current, t_shell *shell, int prev_fd, char **env)
 {
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell, env);
+	exit(shell->last_exit_status);
 }
 
 int ft_parent_process(t_command *current, t_shell *shell, int prev_fd)
 {
-
-	waitpid(shell->last_process_id, NULL, 0);
+	(void)shell;
 	if (prev_fd != 0)
 		close(prev_fd);
 	if (current->next_cmd)
@@ -87,7 +103,7 @@ int ft_executor(t_shell *shell, char **env)
 	prev_fd = 0;
 
 	if (!current->next_cmd && current->is_builtin_cmd)
-		ft_exec_builtins(shell);
+		ft_exec_builtins(shell, false);
 	else
 	{
 		while (current)
@@ -100,5 +116,6 @@ int ft_executor(t_shell *shell, char **env)
 			current = current->next_cmd;
 		}
 	}
+	wait_commands(shell);
 	return shell->last_exit_status;
 }
