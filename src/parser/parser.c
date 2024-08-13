@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 10:40:05 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/13 10:57:00 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,12 +180,10 @@ int parser(t_shell *shell)
 				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
 				{
 					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell);
-					printf("Command Input File : %s\n", last_command->input_file);
 				}
 				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 				{
 					last_command->output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell);
-					printf("Command Output File : %s\n", last_command->output_file);
 				}
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
