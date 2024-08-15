@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 15:37:47 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/13 17:11:42 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,41 @@ void ft_print_tokens(t_token *token_list)
 // Fonction principale de tokenisation
 void ft_tokenize_input(char *input, t_shell *shell)
 {
-    int i = 0;
-    int is_first_token = 1;
+    int i; 
+    int is_first_token; 
+    int inside_quote; 
+	int start; 
 
+    i = 0;
+    is_first_token = 1;
+    inside_quote = 0;
     while (input[i])
     {
         i = ft_skip_whitespace(input, i);
         if (input[i] == '\0')
             break;
-
-        int start = i;
-        if (input[i] == '"' || input[i] == '\'')
-            i = ft_handle_quotes(input, i);
-        else if (ft_is_special_char(input[i]))
-            i++;  // Handle single special character as token
+		start = i;
+        if (ft_is_special_char(input[i]) && !inside_quote)
+        {
+            i++;  // Gérer le caractère spécial unique comme un token
+        }
         else
-            i = ft_parse_regular_token(input, i);
+        {
+            i = ft_parse_regular_token(input, i, &inside_quote, shell);
+            if (i == -1) // En cas d'erreur
+                return;
+        }
 
         t_token_type type = ft_determine_token_type(input, start, is_first_token);
         is_first_token = (type == TOKEN_TYPE_PIPE);
 
         char *token_value = ft_strndup(&input[start], i - start);
         ft_create_add_token(shell, type, token_value);
+        // printf("Token Value: %s\n", token_value);
         free(token_value);
     }
 }
+
 
 
 

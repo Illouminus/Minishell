@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/12 15:36:59 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/13 17:08:17 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,46 @@ int ft_is_special_char(char c)
     return (c == '|' || c == '<' || c == '>');
 }
 
-int ft_parse_regular_token(char *input, int i)
+
+int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell)
 {
-    while (input[i] != '\0' && !ft_isspace(input[i]) && !ft_is_special_char(input[i]) && input[i] != '"' && input[i] != '\'')
-        i++;
+    while (input[i] != '\0' && !ft_isspace(input[i]) && !ft_is_special_char(input[i]))
+    {
+        if (input[i] == '"' || input[i] == '\'')
+        {
+            i = ft_handle_quotes(shell, input, i, inside_quote);
+            if (i == -1) // En cas d'erreur dans la gestion des guillemets
+                return -1;
+        }
+        else
+            i++;
+    }
     return i;
 }
 
-int ft_handle_quotes(char *input, int i)
+int ft_handle_quotes(t_shell *shell, char *input, int i, int *inside_quote)
 {
-    char quote_char = input[i++];
+    char quote_char;
+
+    quote_char = input[i++];
+    *inside_quote = 1; // Indique qu'on est dans des guillemets
+
     while (input[i] && input[i] != quote_char)
         i++;
+
     if (input[i] == quote_char)
-        return i + 1; // Move past closing quote
+    {
+        *inside_quote = 0; // Ferme les guillemets
+        return i + 1; // Passe après le guillemet fermant
+    }
     else
     {
         printf("Erreur: guillemet fermant manquant pour le caractère '%c'.\n", quote_char);
-		// TODO - EXIT et free tout
+        free_shell(shell);
         return -1; // Indique qu'une erreur est survenue
     }
 }
+
 
 
 //Determine the type of token
