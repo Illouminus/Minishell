@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/15 11:27:01 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/15 11:28:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void ft_create_add_token(t_shell *shell, int type, char *value);
 void ft_free_cmd_args(char **cmd_args);
 int ft_is_special_char(char c);
 int ft_skip_whitespace(char *input, int i);
-int ft_parse_regular_token(char *input, int i);
+int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell);
 int ft_handle_quotes(char *input, int i);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
 
