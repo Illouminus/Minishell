@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/14 09:21:09 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/15 09:01:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_val
 	command->next_cmd = NULL;
 	command->input_file = NULL;
 	command->output_file = NULL;
+	command->append_file = NULL;
 	command->shell = shell;
 	return (command);
 }

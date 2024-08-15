@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/14 09:19:27 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/15 08:39:06 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct s_command
 	char *heredoc_marker;
 	char *input_file;
 	char *output_file;
+	char *append_file;
 	int pipe_fds[2];
 	struct s_shell *shell;
 } t_command;

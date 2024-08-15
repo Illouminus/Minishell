@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/14 09:36:08 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/15 10:16:11 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static void handle_input_redirection(const char *input_file, t_shell *shell)
 		if (check_file_access(input_file, R_OK) == -1)
 		{
 			free_shell(shell);
-
 			exit(1);
 			return; // Если файл недоступен или это директория, выходим
 		}
@@ -70,7 +69,6 @@ static void handle_input_redirection(const char *input_file, t_shell *shell)
 static void handle_output_redirection(const char *output_file, t_shell *shell)
 {
 	int output_fd;
-
 	if (output_file)
 	{
 		if (access(output_file, F_OK) == 0 && check_file_access(output_file, W_OK) == -1)
@@ -83,7 +81,6 @@ static void handle_output_redirection(const char *output_file, t_shell *shell)
 		if (output_fd == -1)
 		{
 			free_shell(shell);
-			exit(1);
 			perror("failed to open output file");
 			return; // TODO: handle error properly
 		}
@@ -92,6 +89,35 @@ static void handle_output_redirection(const char *output_file, t_shell *shell)
 			perror("dup2 failed for output");
 			close(output_fd);
 			return; // TODO: handle error properly
+		}
+		close(output_fd);
+	}
+}
+
+static void handle_output_append_redirection(const char *output_file, t_shell *shell)
+{
+	int output_fd;
+
+	if (output_file)
+	{
+		if (access(output_file, F_OK) == 0 && check_file_access(output_file, W_OK) == -1)
+		{
+			shell->last_exit_status = 1;
+			perror("Error: no write access");
+			free_shell(shell);
+		}
+		output_fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (output_fd == -1)
+		{
+			shell->last_exit_status = 1;
+			perror("failed to open output file");
+			free_shell(shell);
+		}
+		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 failed for output");
+			close(output_fd);
+			return;
 		}
 		close(output_fd);
 	}
@@ -131,6 +157,7 @@ void handle_redirections(t_command *current, int prev_fd)
 {
 	handle_input_redirection(current->input_file, current->shell);
 	handle_output_redirection(current->output_file, current->shell);
+	handle_output_append_redirection(current->append_file, current->shell);
 	handle_pipe_redirection(current);
 	handle_prev_fd_redirection(prev_fd);
 }
