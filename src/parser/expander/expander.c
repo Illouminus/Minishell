@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 11:59:10 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/15 13:23:34 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void handle_exit_status(char **result, int *j, t_shell *shell)
 	}
 }
 
-char *ft_expander(char *str, t_shell *shell)
+char *ft_expander(char *str, t_shell *shell, int inside_single_quote)
 {
 	int i;
 	int j;
@@ -94,6 +94,10 @@ char *ft_expander(char *str, t_shell *shell)
 
 	i = 0;
 	j = 0;
+
+	if (inside_single_quote)
+		return ft_strdup(str);
+
 	final_len = estimate_final_length(str, shell);
 	result = malloc(final_len + 1);
 	if (!result)

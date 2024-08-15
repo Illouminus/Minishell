@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/15 11:28:39 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/15 13:15:00 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void ft_free_cmd_args(char **cmd_args);
 int ft_is_special_char(char c);
 int ft_skip_whitespace(char *input, int i);
 int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell);
-int ft_handle_quotes(char *input, int i);
+int ft_handle_quotes(t_shell *shell, char *input, int i, int *inside_quote);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
 
 // Tokens - Main Functions
@@ -173,11 +173,10 @@ void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
-char *ft_expander(char *str, t_shell *shell);
 
 /*Expander */
 
-char *ft_expander(char *str, t_shell *shell);
+char *ft_expander(char *str, t_shell *shell, int inside_single_quote);
 void add_char_to_result(char **result, int *j, char c);
 int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);
