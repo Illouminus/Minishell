@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 11:00:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/14 09:21:09 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int ft_cmd_is_built_in(char *value)
 	return (0);
 }
 
-t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_value_clean)
+t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_value_clean, t_shell *shell)
 {
 	command = malloc(sizeof(t_command));
 	if (!command)
@@ -47,6 +47,7 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_val
 	command->next_cmd = NULL;
 	command->input_file = NULL;
 	command->output_file = NULL;
+	command->shell = shell;
 	return (command);
 }
 
@@ -163,7 +164,7 @@ int parser(t_shell *shell)
 			{
 				cmd_nb_args = ft_determine_nb_args(current_token);
 				i = 0;
-				new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean);
+				new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean, shell);
 				if (last_command)
 				{
 					last_command->next_cmd = new_command;

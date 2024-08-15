@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/10 12:37:34 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/13 11:10:14 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,12 @@ int ft_builtin_cd(t_command *cmd, t_shell *shell)
 {
 	char *value;
 
-	if (cmd->cmd_args[1] != NULL)
+	/*if (cmd->cmd_args[1] != NULL)
 	{
 		print_error("cd", "too many arguments");
 		return 1;
 	}
+	*/
 
 	if (!cmd->cmd_args[0])
 	{

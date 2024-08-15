@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 14:09:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/14 09:55:16 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		ft_builtin_exit(current, shell);
 	if (!next_cmd)
+	{
 		free_shell(shell);
+		exit(shell->last_exit_status);
+	}
 }
 
 static void ft_execute_command(t_command *current, t_shell *shell, char **env)
