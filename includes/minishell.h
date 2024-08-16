@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/15 13:15:00 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/16 11:27:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_command
 	char *input_file;
 	char *output_file;
 	char *append_file;
-	int pipe_fds[2];
 	struct s_shell *shell;
 } t_command;
 
@@ -102,6 +101,7 @@ typedef struct s_shell
 	int saved_stdin_fd;
 	int tmp_proccess_status;
 	int last_exit_status;
+	int pipe_fds[2];
 	t_env *env_var_list;
 } t_shell;
 

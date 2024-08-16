@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/15 10:16:11 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/16 11:29:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,15 +127,15 @@ static void handle_pipe_redirection(t_command *current)
 {
 	if (current->next_cmd)
 	{
-		if (dup2(current->pipe_fds[1], STDOUT_FILENO) == -1)
+		if (dup2(current->shell->pipe_fds[1], STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed for pipe_fds[1]");
-			close(current->pipe_fds[0]);
-			close(current->pipe_fds[1]);
+			close(current->shell->pipe_fds[0]);
+			close(current->shell->pipe_fds[1]);
 			return; // TODO: handle error properly
 		}
-		close(current->pipe_fds[0]);
-		close(current->pipe_fds[1]);
+		close(current->shell->pipe_fds[0]);
+		close(current->shell->pipe_fds[1]);
 	}
 }
 
@@ -158,6 +158,6 @@ void handle_redirections(t_command *current, int prev_fd)
 	handle_input_redirection(current->input_file, current->shell);
 	handle_output_redirection(current->output_file, current->shell);
 	handle_output_append_redirection(current->append_file, current->shell);
-	handle_pipe_redirection(current);
 	handle_prev_fd_redirection(prev_fd);
+	handle_pipe_redirection(current);
 }
