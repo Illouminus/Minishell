@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/16 11:32:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/16 14:33:14 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		ft_builtin_exit(current, shell);
-	if (!next_cmd)
+	if (next_cmd)
 		free_shell(shell);
 }
 
@@ -47,8 +47,6 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 	}
 	if (current->is_builtin_cmd && current->next_cmd)
 		ft_exec_builtins(shell, true);
-	else if (current->is_builtin_cmd)
-		ft_exec_builtins(shell, false);
 	else
 	{
 		path = ft_get_path(current, shell);
