@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/16 11:32:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 13:31:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,14 @@ void ft_exit_error(t_shell *shell, char *error_message)
 	ft_putstr_fd("\n", STDERR_FILENO);
 	shell->last_exit_status = 1;
 	exit(1);
+}
+
+void handle_error(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
+{
+	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
+	shell->last_exit_status = exit_code;
+	free_shell(shell);
+	exit(exit_code);
 }
 
 void ft_pipe(t_command *current, t_shell *shell)
@@ -47,6 +55,33 @@ void ft_free_array(char **split)
 	free(split);
 }
 
+static char *ft_absolute_path(char *cmd, t_shell *shell)
+{
+	struct stat path_stat;
+
+	if (stat(cmd, &path_stat) == -1)
+	{
+		handle_error(cmd, "No such file or directory", 127, shell);
+	}
+
+	if (S_ISDIR(path_stat.st_mode))
+	{
+		handle_error(cmd, "Is a directory", 126, shell);
+	}
+
+	if (access(cmd, X_OK) == 0)
+		return cmd;
+	if (access(cmd, F_OK) == -1)
+	{
+		handle_error(cmd, "No such file or directory", 127, shell);
+	}
+	else
+	{
+		shell->last_exit_status = 126;
+	}
+	return cmd;
+}
+
 char *ft_get_path(t_command *current, t_shell *shell)
 {
 	t_env *path_env;
@@ -54,6 +89,9 @@ char *ft_get_path(t_command *current, t_shell *shell)
 	char *path_part;
 	char *exec;
 	int i;
+
+	if (current->cmd_value[0] == '/' || current->cmd_value[0] == '.')
+		return ft_absolute_path(current->cmd_value, shell);
 
 	path_env = ft_get_env_var_by_name(shell->env_var_list, "PATH");
 	split = ft_split(path_env->env_value, ':');
