@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/15 13:34:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 09:20:12 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ int ft_determine_nb_args(t_token *token_list)
 	// printf("Nb of args : %d\n", i);
 	return (i);
 }
-// Функция для очистки токена и определения состояния кавычек
 char *ft_clean_token_value(const char *token, int *inside_single_quote)
 {
 	size_t len = ft_strlen(token);
@@ -116,36 +115,30 @@ char *ft_clean_token_value(const char *token, int *inside_single_quote)
 	size_t j = 0;
 	int inside_double_quote = 0;
 
-	// Выделяем память для новой строки
 	char *cleaned = (char *)malloc(len + 1);
 	if (!cleaned)
 	{
-		return NULL; // Обработка ошибки, если память не выделена
+		return NULL;
 	}
 
-	// Проходим по каждому символу токена
 	while (i < len)
 	{
 		if (token[i] == '\'' && !inside_double_quote)
 		{
-			// Если находим одинарную кавычку вне двойных кавычек, переключаем состояние флага
 			*inside_single_quote = 1;
 		}
 		else if (token[i] == '"' && !(*inside_single_quote))
 		{
-			// Если находим двойную кавычку вне одинарных кавычек, переключаем состояние флага
 			inside_double_quote = 1;
 		}
 		else
 		{
-			// Копируем символ в новую строку, если он не является кавычкой
 			cleaned[j] = token[i];
 			j++;
 		}
 		i++;
 	}
 
-	// Завершаем строку нулевым символом
 	cleaned[j] = '\0';
 
 	return cleaned;
