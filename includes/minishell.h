@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/16 11:27:51 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 17:49:25 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,17 @@ typedef enum e_token_type
 	TOKEN_TYPE_ARG,
 	TOKEN_TYPE_REDIR_IN,
 	TOKEN_TYPE_REDIR_OUT,
+	TOKEN_TYPE_REDIR_APPEND,
 	TOKEN_TYPE_PIPE,
 	TOKEN_TYPE_EOF,
 } t_token_type;
+
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+} t_redir_type;
 
 // Structure d'un token
 typedef struct s_token
@@ -62,6 +70,14 @@ typedef struct s_token
 	struct s_token *next_tok;
 	struct s_token *prev_tok;
 } t_token;
+
+typedef struct s_redir
+{
+	char *filename;
+	t_redir_type redirection_type;
+	struct s_redir *next;
+	struct s_redir *prev;
+} t_redir;
 
 // Structure d'une commande
 typedef struct s_command
@@ -73,9 +89,9 @@ typedef struct s_command
 	struct s_command *next_cmd;
 	struct s_command *prev_cmd;
 	char *heredoc_marker;
-	char *input_file;
-	char *output_file;
-	char *append_file;
+	t_redir *redirections;
+	t_redir *last_redirection;
+	int redir_count;
 	struct s_shell *shell;
 } t_command;
 
@@ -180,4 +196,5 @@ char *ft_expander(char *str, t_shell *shell, int inside_single_quote);
 void add_char_to_result(char **result, int *j, char c);
 int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);
+void add_redirection(t_command *cmd, int type, char *filename);
 #endif // MINISHELL_H

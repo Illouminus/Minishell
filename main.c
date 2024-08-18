@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 14:39:02 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 15:26:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ int minishell(t_shell *shell, char **env)
 		}
 		free_shell(shell);
 	}
-	free_shell(shell);
-	printf("shell last exit status: %d\n", shell->last_exit_status);
-	return (shell->last_exit_status);
+	return (0);
 }
 
 int main(int argc, char **argv, char **env)
@@ -54,8 +52,8 @@ int main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 
-	int exit_code = minishell(&shell, env);
-
+	minishell(&shell, env);
 	free_shell(&shell);
-	return (exit_code);
+	exit(shell.last_exit_status);
+	return (0);
 }

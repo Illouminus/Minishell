@@ -32,6 +32,7 @@ SRCS = main.c \
 		 $(SRC_DIR)/outils/ft_free_parsing.c \
 		 $(SRC_DIR)/outils/ft_isspace.c \
        $(SRC_DIR)/parser/parser.c \
+		 $(SRC_DIR)/parser/outils.c \
 		 $(SRC_DIR)/parser/expander/expander.c \
 		 $(SRC_DIR)/parser/expander/outils.c \
 
