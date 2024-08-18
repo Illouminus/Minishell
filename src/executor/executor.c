@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 09:34:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 18:01:59 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int ft_executor(t_shell *shell, char **env)
 	current = shell->command_list;
 	prev_fd = 0;
 
-	if (!current->next_cmd && current->is_builtin_cmd && !current->append_file && !current->output_file && !current->input_file)
+	if (!current->next_cmd && current->is_builtin_cmd && !current->redirections)
 		ft_exec_builtins(shell, false);
 	else
 	{

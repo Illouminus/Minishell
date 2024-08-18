@@ -6,120 +6,121 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 09:46:10 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 18:01:15 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int check_file_access(const char *filepath, int mode)
+static int check_file_access(const char *filepath, int mode, t_shell *shell)
 {
 	struct stat file_stat;
 
 	if (access(filepath, mode) == -1)
 	{
 		perror("Access error");
+		shell->last_exit_status = 1;
 		return -1;
 	}
 
 	if (stat(filepath, &file_stat) == -1)
 	{
 		perror("Stat error");
+		shell->last_exit_status = 1;
 		return -1;
 	}
 	if (S_ISDIR(file_stat.st_mode))
 	{
 		fprintf(stderr, "Error: '%s' is a directory\n", filepath);
+		shell->last_exit_status = 1;
 		return -1;
 	}
 
 	return 0; // Все проверки прошли успешно
 }
 
-static void handle_input_redirection(const char *input_file, t_shell *shell)
+static int validate_redirections(t_command *current, t_shell *shell)
 {
-	int input_fd;
+	t_redir *redir = current->redirections;
 
-	if (input_file)
+	while (redir)
 	{
-		if (check_file_access(input_file, R_OK) == -1)
-		{
-			free_shell(shell);
-			exit(1);
-			return; // Если файл недоступен или это директория, выходим
-		}
-		input_fd = open(input_file, O_RDONLY);
-		if (input_fd == -1)
-		{
-			free_shell(shell);
-			exit(1);
-			perror("failed to open input file");
-			return; // TODO: handle error properly
-		}
-		if (dup2(input_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 failed for input");
-			close(input_fd);
-			return; // TODO: handle error properly
-		}
-		close(input_fd);
+		if (redir->redirection_type == REDIR_IN && check_file_access(redir->filename, R_OK, shell) == -1)
+			return -1;
+		if ((redir->redirection_type == REDIR_OUT || redir->redirection_type == REDIR_APPEND) &&
+			 (access(redir->filename, F_OK) == 0 && check_file_access(redir->filename, W_OK, shell) == -1))
+			return -1;
+		redir = redir->next;
 	}
+
+	return 0; // Все проверки прошли успешно
 }
 
-static void handle_output_redirection(const char *output_file, t_shell *shell)
+static void perform_redirections(t_command *current, t_shell *shell)
 {
-	int output_fd;
-	if (output_file)
-	{
-		if (access(output_file, F_OK) == 0 && check_file_access(output_file, W_OK) == -1)
-		{
-			free_shell(shell);
-			exit(1);
-			return; // Если файл недоступен или это директория, выходим
-		}
-		output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (output_fd == -1)
-		{
-			free_shell(shell);
-			perror("failed to open output file");
-			return; // TODO: handle error properly
-		}
-		if (dup2(output_fd, STDOUT_FILENO) == -1)
-		{
-			perror("dup2 failed for output");
-			close(output_fd);
-			return; // TODO: handle error properly
-		}
-		close(output_fd);
-	}
-}
+	t_redir *redir = current->redirections;
+	int fd;
 
-static void handle_output_append_redirection(const char *output_file, t_shell *shell)
-{
-	int output_fd;
-
-	if (output_file)
+	while (redir)
 	{
-		if (access(output_file, F_OK) == 0 && check_file_access(output_file, W_OK) == -1)
+		if (redir->redirection_type == REDIR_IN)
 		{
-			shell->last_exit_status = 1;
-			perror("Error: no write access");
-			free_shell(shell);
+			fd = open(redir->filename, O_RDONLY);
+			if (fd == -1)
+			{
+				perror("failed to open input file");
+				shell->last_exit_status = 1;
+				free_shell(shell);
+				exit(1);
+			}
+			if (dup2(fd, STDIN_FILENO) == -1)
+			{
+				perror("dup2 failed for input");
+				close(fd);
+				free_shell(shell);
+				exit(1);
+			}
+			close(fd);
 		}
-		output_fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (output_fd == -1)
+		else if (redir->redirection_type == REDIR_OUT)
 		{
-			shell->last_exit_status = 1;
-			perror("failed to open output file");
-			free_shell(shell);
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1)
+			{
+				perror("failed to open output file");
+				shell->last_exit_status = 1;
+				free_shell(shell);
+				exit(1);
+			}
+			if (dup2(fd, STDOUT_FILENO) == -1)
+			{
+				perror("dup2 failed for output");
+				close(fd);
+				free_shell(shell);
+				exit(1);
+			}
+			close(fd);
 		}
-		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		else if (redir->redirection_type == REDIR_APPEND)
 		{
-			perror("dup2 failed for output");
-			close(output_fd);
-			return;
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				perror("failed to open output file");
+				shell->last_exit_status = 1;
+				free_shell(shell);
+				exit(1);
+			}
+			if (dup2(fd, STDOUT_FILENO) == -1)
+			{
+				perror("dup2 failed for output");
+				close(fd);
+				free_shell(shell);
+				exit(1);
+			}
+			close(fd);
 		}
-		close(output_fd);
+		redir = redir->next;
 	}
 }
 
@@ -132,7 +133,7 @@ static void handle_pipe_redirection(t_command *current)
 			perror("dup2 failed for pipe_fds[1]");
 			close(current->shell->pipe_fds[0]);
 			close(current->shell->pipe_fds[1]);
-			return; // TODO: handle error properly
+			exit(1);
 		}
 		close(current->shell->pipe_fds[0]);
 		close(current->shell->pipe_fds[1]);
@@ -147,7 +148,7 @@ static void handle_prev_fd_redirection(int prev_fd)
 		{
 			perror("dup2 failed for pipe input");
 			close(prev_fd);
-			return; // TODO: handle error properly
+			exit(1);
 		}
 		close(prev_fd);
 	}
@@ -155,9 +156,13 @@ static void handle_prev_fd_redirection(int prev_fd)
 
 void handle_redirections(t_command *current, int prev_fd)
 {
+	if (validate_redirections(current, current->shell) == -1)
+	{
+		free_shell(current->shell);
+		exit(1);
+	}
+
 	handle_prev_fd_redirection(prev_fd);
 	handle_pipe_redirection(current);
-	handle_input_redirection(current->input_file, current->shell);
-	handle_output_redirection(current->output_file, current->shell);
-	handle_output_append_redirection(current->append_file, current->shell);
+	perform_redirections(current, current->shell);
 }

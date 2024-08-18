@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 11:56:53 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 17:50:53 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,8 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_val
 	command->redir_tokens = NULL;
 	command->prev_cmd = NULL;
 	command->next_cmd = NULL;
-	command->input_file = NULL;
-	command->output_file = NULL;
-	command->append_file = NULL;
+	command->redirections = NULL;
+	command->last_redirection = NULL;
 	command->shell = shell;
 	return (command);
 }
@@ -83,14 +82,43 @@ void ft_afficher_command_list(t_command *command_list)
 		printf("Commande numéro %d:\n", index);
 		printf("  cmd_value: %s\n", current_command->cmd_value);
 		printf("  is_builtin_cmd: %s\n", current_command->is_builtin_cmd ? "true" : "false");
-		printf("  command Input File: %s\n", current_command->input_file);
-		printf("  command Output File: %s\n", current_command->output_file);
 		printf("  command args: %s\n", current_command->cmd_args[0]);
 		printf("  command args: %s\n", current_command->cmd_args[1]);
 		current_command = current_command->next_cmd;
 		index++;
 	}
 }
+/*
+void handle_error_parser(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
+{
+	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
+	shell->last_exit_status = exit_code;
+	// free_shell(shell);
+	//  ßexit(shell->last_exit_status);
+}
+
+static int ft_check_input_file(char *file_path, t_shell *shell)
+{
+	struct stat path_stat;
+
+	if (stat(file_path, &path_stat) == -1)
+	{
+		handle_error_parser(file_path, "No such file or directory", 1, shell);
+		return 1;
+	}
+	if (S_ISDIR(path_stat.st_mode))
+	{
+		handle_error_parser(file_path, "Is a directory", 1, shell);
+		return 1;
+	}
+	if (access(file_path, R_OK) == -1)
+	{
+		handle_error_parser(file_path, "Permission denied", 1, shell);
+		return 1;
+	}
+	return 0;
+}
+*/
 
 // Nombre d'arguments depuis la liste de tokens
 int ft_determine_nb_args(t_token *token_list)
@@ -182,15 +210,23 @@ int parser(t_shell *shell)
 				}
 				last_command = new_command;
 			}
-			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
+			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT || current_token->tok_type == TOKEN_TYPE_REDIR_APPEND)
 			{
 				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
 				{
-					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					char *input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					add_redirection(last_command, REDIR_IN, input_file);
 				}
 				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 				{
-					last_command->output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					char *output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					add_redirection(last_command, REDIR_OUT, output_file);
+				}
+				else if (current_token->tok_type == TOKEN_TYPE_REDIR_APPEND)
+				{
+					current_token = current_token->next_tok;
+					char *output_file_append = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					add_redirection(last_command, REDIR_APPEND, output_file_append);
 				}
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))

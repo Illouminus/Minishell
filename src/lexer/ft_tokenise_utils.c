@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/15 13:02:25 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 17:53:48 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ t_token_type ft_determine_token_type(char *input, int start, int is_first_token)
 	else if (input[start] == '<')
 	{
 		type = TOKEN_TYPE_REDIR_IN;
+	}
+	else if (input[start] == '>' && input[start + 1] == '>')
+	{
+		type = TOKEN_TYPE_REDIR_APPEND;
+		start++;
 	}
 	else if (input[start] == '>')
 	{
