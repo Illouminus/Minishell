@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 18:01:15 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 18:22:56 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int check_file_access(const char *filepath, int mode, t_shell *shell)
 		return -1;
 	}
 
-	return 0; // Все проверки прошли успешно
+	return 0;
 }
 
 static int validate_redirections(t_command *current, t_shell *shell)
@@ -47,13 +47,25 @@ static int validate_redirections(t_command *current, t_shell *shell)
 	{
 		if (redir->redirection_type == REDIR_IN && check_file_access(redir->filename, R_OK, shell) == -1)
 			return -1;
+
 		if ((redir->redirection_type == REDIR_OUT || redir->redirection_type == REDIR_APPEND) &&
 			 (access(redir->filename, F_OK) == 0 && check_file_access(redir->filename, W_OK, shell) == -1))
+		{
 			return -1;
+		}
 		redir = redir->next;
 	}
 
-	return 0; // Все проверки прошли успешно
+	return 0;
+}
+
+static void handle_redirection_error(t_shell *shell, int fd)
+{
+	if (fd != -1)
+		close(fd);
+	shell->last_exit_status = 1;
+	free_shell(shell);
+	exit(1);
 }
 
 static void perform_redirections(t_command *current, t_shell *shell)
@@ -63,63 +75,32 @@ static void perform_redirections(t_command *current, t_shell *shell)
 
 	while (redir)
 	{
+		fd = -1; // Инициализация
 		if (redir->redirection_type == REDIR_IN)
 		{
 			fd = open(redir->filename, O_RDONLY);
 			if (fd == -1)
-			{
-				perror("failed to open input file");
-				shell->last_exit_status = 1;
-				free_shell(shell);
-				exit(1);
-			}
+				handle_redirection_error(shell, fd);
 			if (dup2(fd, STDIN_FILENO) == -1)
-			{
-				perror("dup2 failed for input");
-				close(fd);
-				free_shell(shell);
-				exit(1);
-			}
-			close(fd);
+				handle_redirection_error(shell, fd);
 		}
 		else if (redir->redirection_type == REDIR_OUT)
 		{
 			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
-			{
-				perror("failed to open output file");
-				shell->last_exit_status = 1;
-				free_shell(shell);
-				exit(1);
-			}
+				handle_redirection_error(shell, fd);
 			if (dup2(fd, STDOUT_FILENO) == -1)
-			{
-				perror("dup2 failed for output");
-				close(fd);
-				free_shell(shell);
-				exit(1);
-			}
-			close(fd);
+				handle_redirection_error(shell, fd);
 		}
 		else if (redir->redirection_type == REDIR_APPEND)
 		{
 			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
-			{
-				perror("failed to open output file");
-				shell->last_exit_status = 1;
-				free_shell(shell);
-				exit(1);
-			}
+				handle_redirection_error(shell, fd);
 			if (dup2(fd, STDOUT_FILENO) == -1)
-			{
-				perror("dup2 failed for output");
-				close(fd);
-				free_shell(shell);
-				exit(1);
-			}
-			close(fd);
+				handle_redirection_error(shell, fd);
 		}
+		close(fd); // Закрытие дескриптора после использования
 		redir = redir->next;
 	}
 }
