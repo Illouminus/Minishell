@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 14:09:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 09:34:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		ft_builtin_exit(current, shell);
-	if (!next_cmd)
+	if (next_cmd)
 		free_shell(shell);
 }
 
@@ -46,13 +46,13 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 		free_shell(shell);
 	}
 	if (current->is_builtin_cmd && current->next_cmd)
+	{
 		ft_exec_builtins(shell, true);
-	else if (current->is_builtin_cmd)
-		ft_exec_builtins(shell, false);
+	}
+
 	else
 	{
 		path = ft_get_path(current, shell);
-		printf("GOING IN EXECUTE");
 		if (!path)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -87,8 +87,8 @@ int ft_parent_process(t_command *current, t_shell *shell, int prev_fd)
 		close(prev_fd);
 	if (current->next_cmd)
 	{
-		close(current->pipe_fds[1]);
-		prev_fd = current->pipe_fds[0];
+		close(current->shell->pipe_fds[1]);
+		prev_fd = current->shell->pipe_fds[0];
 	}
 	return prev_fd;
 }
@@ -102,7 +102,7 @@ int ft_executor(t_shell *shell, char **env)
 	current = shell->command_list;
 	prev_fd = 0;
 
-	if (!current->next_cmd && current->is_builtin_cmd)
+	if (!current->next_cmd && current->is_builtin_cmd && !current->append_file && !current->output_file && !current->input_file)
 		ft_exec_builtins(shell, false);
 	else
 	{

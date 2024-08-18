@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 17:11:42 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/15 13:02:32 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,49 +25,43 @@ void ft_print_tokens(t_token *token_list)
 	printf("\n\n");
 }
 
-
-
 // Fonction principale de tokenisation
 void ft_tokenize_input(char *input, t_shell *shell)
 {
-    int i; 
-    int is_first_token; 
-    int inside_quote; 
-	int start; 
+	int i;
+	int is_first_token;
+	int inside_quote;
+	int start;
 
-    i = 0;
-    is_first_token = 1;
-    inside_quote = 0;
-    while (input[i])
-    {
-        i = ft_skip_whitespace(input, i);
-        if (input[i] == '\0')
-            break;
+	i = 0;
+	is_first_token = 1;
+	inside_quote = 0;
+	while (input[i])
+	{
+		i = ft_skip_whitespace(input, i);
+		if (input[i] == '\0')
+			break;
 		start = i;
-        if (ft_is_special_char(input[i]) && !inside_quote)
-        {
-            i++;  // Gérer le caractère spécial unique comme un token
-        }
-        else
-        {
-            i = ft_parse_regular_token(input, i, &inside_quote, shell);
-            if (i == -1) // En cas d'erreur
-                return;
-        }
+		if (ft_is_special_char(input[i]) && !inside_quote)
+		{
+			i++; // Gérer le caractère spécial unique comme un token
+		}
+		else
+		{
+			i = ft_parse_regular_token(input, i, &inside_quote, shell);
+			if (i == -1) // En cas d'erreur
+				return;
+		}
 
-        t_token_type type = ft_determine_token_type(input, start, is_first_token);
-        is_first_token = (type == TOKEN_TYPE_PIPE);
+		t_token_type type = ft_determine_token_type(input, start, is_first_token);
+		is_first_token = (type == TOKEN_TYPE_PIPE);
 
-        char *token_value = ft_strndup(&input[start], i - start);
-        ft_create_add_token(shell, type, token_value);
-        // printf("Token Value: %s\n", token_value);
-        free(token_value);
-    }
+		char *token_value = ft_strndup(&input[start], i - start);
+		ft_create_add_token(shell, type, token_value);
+		// printf("Token Value: %s\n", token_value);
+		free(token_value);
+	}
 }
-
-
-
-
 
 // Generate the tokens from the shell->user_input
 int lexer(t_shell *shell)

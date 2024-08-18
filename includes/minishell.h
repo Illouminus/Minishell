@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/13 16:04:11 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/16 11:27:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <stdbool.h>
 #include "../libft/libft.h"
@@ -74,7 +75,8 @@ typedef struct s_command
 	char *heredoc_marker;
 	char *input_file;
 	char *output_file;
-	int pipe_fds[2];
+	char *append_file;
+	struct s_shell *shell;
 } t_command;
 
 // Structure pour les variables d'environnement
@@ -99,6 +101,7 @@ typedef struct s_shell
 	int saved_stdin_fd;
 	int tmp_proccess_status;
 	int last_exit_status;
+	int pipe_fds[2];
 	t_env *env_var_list;
 } t_shell;
 
@@ -116,7 +119,7 @@ void ft_create_add_token(t_shell *shell, int type, char *value);
 void ft_free_cmd_args(char **cmd_args);
 int ft_is_special_char(char c);
 int ft_skip_whitespace(char *input, int i);
-int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell); 
+int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell);
 int ft_handle_quotes(t_shell *shell, char *input, int i, int *inside_quote);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
 
@@ -170,11 +173,10 @@ void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
-char *ft_expander(char *str, t_shell *shell);
 
 /*Expander */
 
-char *ft_expander(char *str, t_shell *shell);
+char *ft_expander(char *str, t_shell *shell, int inside_single_quote);
 void add_char_to_result(char **result, int *j, char c);
 int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/15 11:02:22 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 09:47:18 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int ft_cmd_is_built_in(char *value)
 	return (0);
 }
 
-t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_value_clean)
+t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_value_clean, t_shell *shell)
 {
 	command = malloc(sizeof(t_command));
 	if (!command)
@@ -47,6 +47,8 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args, char *cmd_val
 	command->next_cmd = NULL;
 	command->input_file = NULL;
 	command->output_file = NULL;
+	command->append_file = NULL;
+	command->shell = shell;
 	return (command);
 }
 
@@ -106,33 +108,28 @@ int ft_determine_nb_args(t_token *token_list)
 	// printf("Nb of args : %d\n", i);
 	return (i);
 }
-
-// Gestion des guillemets dans les value des tokens | Value propre prête à envoyer à la création de commandes
-char *ft_clean_token_value(const char *token)
+char *ft_clean_token_value(const char *token, int *inside_single_quote)
 {
 	size_t len = ft_strlen(token);
 	size_t i = 0;
 	size_t j = 0;
-	int inside_single_quote = 0;
 	int inside_double_quote = 0;
 
-	// Allouer une nouvelle chaîne pour stocker le résultat (taille maximale = len)
 	char *cleaned = (char *)malloc(len + 1);
 	if (!cleaned)
 	{
-		return NULL; // Gestion de l'erreur si l'allocation échoue
+		return NULL;
 	}
 
-	// Parcourir chaque caractère de la chaîne d'entrée
 	while (i < len)
 	{
 		if (token[i] == '\'' && !inside_double_quote)
 		{
-			inside_single_quote = !inside_single_quote; // Alterne l'état des guillemets simples
+			*inside_single_quote = 1;
 		}
-		else if (token[i] == '"' && !inside_single_quote)
+		else if (token[i] == '"' && !(*inside_single_quote))
 		{
-			inside_double_quote = !inside_double_quote; // Alterne l'état des guillemets doubles
+			inside_double_quote = 1;
 		}
 		else
 		{
@@ -142,7 +139,6 @@ char *ft_clean_token_value(const char *token)
 		i++;
 	}
 
-	// Ajouter le caractère nul de fin
 	cleaned[j] = '\0';
 
 	return cleaned;
@@ -168,12 +164,13 @@ int parser(t_shell *shell)
 	{
 		while (current_token)
 		{
-			cmd_value_clean = ft_clean_token_value(current_token->tok_value);
+			int inside_single_quote = 0;
+			cmd_value_clean = ft_clean_token_value(current_token->tok_value, &inside_single_quote);
 			if (current_token->tok_type == TOKEN_TYPE_CMD)
 			{
 				cmd_nb_args = ft_determine_nb_args(current_token);
 				i = 0;
-				new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean);
+				new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean, shell);
 				if (last_command)
 				{
 					last_command->next_cmd = new_command;
@@ -189,16 +186,16 @@ int parser(t_shell *shell)
 			{
 				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
 				{
-					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell);
+					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
 				}
 				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 				{
-					last_command->output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value), shell);
+					last_command->output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
 				}
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
 			{
-				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell);
+				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell, inside_single_quote);
 				i++;
 			}
 			current_token = current_token->next_tok;

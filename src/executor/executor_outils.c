@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_outils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 15:39:03 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/16 11:32:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void ft_pipe(t_command *current, t_shell *shell)
 {
 	if (current->next_cmd)
 	{
-		if (pipe(current->pipe_fds) == -1)
+		if (pipe(current->shell->pipe_fds) == -1)
 			ft_exit_error(shell, "pipe failed"); // TODO: handle error
 	}
 	shell->last_process_id = fork();
