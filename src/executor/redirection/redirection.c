@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/16 14:32:34 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 09:46:10 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,9 +155,9 @@ static void handle_prev_fd_redirection(int prev_fd)
 
 void handle_redirections(t_command *current, int prev_fd)
 {
+	handle_prev_fd_redirection(prev_fd);
+	handle_pipe_redirection(current);
 	handle_input_redirection(current->input_file, current->shell);
 	handle_output_redirection(current->output_file, current->shell);
 	handle_output_append_redirection(current->append_file, current->shell);
-	handle_prev_fd_redirection(prev_fd);
-	handle_pipe_redirection(current);
 }

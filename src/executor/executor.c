@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/16 14:33:14 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 09:34:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 		free_shell(shell);
 	}
 	if (current->is_builtin_cmd && current->next_cmd)
+	{
 		ft_exec_builtins(shell, true);
+	}
+
 	else
 	{
 		path = ft_get_path(current, shell);
-		printf("GOING IN EXECUTE");
 		if (!path)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
