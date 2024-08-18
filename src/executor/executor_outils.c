@@ -6,21 +6,11 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 13:31:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 13:42:02 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void ft_exit_error(t_shell *shell, char *error_message)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(error_message, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
-	shell->last_exit_status = 1;
-	exit(1);
-}
-
 void handle_error(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
 {
 	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
@@ -34,12 +24,13 @@ void ft_pipe(t_command *current, t_shell *shell)
 	if (current->next_cmd)
 	{
 		if (pipe(current->shell->pipe_fds) == -1)
-			ft_exit_error(shell, "pipe failed"); // TODO: handle error
+			handle_error("pipe", "failed to create pipe", 1, shell);
 	}
+
 	shell->last_process_id = fork();
 
 	if (shell->last_process_id == -1)
-		ft_exit_error(shell, "fork failed"); // TODO: handle error
+		handle_error("fork", "failed to fork process", 1, shell);
 }
 
 void ft_free_array(char **split)
@@ -60,25 +51,15 @@ static char *ft_absolute_path(char *cmd, t_shell *shell)
 	struct stat path_stat;
 
 	if (stat(cmd, &path_stat) == -1)
-	{
 		handle_error(cmd, "No such file or directory", 127, shell);
-	}
-
 	if (S_ISDIR(path_stat.st_mode))
-	{
 		handle_error(cmd, "Is a directory", 126, shell);
-	}
-
 	if (access(cmd, X_OK) == 0)
 		return cmd;
 	if (access(cmd, F_OK) == -1)
-	{
 		handle_error(cmd, "No such file or directory", 127, shell);
-	}
 	else
-	{
 		shell->last_exit_status = 126;
-	}
 	return cmd;
 }
 

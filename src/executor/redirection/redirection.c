@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 09:46:10 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 13:53:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,6 @@ static void handle_input_redirection(const char *input_file, t_shell *shell)
 
 	if (input_file)
 	{
-		if (check_file_access(input_file, R_OK) == -1)
-		{
-			free_shell(shell);
-			exit(1);
-			return; // Если файл недоступен или это директория, выходим
-		}
 		input_fd = open(input_file, O_RDONLY);
 		if (input_fd == -1)
 		{

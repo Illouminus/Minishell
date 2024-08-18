@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 11:56:53 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 14:58:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,41 @@ void ft_afficher_command_list(t_command *command_list)
 		current_command = current_command->next_cmd;
 		index++;
 	}
+}
+
+void handle_error_parser(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
+{
+	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
+	shell->last_exit_status = exit_code;
+	// free_shell(shell);
+	//  ßexit(shell->last_exit_status);
+}
+
+static int ft_check_input_file(char *file_path, t_shell *shell)
+{
+	struct stat path_stat;
+
+	// Проверка существования файла
+	if (stat(file_path, &path_stat) == -1)
+	{
+		handle_error_parser(file_path, "No such file or directory", 1, shell);
+		return 1;
+	}
+
+	// Проверка на то, что это не директория
+	if (S_ISDIR(path_stat.st_mode))
+	{
+		handle_error_parser(file_path, "Is a directory", 1, shell);
+		return 1;
+	}
+
+	// Проверка на возможность чтения файла
+	if (access(file_path, R_OK) == -1)
+	{
+		handle_error_parser(file_path, "Permission denied", 1, shell);
+		return 1;
+	}
+	return 0;
 }
 
 // Nombre d'arguments depuis la liste de tokens
@@ -186,7 +221,9 @@ int parser(t_shell *shell)
 			{
 				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
 				{
-					last_command->input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					char *input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
+					ft_check_input_file(input_file, shell);
+					last_command->input_file = input_file;
 				}
 				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
 				{

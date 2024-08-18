@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 10:36:27 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 14:39:02 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,47 @@
 
 int g_exit_code;
 
-int minishell(char **env)
+int minishell(t_shell *shell, char **env)
 {
-	t_shell shell;
-
-	if (init_shell(&shell, env) == 1)
+	if (init_shell(shell, env) == 1)
 		return (1);
 	setup_signal_handlers();
 	while (1)
 	{
-		shell.user_input = readline("minishell >>  ");
+		shell->user_input = readline("minishell >>  ");
 		if (g_exit_code == 130)
 		{
-			shell.last_exit_status = 130;
+			shell->last_exit_status = 130;
 			g_exit_code = 0;
 		}
-		handle_exit(&shell);
+		handle_exit(shell);
 
-		if (lexer(&shell) == EXIT_SUCCESS && parser(&shell) == EXIT_SUCCESS)
+		if (lexer(shell) == EXIT_SUCCESS && parser(shell) == EXIT_SUCCESS)
 		{
-			g_exit_code = ft_executor(&shell, env);
-			shell.last_exit_status = g_exit_code;
+			g_exit_code = ft_executor(shell, env);
+			shell->last_exit_status = g_exit_code;
 		}
 		else
 		{
 			g_exit_code = 1;
-			shell.last_exit_status = g_exit_code;
+			shell->last_exit_status = g_exit_code;
 		}
-		free_shell(&shell);
+		free_shell(shell);
 	}
-	free_shell(&shell);
-	return (EXIT_SUCCESS);
+	free_shell(shell);
+	printf("shell last exit status: %d\n", shell->last_exit_status);
+	return (shell->last_exit_status);
 }
 
 int main(int argc, char **argv, char **env)
 {
+	t_shell shell;
 
 	(void)argc;
 	(void)argv;
 
-	minishell(env);
+	int exit_code = minishell(&shell, env);
 
-	return (0);
+	free_shell(&shell);
+	return (exit_code);
 }
