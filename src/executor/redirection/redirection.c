@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 18:22:56 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 07:10:28 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static int validate_redirections(t_command *current, t_shell *shell)
 		}
 		redir = redir->next;
 	}
-
 	return 0;
 }
 
