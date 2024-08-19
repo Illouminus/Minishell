@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 13:42:02 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 10:01:36 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,17 @@ void ft_free_array(char **split)
 static char *ft_absolute_path(char *cmd, t_shell *shell)
 {
 	struct stat path_stat;
-
 	if (stat(cmd, &path_stat) == -1)
 		handle_error(cmd, "No such file or directory", 127, shell);
 	if (S_ISDIR(path_stat.st_mode))
-		handle_error(cmd, "Is a directory", 126, shell);
+		handle_error(cmd, "is a directory", 126, shell);
 	if (access(cmd, X_OK) == 0)
 		return cmd;
 	if (access(cmd, F_OK) == -1)
 		handle_error(cmd, "No such file or directory", 127, shell);
 	else
-		shell->last_exit_status = 126;
-	return cmd;
+		handle_error(cmd, "Permission denied", 126, shell);
+	return NULL;
 }
 
 char *ft_get_path(t_command *current, t_shell *shell)

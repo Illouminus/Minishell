@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 15:26:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 11:21:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int minishell(t_shell *shell, char **env)
 			g_exit_code = 0;
 		}
 		handle_exit(shell);
-
 		if (lexer(shell) == EXIT_SUCCESS && parser(shell) == EXIT_SUCCESS)
 		{
 			g_exit_code = ft_executor(shell, env);
