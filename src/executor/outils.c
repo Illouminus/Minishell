@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 13:41:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 11:32:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void wait_commands(t_shell *shell)
 					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 				else if (shell->last_exit_status == 139)
 					ft_putstr_fd("Segmentation fault (core dumped)\n", STDERR_FILENO);
+				else if (shell->last_exit_status == 141)
+					ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
 			}
 			if (shell->last_exit_status == 130)
 				ft_putstr_fd("\n", STDERR_FILENO);
