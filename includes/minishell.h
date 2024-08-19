@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/19 09:24:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 16:26:12 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef enum e_token_type
 	TOKEN_TYPE_REDIR_OUT,
 	TOKEN_TYPE_REDIR_APPEND,
 	TOKEN_TYPE_PIPE,
+	TOKEN_TYPE_HEREDOC,
 	TOKEN_TYPE_EOF,
 } t_token_type;
 
@@ -203,7 +204,7 @@ void setup_signal_handlers(void);
 /* ========================================================= */
 
 void free_shell(t_shell *shell);
-int ft_heredoc_handler(t_command *command, t_shell *shell);
+char *ft_heredoc_handler(char *marker);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
 void print_error(char *cmd, char *error_message);
