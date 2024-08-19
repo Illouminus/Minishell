@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 09:56:16 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 10:22:50 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 	char **cmd_args;
 	signal(SIGQUIT, SIG_DFL);
 
-	if (!current->cmd_value)
+	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
 	{
 		shell->last_exit_status = 0;
-		free_shell(shell);
+		return; // Пропускаем выполнение пустой команды
 	}
 	if (current->is_builtin_cmd && current->next_cmd)
 	{

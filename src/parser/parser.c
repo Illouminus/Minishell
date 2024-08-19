@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 09:58:41 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 10:59:09 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,12 @@ int parser(t_shell *shell)
 		{
 			int inside_single_quote = 0;
 			cmd_value_clean = ft_expander(ft_clean_token_value(current_token->tok_value, &inside_single_quote), shell, inside_single_quote);
+			if (*cmd_value_clean == '\0' && current_token->next_tok)
+			{
+				current_token = current_token->next_tok;
+				current_token->tok_type = TOKEN_TYPE_CMD;
+				continue;
+			}
 			if (current_token->tok_type == TOKEN_TYPE_CMD)
 			{
 				cmd_nb_args = ft_determine_nb_args(current_token);

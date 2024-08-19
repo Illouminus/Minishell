@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 18:33:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 10:30:56 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ void handle_env_variable(const char *str, int *i, char **result, int *j, int *le
 		ft_strncpy(&(*result)[*j], env_value, env_len);
 		*j += env_len;
 		*len += env_len;
+	}
+	else
+	{
+		(*result)[*j] = '\0';
+		*j += 1;
 	}
 }
 
