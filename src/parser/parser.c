@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/18 17:50:53 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/18 18:33:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ int parser(t_shell *shell)
 		}
 		// ft_afficher_command_list(shell->command_list);
 	}
+
 	if (last_command && last_command->cmd_args)
 		last_command->cmd_args[i] = NULL;
 	return (EXIT_SUCCESS);
