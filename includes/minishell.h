@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/18 17:49:25 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 09:24:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef enum e_token_type
 	TOKEN_TYPE_EOF,
 } t_token_type;
 
+// Enumération des types de redirections
 typedef enum e_redir_type
 {
 	REDIR_IN,
@@ -71,6 +72,7 @@ typedef struct s_token
 	struct s_token *prev_tok;
 } t_token;
 
+// Structure d'une redirection
 typedef struct s_redir
 {
 	char *filename;
@@ -127,8 +129,11 @@ typedef struct s_shell
 -------------------------------------------------------------
 */
 
-/* PARSING */
-/* Tokens - Utils */
+/* ========================================================= */
+/*                          PARSING                          */
+/* ========================================================= */
+
+/* Tokens - Fonctions Utilitaires */
 t_token *ft_create_token(int type, char *value);
 void ft_add_token(t_shell *shell, t_token *new_token);
 void ft_create_add_token(t_shell *shell, int type, char *value);
@@ -139,17 +144,41 @@ int ft_parse_regular_token(char *input, int i, int *inside_quote, t_shell *shell
 int ft_handle_quotes(t_shell *shell, char *input, int i, int *inside_quote);
 t_token_type ft_determine_token_type(char *input, int start, int is_first_token);
 
-// Tokens - Main Functions
+/* Tokens - Fonctions Principales */
 void ft_tokenize_input(char *input, t_shell *shell);
 int lexer(t_shell *shell);
 
-// Parsing
+/* Analyse Syntaxique (Parsing) */
 int parser(t_shell *shell);
 
-/* Execution */
+/* ========================================================= */
+/*                        EXECUTION                          */
+/* ========================================================= */
+
+/* Initialisation du Shell */
 int init_shell(t_shell *shell, char **env);
 
-/* Variables d'environnement */
+/* Exécution des Commandes */
+int ft_executor(t_shell *shell, char **env);
+char **ft_construct_cmd_args(char *cmd_name, char **cmd_args);
+char *ft_get_path(t_command *current, t_shell *shell);
+void handle_redirections(t_command *current, int prev_fd);
+void ft_pipe(t_command *current, t_shell *shell);
+void wait_commands(t_shell *shell);
+
+/* Fonctions Intégrées (Built-Ins) */
+int ft_builtin_cd(t_command *cmd, t_shell *shell);
+int ft_builtin_echo(t_command *cmd);
+int ft_builtin_env(t_env *env);
+int ft_builtin_export(t_command *cmd, t_env *env_list);
+int ft_builtin_pwd(t_command *commands);
+int ft_builtin_unset(t_command *cmd, t_env **env_list);
+void ft_builtin_exit(t_command *commands, t_shell *shell);
+
+/* ========================================================= */
+/*                VARIABLES D'ENVIRONNEMENT                  */
+/* ========================================================= */
+
 t_env *init_env_vars(char **env);
 t_env *init_default_env_vars(void);
 t_env *create_env_var_node(char *env_str);
@@ -161,40 +190,32 @@ void add_env_var_to_list(t_env **head, t_env *new_var);
 void global_exit_env(t_shell *shell, int status);
 void free_env_var_list(t_env *env);
 
-/* Gestion des signaux */
+/* ========================================================= */
+/*                  GESTION DES SIGNAUX                      */
+/* ========================================================= */
+
 void handle_sigint(int sig);
+void handle_sigpipe(int sig);
 void setup_signal_handlers(void);
-void print_error(char *cmd, char *error_message);
 
-/* Fonctions intégrées (Built-In) */
-int ft_builtin_cd(t_command *cmd, t_shell *shell);
-int ft_builtin_echo(t_command *cmd);
-int ft_builtin_env(t_env *env);
-int ft_builtin_export(t_command *cmd, t_env *env_list);
-int ft_builtin_pwd(t_command *commands);
-int ft_builtin_unset(t_command *cmd, t_env **env_list);
-void ft_builtin_exit(t_command *commands, t_shell *shell);
+/* ========================================================= */
+/*                    FONCTIONS UTILITAIRES                  */
+/* ========================================================= */
 
-/* Fonctions d'exécution */
-int ft_executor(t_shell *shell, char **env);
-char **ft_construct_cmd_args(char *cmd_name, char **cmd_args);
-char *ft_get_path(t_command *current, t_shell *shell);
-void handle_redirections(t_command *current, int prev_fd);
-void ft_pipe(t_command *current, t_shell *shell);
-void ft_free_array(char **split);
-void wait_commands(t_shell *shell);
-
-/* Fonctions utilitaires */
 void free_shell(t_shell *shell);
 int ft_heredoc_handler(t_command *command, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
+void print_error(char *cmd, char *error_message);
 
-/*Expander */
+/* ========================================================= */
+/*                          EXPANDER                         */
+/* ========================================================= */
 
 char *ft_expander(char *str, t_shell *shell, int inside_single_quote);
 void add_char_to_result(char **result, int *j, char c);
 int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);
 void add_redirection(t_command *cmd, int type, char *filename);
+
 #endif // MINISHELL_H

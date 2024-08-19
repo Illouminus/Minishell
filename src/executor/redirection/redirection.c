@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 08:57:33 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/19 09:04:34 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,3 +149,4 @@ void handle_redirections(t_command *current, int prev_fd)
 	handle_pipe_redirection(current);
 
 	perform_redirections(input_fd, output_fd, current->shell);
+}
