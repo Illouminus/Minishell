@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/19 16:26:12 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:29:15 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef enum e_token_type
 	TOKEN_TYPE_REDIR_IN,
 	TOKEN_TYPE_REDIR_OUT,
 	TOKEN_TYPE_REDIR_APPEND,
-	TOKEN_TYPE_PIPE,
 	TOKEN_TYPE_HEREDOC,
+	TOKEN_TYPE_PIPE,
 	TOKEN_TYPE_EOF,
 } t_token_type;
 
@@ -114,10 +114,8 @@ typedef struct s_shell
 	t_command *command_list;
 	pid_t last_process_id;
 	int wait_status;
-	char *command_path;
 	char **env_vars;
 	char *heredoc_tempfile;
-	int saved_stdin_fd;
 	int tmp_proccess_status;
 	int last_exit_status;
 	int pipe_fds[2];
@@ -166,6 +164,8 @@ char *ft_get_path(t_command *current, t_shell *shell);
 void handle_redirections(t_command *current, int prev_fd);
 void ft_pipe(t_command *current, t_shell *shell);
 void wait_commands(t_shell *shell);
+void ft_free_array(char **array);
+void handle_error(const char *cmd, const char *error_message, int exit_code, t_shell *shell);
 
 /* Fonctions Intégrées (Built-Ins) */
 int ft_builtin_cd(t_command *cmd, t_shell *shell);

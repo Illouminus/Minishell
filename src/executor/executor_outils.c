@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 10:01:36 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:25:47 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,13 @@ void ft_pipe(t_command *current, t_shell *shell)
 	if (current->next_cmd)
 	{
 		if (pipe(current->shell->pipe_fds) == -1)
-			handle_error("pipe", "failed to create pipe", 1, shell);
+			handle_error("pipe", strerror(errno), 1, shell);
 	}
 
 	shell->last_process_id = fork();
 
 	if (shell->last_process_id == -1)
-		handle_error("fork", "failed to fork process", 1, shell);
-}
-
-void ft_free_array(char **split)
-{
-	int i;
-
-	i = 0;
-	while (split[i])
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
+		handle_error("fork", strerror(errno), 1, shell);
 }
 
 static char *ft_absolute_path(char *cmd, t_shell *shell)

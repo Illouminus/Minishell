@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 11:21:27 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:29:21 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 	else if (ft_strcmp(current->cmd_value, "export") == 0)
 		shell->last_exit_status = ft_builtin_export(current, shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "unset") == 0)
-		shell->last_exit_status = ft_builtin_export(current, shell->env_var_list);
+		shell->last_exit_status = ft_builtin_unset(current, &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
@@ -38,8 +38,8 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 {
 	char *path;
 	char **cmd_args;
-	signal(SIGQUIT, SIG_DFL);
 
+	signal(SIGQUIT, SIG_DFL);
 	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
 	{
 		shell->last_exit_status = 0;
@@ -47,29 +47,18 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 		exit(shell->last_exit_status);
 	}
 	if (current->is_builtin_cmd && current->next_cmd)
-	{
 		ft_exec_builtins(shell, true);
-	}
-
 	else
 	{
 		path = ft_get_path(current, shell);
 		if (!path)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(current->cmd_value, STDERR_FILENO);
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
-			exit(127);
-		}
+			handle_error(current->cmd_value, "command not found", 127, shell);
 		cmd_args = ft_construct_cmd_args(current->cmd_value, current->cmd_args);
 		if (execve(path, cmd_args, env) == -1)
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(current->cmd_value, STDERR_FILENO);
-			ft_putstr_fd(": ", STDERR_FILENO);
-			ft_putstr_fd(strerror(errno), STDERR_FILENO);
-			ft_putstr_fd("\n", STDERR_FILENO);
-			exit(1);
+			free(path);
+			ft_free_array(cmd_args);
+			handle_error(current->cmd_value, strerror(errno), 1, shell);
 		}
 	}
 }
@@ -81,9 +70,8 @@ static void ft_child_process(t_command *current, t_shell *shell, int prev_fd, ch
 	exit(shell->last_exit_status);
 }
 
-int ft_parent_process(t_command *current, t_shell *shell, int prev_fd)
+int ft_parent_process(t_command *current, int prev_fd)
 {
-	(void)shell;
 	if (prev_fd != 0)
 		close(prev_fd);
 	if (current->next_cmd)
@@ -113,7 +101,7 @@ int ft_executor(t_shell *shell, char **env)
 			if (shell->last_process_id == 0)
 				ft_child_process(current, shell, prev_fd, env);
 			else
-				prev_fd = ft_parent_process(current, shell, prev_fd);
+				prev_fd = ft_parent_process(current, prev_fd);
 			current = current->next_cmd;
 		}
 	}

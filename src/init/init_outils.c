@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 17:07:10 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 09:54:12 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ int init_shell(t_shell *shell, char **env)
 	shell->last_process_id = -2;
 	shell->last_exit_status = 0;
 	shell->heredoc_tempfile = NULL;
-	shell->saved_stdin_fd = -1;
 	shell->user_input = NULL;
-	shell->command_path = NULL;
 	shell->heredoc_tempfile = ft_strdup("heredoc_tempfile");
 	shell->pipe_fds[0] = -2;
 	shell->pipe_fds[1] = -2;

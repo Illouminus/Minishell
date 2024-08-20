@@ -6,18 +6,25 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 11:32:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:18:17 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_error(char *cmd, char *error_message)
+void ft_free_array(char **array)
 {
-	ft_putstr_fd(cmd, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(error_message, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
+	int i = 0;
+
+	if (!array)
+		return;
+
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }
 
 char *ft_getenv(t_env *env_list, const char *name)

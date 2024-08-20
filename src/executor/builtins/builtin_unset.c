@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:26 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/06 17:19:48 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:28:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void ft_unsetenv(t_env **env_list, const char *name)
 				previous->next_env = current->next_env;
 			else
 				*env_list = current->next_env;
+
 			free(current->env_var_name);
 			free(current->env_value);
 			free(current);
@@ -37,19 +38,13 @@ void ft_unsetenv(t_env **env_list, const char *name)
 
 int ft_builtin_unset(t_command *cmd, t_env **env_list)
 {
-	int i;
-
-	i = 0;
+	int i = 1;
 
 	if (!cmd->cmd_args[1])
-	{
-		print_error("unset", "not enough arguments");
-		return 1;
-	}
+		return 0;
 
 	while (cmd->cmd_args[i])
 	{
-
 		ft_unsetenv(env_list, cmd->cmd_args[i]);
 		i++;
 	}
