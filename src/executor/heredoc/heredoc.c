@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 16:39:45 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 11:34:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char *ft_heredoc_handler(char *marker)
 	char *input_line;
 	size_t len = 1024;
 	ssize_t read_len;
-	char *tempfile_path = ft_strdup("/tmp/minishell_heredoc");
+	char *tempfile_path = ft_strdup("minishell_heredoc");
 	int tmp_fd = open(tempfile_path, O_CREAT | O_RDWR | O_TRUNC, 0600);
 
 	if (tmp_fd == -1)

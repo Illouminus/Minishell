@@ -8,7 +8,7 @@ obj/src/lexer/*.o
 obj/src/outils/*.o
 obj/
 minishell_tester
-
+minishell_heredoc
 # Ignoring executable
 minishell
 

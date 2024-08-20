@@ -6,12 +6,11 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 17:09:35 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 11:35:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <ncurses.h>
 
 int g_exit_code;
 

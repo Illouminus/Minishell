@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 10:25:47 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 11:51:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char *ft_get_path(t_command *current, t_shell *shell)
 		return ft_absolute_path(current->cmd_value, shell);
 
 	path_env = ft_get_env_var_by_name(shell->env_var_list, "PATH");
+	if (!path_env)
+		return NULL;
 	split = ft_split(path_env->env_value, ':');
 	i = 0;
 
