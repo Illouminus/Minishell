@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/20 10:29:15 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 11:03:47 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ int ft_builtin_export(t_command *cmd, t_env *env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
 void ft_builtin_exit(t_command *commands, t_shell *shell);
+void ft_print_env_list(t_env *env_list);
 
 /* ========================================================= */
 /*                VARIABLES D'ENVIRONNEMENT                  */

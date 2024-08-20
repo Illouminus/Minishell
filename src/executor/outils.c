@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 10:18:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 11:03:36 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,17 @@ void wait_commands(t_shell *shell)
 
 	if (g_exit_code == 130)
 		shell->last_exit_status = 130;
+}
+
+void ft_print_env_list(t_env *env_list)
+{
+	t_env *current = env_list;
+	while (current)
+	{
+		ft_putstr_fd(current->env_var_name, STDOUT_FILENO);
+		ft_putstr_fd("=", STDOUT_FILENO);
+		ft_putstr_fd(current->env_value, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		current = current->next_env;
+	}
 }
