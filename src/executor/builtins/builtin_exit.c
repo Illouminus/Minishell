@@ -6,9 +6,11 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/13 15:25:20 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 10:55:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 #include "minishell.h"
 
@@ -22,14 +24,29 @@ static void handle_exit_error(const char *arg, t_shell *shell)
 	exit(shell->last_exit_status);
 }
 
+static int is_numeric(const char *arg)
+{
+	int i = 0;
+
+	if (arg[i] == '-' || arg[i] == '+')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 static int get_exit_status(const char *arg, t_shell *shell)
 {
-	char *endptr;
-	long stat = strtol(arg, &endptr, 10);
+	long stat;
 
-	// Проверка на ошибку при конвертации
-	if (*endptr != '\0' || errno == ERANGE)
+	if (!is_numeric(arg))
 		handle_exit_error(arg, shell);
+
+	stat = ft_atol(arg);
 
 	if (stat > 255 || stat < 0)
 		stat = (unsigned char)stat;
