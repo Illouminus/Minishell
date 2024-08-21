@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 11:03:36 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 10:24:29 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ void wait_commands(t_shell *shell)
 		if (result == shell->last_process_id)
 		{
 			if (WIFEXITED(shell->tmp_proccess_status))
-			{
 				shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
-			}
 			else
 			{
 				shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
@@ -82,11 +80,8 @@ void wait_commands(t_shell *shell)
 				else if (shell->last_exit_status == 141)
 					ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
 			}
-			if (shell->last_exit_status == 130)
-				ft_putstr_fd("\n", STDERR_FILENO);
 		}
 	}
-
 	if (g_exit_code == 130)
 		shell->last_exit_status = 130;
 }
