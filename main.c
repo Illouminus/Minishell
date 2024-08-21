@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 11:55:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 12:38:38 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ int minishell(t_shell *shell, char **env)
 {
 	if (init_shell(shell, env) == 1)
 		return (1);
-	setup_signal_handlers();
 	while (1)
 	{
+		setup_signal_handlers();
 		shell->user_input = readline("minishell >>  ");
 		if (g_exit_code == 130)
 		{
