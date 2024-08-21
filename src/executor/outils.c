@@ -6,18 +6,25 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 11:32:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 15:55:46 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_error(char *cmd, char *error_message)
+void ft_free_array(char **array)
 {
-	ft_putstr_fd(cmd, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(error_message, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
+	int i = 0;
+
+	if (!array)
+		return;
+
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }
 
 char *ft_getenv(t_env *env_list, const char *name)
@@ -41,6 +48,8 @@ void ft_setenv(t_env **env_list, const char *name, const char *value)
 	else
 	{
 		t_env *new_var = malloc(sizeof(t_env));
+		if (!new_var)
+			return;
 		if (new_var)
 		{
 			new_var->env_var_name = strdup(name);
@@ -62,9 +71,7 @@ void wait_commands(t_shell *shell)
 		if (result == shell->last_process_id)
 		{
 			if (WIFEXITED(shell->tmp_proccess_status))
-			{
 				shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
-			}
 			else
 			{
 				shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
@@ -75,11 +82,21 @@ void wait_commands(t_shell *shell)
 				else if (shell->last_exit_status == 141)
 					ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
 			}
-			if (shell->last_exit_status == 130)
-				ft_putstr_fd("\n", STDERR_FILENO);
 		}
 	}
-
 	if (g_exit_code == 130)
 		shell->last_exit_status = 130;
+}
+
+void ft_print_env_list(t_env *env_list)
+{
+	t_env *current = env_list;
+	while (current)
+	{
+		ft_putstr_fd(current->env_var_name, STDOUT_FILENO);
+		ft_putstr_fd("=", STDOUT_FILENO);
+		ft_putstr_fd(current->env_value, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		current = current->next_env;
+	}
 }

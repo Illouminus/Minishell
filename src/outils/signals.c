@@ -6,11 +6,35 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:43:31 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 11:26:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 12:40:14 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void free_env_vars(t_env **env_var_list)
+{
+	t_env *env_temp;
+	while (*env_var_list)
+	{
+		env_temp = *env_var_list;
+		*env_var_list = (*env_var_list)->next_env;
+		free(env_temp->env_var_name);
+		free(env_temp->env_value);
+		free(env_temp);
+	}
+	*env_var_list = NULL;
+}
+
+void handle_exit(t_shell *shell)
+{
+	if (!shell->user_input)
+	{
+		if (isatty(STDIN_FILENO))
+			printf(" exit\n");
+		global_exit(shell);
+	}
+}
 
 void handle_sigint(int sig)
 {
@@ -25,11 +49,29 @@ void handle_sigint(int sig)
 
 void setup_signal_handlers(void)
 {
-	struct sigaction sa;
+	struct sigaction sa_int, sa_quit;
 
-	sa.sa_handler = handle_sigint;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
+	sa_int.sa_handler = handle_sigint;
+	sa_int.sa_flags = 0;
+	sigemptyset(&sa_int.sa_mask);
+	sigaction(SIGINT, &sa_int, NULL);
 
-	sigaction(SIGINT, &sa, NULL);
+	sa_quit.sa_handler = SIG_IGN;
+	sa_quit.sa_flags = 0;
+	sigemptyset(&sa_quit.sa_mask);
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void global_exit(t_shell *shell)
+{
+	if (shell->env_var_list)
+		free_env_vars(&shell->env_var_list);
+	if (shell->user_input)
+	{
+		free(shell->user_input);
+		shell->user_input = NULL;
+	}
+	free_shell(shell);
+	clear_history();
+	exit(shell->last_exit_status);
 }

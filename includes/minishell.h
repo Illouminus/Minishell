@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/19 16:26:12 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:46:03 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef enum e_token_type
 	TOKEN_TYPE_REDIR_IN,
 	TOKEN_TYPE_REDIR_OUT,
 	TOKEN_TYPE_REDIR_APPEND,
-	TOKEN_TYPE_PIPE,
 	TOKEN_TYPE_HEREDOC,
+	TOKEN_TYPE_PIPE,
 	TOKEN_TYPE_EOF,
 } t_token_type;
 
@@ -114,10 +114,7 @@ typedef struct s_shell
 	t_command *command_list;
 	pid_t last_process_id;
 	int wait_status;
-	char *command_path;
 	char **env_vars;
-	char *heredoc_tempfile;
-	int saved_stdin_fd;
 	int tmp_proccess_status;
 	int last_exit_status;
 	int pipe_fds[2];
@@ -166,15 +163,20 @@ char *ft_get_path(t_command *current, t_shell *shell);
 void handle_redirections(t_command *current, int prev_fd);
 void ft_pipe(t_command *current, t_shell *shell);
 void wait_commands(t_shell *shell);
-
+void ft_free_array(char **array);
+void handle_error(const char *cmd, const char *error_message, int exit_code, t_shell *shell);
+void handle_error_non_critical(const char *cmd, const char *error_message, int exit_code, t_shell *shell);
+void handle_redirection_error(const char *filepath, const char *error_message, int exit_code, t_shell *shell, int fd);
+int check_and_open_file(const char *filepath, int flags, mode_t mode, t_shell *shell);
 /* Fonctions Intégrées (Built-Ins) */
 int ft_builtin_cd(t_command *cmd, t_shell *shell);
 int ft_builtin_echo(t_command *cmd);
 int ft_builtin_env(t_env *env);
-int ft_builtin_export(t_command *cmd, t_env *env_list);
+int ft_builtin_export(t_command *cmd, t_env **env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
 void ft_builtin_exit(t_command *commands, t_shell *shell);
+void ft_print_env_list(t_env *env_list);
 
 /* ========================================================= */
 /*                VARIABLES D'ENVIRONNEMENT                  */
@@ -188,7 +190,7 @@ t_env *ft_get_env_var_by_name(t_env *head, const char *name);
 char *ft_getenv(t_env *env_list, const char *name);
 void ft_setenv(t_env **env_list, const char *name, const char *value);
 void add_env_var_to_list(t_env **head, t_env *new_var);
-void global_exit_env(t_shell *shell, int status);
+void global_exit(t_shell *shell);
 void free_env_var_list(t_env *env);
 
 /* ========================================================= */
@@ -207,7 +209,6 @@ void free_shell(t_shell *shell);
 char *ft_heredoc_handler(char *marker);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
-void print_error(char *cmd, char *error_message);
 
 /* ========================================================= */
 /*                          EXPANDER                         */

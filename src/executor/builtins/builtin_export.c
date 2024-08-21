@@ -6,24 +6,11 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:22 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/10 13:01:40 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:04:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void ft_print_env_list(t_env *env_list)
-{
-	t_env *current = env_list;
-	while (current)
-	{
-		ft_putstr_fd(current->env_var_name, STDOUT_FILENO);
-		ft_putstr_fd("=", STDOUT_FILENO);
-		ft_putstr_fd(current->env_value, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		current = current->next_env;
-	}
-}
 
 static int ft_check_var_name(const char *var_name)
 {
@@ -42,55 +29,67 @@ static int ft_check_var_name(const char *var_name)
 	return 0;
 }
 
-static int ft_export_variable(t_env *env_list, char *var)
+static int ft_export_error(const char *var_name)
 {
-	char *var_name;
-	char *var_value;
+	ft_putstr_fd("export: '", STDERR_FILENO);
+	ft_putstr_fd((char *)var_name, STDERR_FILENO);
+	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	return 1;
+}
 
-	if (!var)
-		return 1;
-	var_value = ft_strchr(var, '=');
-	if (var_value)
+static int ft_split_variable(char *var, char **var_name, char **var_value)
+{
+	*var_value = ft_strchr(var, '=');
+	if (*var_value)
 	{
-		var_name = ft_strndup(var, var_value - var);
-		var_value++;
+		*var_name = ft_strndup(var, *var_value - var);
+		(*var_value)++;
 	}
 	else
 	{
-		var_name = ft_strdup(var);
-		var_value = NULL;
+		*var_name = ft_strdup(var);
+		*var_value = NULL;
 	}
-	if (!var_name || ft_check_var_name(var_name) == 1)
+	if (!(*var_name))
+		return 1;
+	return 0;
+}
+
+static int ft_export_variable(t_env **env_list, char *var)
+{
+	char *var_name = NULL;
+	char *var_value = NULL;
+
+	if (!var)
+		return 1;
+	if (ft_split_variable(var, &var_name, &var_value) == 1)
+		return 1;
+	if (ft_check_var_name(var_name) == 1)
 	{
-		ft_putstr_fd("export: not a valid identifier\n", STDERR_FILENO);
+		ft_export_error(var_name);
 		free(var_name);
 		return 1;
 	}
-
 	if (var_value && *var_value != '\0')
 	{
 		char *trimmed_value = ft_strtrim(var_value, "\"\'");
-		ft_setenv(&env_list, var_name, trimmed_value);
+		ft_setenv(env_list, var_name, trimmed_value);
 		free(trimmed_value);
 	}
 	else
 	{
-		ft_setenv(&env_list, var_name, "");
+		ft_setenv(env_list, var_name, "");
 	}
-
 	free(var_name);
 	return 0;
 }
-
-int ft_builtin_export(t_command *cmd, t_env *env_list)
+int ft_builtin_export(t_command *cmd, t_env **env_list)
 {
-	int i;
+	int i = 0;
 
-	i = 0;
-
-	if (!cmd->cmd_args)
+	if (!cmd->cmd_args || !cmd->cmd_args[0])
 	{
-		ft_print_env_list(env_list);
+		ft_print_env_list(*env_list);
 		return 0;
 	}
 	else

@@ -6,45 +6,78 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 16:39:45 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 14:41:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_heredoc_handler(char *marker)
+#define HEREDOC_BUFFER_SIZE 1024
+#define HEREDOC_TEMPFILE "minishell_heredoc"
+
+static int open_tempfile(void)
+{
+	int tmp_fd;
+
+	tmp_fd = open(HEREDOC_TEMPFILE, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	if (tmp_fd == -1)
+	{
+		perror("minishell: heredoc: failed to create temporary file");
+		return -1;
+	}
+	return tmp_fd;
+}
+
+static void write_to_tempfile(int tmp_fd, const char *input_line, ssize_t read_len)
+{
+	if (input_line[read_len - 1] != '\n')
+	{
+		char newline = '\n';
+		write(tmp_fd, input_line, read_len);
+		write(tmp_fd, &newline, 1);
+	}
+	else
+	{
+		write(tmp_fd, input_line, read_len);
+	}
+}
+
+static void handle_heredoc_input(int tmp_fd, const char *marker)
 {
 	char *input_line;
-	size_t len = 1024;
 	ssize_t read_len;
-	char *tempfile_path = ft_strdup("/tmp/minishell_heredoc");
-	int tmp_fd = open(tempfile_path, O_CREAT | O_RDWR | O_TRUNC, 0600);
 
-	if (tmp_fd == -1)
-		return NULL; // Обработка ошибки
-
-	input_line = malloc(len);
+	input_line = malloc(HEREDOC_BUFFER_SIZE);
 	if (!input_line)
-		return NULL;
+	{
+		perror("minishell: heredoc: memory allocation failed");
+		close(tmp_fd);
+		exit(1);
+	}
 
 	while (1)
 	{
 		ft_putstr_fd("heredoc> ", STDOUT_FILENO);
-		read_len = read(STDIN_FILENO, input_line, len);
+		read_len = read(STDIN_FILENO, input_line, HEREDOC_BUFFER_SIZE);
 		if (read_len == -1 || ft_strncmp(input_line, marker, ft_strlen(marker)) == 0)
 			break;
 
-		// Добавляем \n в конец каждой строки, если его нет
-		if (input_line[read_len - 1] != '\n')
-		{
-			input_line[read_len] = '\n';
-			read_len++;
-		}
-
-		write(tmp_fd, input_line, read_len);
+		write_to_tempfile(tmp_fd, input_line, read_len);
 	}
 
 	free(input_line);
+}
+
+char *ft_heredoc_handler(char *marker)
+{
+	int tmp_fd;
+
+	tmp_fd = open_tempfile();
+	if (tmp_fd == -1)
+		return NULL;
+
+	handle_heredoc_input(tmp_fd, marker);
 	close(tmp_fd);
-	return tempfile_path;
+
+	return ft_strdup(HEREDOC_TEMPFILE);
 }

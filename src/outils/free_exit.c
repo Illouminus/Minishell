@@ -6,76 +6,77 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/10 09:19:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 12:10:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void free_env_node(t_env *env)
+static void free_redirections(t_redir **redir)
 {
-	free(env->env_var_name);
-	free(env->env_value);
-	free(env);
+	t_redir *temp;
+
+	while (*redir)
+	{
+		temp = *redir;
+		*redir = (*redir)->next;
+
+		if (temp->filename && ft_strcmp(temp->filename, "minishell_heredoc") == 0)
+		{
+			unlink(temp->filename);
+		}
+		free(temp->filename);
+		free(temp);
+	}
+	*redir = NULL;
 }
 
-void free_env_var_list(t_env *env)
+static void free_commands(t_command **command_list)
 {
-	t_env *current;
-	t_env *next;
+	t_command *cmd_temp;
 
-	current = env;
-	while (current)
+	while (*command_list)
 	{
-		next = current->next_env;
-		free_env_node(current);
-		current = next;
+		cmd_temp = *command_list;
+		*command_list = (*command_list)->next_cmd;
+		free(cmd_temp->cmd_value);
+		if (cmd_temp->cmd_args)
+		{
+			char **args = cmd_temp->cmd_args;
+			while (*args)
+			{
+				free(*args);
+				args++;
+			}
+			free(cmd_temp->cmd_args);
+		}
+		if (cmd_temp->redirections)
+			free_redirections(&cmd_temp->redirections);
+		free(cmd_temp->heredoc_marker);
+		free(cmd_temp);
 	}
+	*command_list = NULL;
 }
 
-void global_exit_env(t_shell *shell, int status)
+static void free_tokens(t_token **token_list)
 {
-	if (shell)
+	t_token *tok_temp;
+	while (*token_list)
 	{
-		if (shell->env_var_list)
-			free_env_var_list(shell->env_var_list);
+		tok_temp = *token_list;
+		*token_list = (*token_list)->next_tok;
+		free(tok_temp->tok_value);
+		free(tok_temp);
 	}
-	clear_history();
-	exit(status);
+	*token_list = NULL;
 }
 
 void free_shell(t_shell *shell)
 {
-	t_command *cmd_temp;
-	char **args;
-	while (shell->command_list)
-	{
-		cmd_temp = shell->command_list;
-		shell->command_list = shell->command_list->next_cmd;
-		free(cmd_temp->cmd_value);
-		args = cmd_temp->cmd_args;
-		while (*args)
-		{
-			free(*args);
-			args++;
-		}
-		free(cmd_temp->cmd_args);
-		free(cmd_temp);
-	}
-
-	t_token *tok_temp;
-	while (shell->token_list)
-	{
-		tok_temp = shell->token_list;
-		shell->token_list = shell->token_list->next_tok;
-		free(tok_temp->tok_value);
-		free(tok_temp);
-	}
-
-	if (shell->user_input)
-	{
-		free(shell->user_input);
-		shell->user_input = NULL;
-	}
-	//	exit(shell->last_exit_status);
+	if (!shell)
+		return;
+	if (shell->command_list)
+		free_commands(&shell->command_list);
+	if (shell->token_list)
+		free_tokens(&shell->token_list);
 }

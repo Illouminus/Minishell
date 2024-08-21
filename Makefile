@@ -9,7 +9,8 @@ OBJ_DIR = obj
 
 # Указание всех исходных файлов вручную
 SRCS = main.c \
-       $(SRC_DIR)/env/env_outils.c \
+       $(SRC_DIR)/env/env.c \
+		 $(SRC_DIR)/env/outils.c \
        $(SRC_DIR)/executor/builtins/builtin_cd.c \
        $(SRC_DIR)/executor/builtins/builtin_echo.c \
        $(SRC_DIR)/executor/builtins/builtin_env.c \
@@ -20,16 +21,15 @@ SRCS = main.c \
        $(SRC_DIR)/executor/executor_outils.c \
 		 $(SRC_DIR)/executor/heredoc/heredoc.c \
 		 $(SRC_DIR)/executor/redirection/redirection.c \
+		 $(SRC_DIR)/executor/redirection/redirection_outils.c \
        $(SRC_DIR)/executor/executor.c \
        $(SRC_DIR)/executor/outils.c \
        $(SRC_DIR)/init/init_outils.c \
        $(SRC_DIR)/lexer/lexer.c \
 		 $(SRC_DIR)/lexer/ft_token_create_utils.c \
 		 $(SRC_DIR)/lexer/ft_tokenise_utils.c \
-       $(SRC_DIR)/outils/error_exit.c \
        $(SRC_DIR)/outils/free_exit.c \
        $(SRC_DIR)/outils/signals.c \
-		 $(SRC_DIR)/outils/ft_free_parsing.c \
 		 $(SRC_DIR)/outils/ft_isspace.c \
        $(SRC_DIR)/parser/parser.c \
 		 $(SRC_DIR)/parser/outils.c \
