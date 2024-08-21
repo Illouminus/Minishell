@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 10:49:46 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:45:59 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,12 @@
 
 int ft_builtin_env(t_env *env)
 {
-	t_env *current;
-
-	current = env;
-
-	while (current)
-	{
-		if (current->env_var_name)
-		{
-			ft_putstr_fd(current->env_var_name, 1);
-			ft_putstr_fd("=", 1);
-			ft_putstr_fd(current->env_value, 1);
-			ft_putstr_fd("\n", 1);
-		}
-		current = current->next_env;
-	}
+	ft_print_env_list(env);
 	return (EXIT_SUCCESS);
+}
+
+void handle_error_non_critical(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
+{
+	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
+	shell->last_exit_status = exit_code;
 }

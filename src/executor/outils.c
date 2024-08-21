@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 10:24:29 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 15:55:46 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void ft_setenv(t_env **env_list, const char *name, const char *value)
 	else
 	{
 		t_env *new_var = malloc(sizeof(t_env));
+		if (!new_var)
+			return;
 		if (new_var)
 		{
 			new_var->env_var_name = strdup(name);

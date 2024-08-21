@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/21 11:57:14 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:46:03 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,13 +165,14 @@ void ft_pipe(t_command *current, t_shell *shell);
 void wait_commands(t_shell *shell);
 void ft_free_array(char **array);
 void handle_error(const char *cmd, const char *error_message, int exit_code, t_shell *shell);
+void handle_error_non_critical(const char *cmd, const char *error_message, int exit_code, t_shell *shell);
 void handle_redirection_error(const char *filepath, const char *error_message, int exit_code, t_shell *shell, int fd);
 int check_and_open_file(const char *filepath, int flags, mode_t mode, t_shell *shell);
 /* Fonctions Intégrées (Built-Ins) */
 int ft_builtin_cd(t_command *cmd, t_shell *shell);
 int ft_builtin_echo(t_command *cmd);
 int ft_builtin_env(t_env *env);
-int ft_builtin_export(t_command *cmd, t_env *env_list);
+int ft_builtin_export(t_command *cmd, t_env **env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
 void ft_builtin_exit(t_command *commands, t_shell *shell);

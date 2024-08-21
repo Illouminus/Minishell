@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 16:39:37 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:26:09 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,37 +88,6 @@ void ft_afficher_command_list(t_command *command_list)
 		index++;
 	}
 }
-/*
-void handle_error_parser(const char *cmd, const char *error_message, int exit_code, t_shell *shell)
-{
-	fprintf(stderr, "minishell: %s: %s\n", cmd, error_message);
-	shell->last_exit_status = exit_code;
-	// free_shell(shell);
-	//  ßexit(shell->last_exit_status);
-}
-
-static int ft_check_input_file(char *file_path, t_shell *shell)
-{
-	struct stat path_stat;
-
-	if (stat(file_path, &path_stat) == -1)
-	{
-		handle_error_parser(file_path, "No such file or directory", 1, shell);
-		return 1;
-	}
-	if (S_ISDIR(path_stat.st_mode))
-	{
-		handle_error_parser(file_path, "Is a directory", 1, shell);
-		return 1;
-	}
-	if (access(file_path, R_OK) == -1)
-	{
-		handle_error_parser(file_path, "Permission denied", 1, shell);
-		return 1;
-	}
-	return 0;
-}
-*/
 
 // Nombre d'arguments depuis la liste de tokens
 int ft_determine_nb_args(t_token *token_list)

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 12:33:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:42:30 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 	else if (ft_strcmp(current->cmd_value, "pwd") == 0)
 		shell->last_exit_status = ft_builtin_pwd(current);
 	else if (ft_strcmp(current->cmd_value, "export") == 0)
-		shell->last_exit_status = ft_builtin_export(current, shell->env_var_list);
+		shell->last_exit_status = ft_builtin_export(current, &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "unset") == 0)
 		shell->last_exit_status = ft_builtin_unset(current, &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "env") == 0)

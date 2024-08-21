@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 10:49:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 16:46:28 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int handle_cd_error(const char *cmd, const char *error_message, t_shell *shell, char *s1, char *s2)
 {
-	handle_error(cmd, error_message, 1, shell);
+	handle_error_non_critical(cmd, error_message, 1, shell);
 	free(s1);
 	free(s2);
 	return 1;
@@ -27,7 +27,7 @@ void ft_update_pwd(t_shell *shell, const char *command)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		handle_error(command, strerror(errno), 1, shell);
+		handle_error_non_critical(command, strerror(errno), 1, shell);
 		return;
 	}
 
@@ -78,7 +78,7 @@ int check_for_arguments(t_command *commands, t_shell *shell)
 			return ft_fd_minus(shell, 0);
 		else if (chdir(commands->cmd_args[0]) == -1)
 		{
-			handle_error("cd", strerror(errno), 1, shell);
+			handle_error_non_critical("cd", strerror(errno), 1, shell);
 			return 1;
 		}
 
