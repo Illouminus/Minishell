@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 11:25:17 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 12:12:56 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,5 @@ void ft_builtin_exit(t_command *commands, t_shell *shell)
 		shell->last_exit_status = get_exit_status(commands->cmd_args[0], shell);
 	}
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
-	free_shell(shell);
-	exit(shell->last_exit_status);
+	global_exit(shell);
 }

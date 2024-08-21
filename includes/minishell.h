@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/21 10:44:46 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 11:57:14 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ typedef struct s_shell
 	pid_t last_process_id;
 	int wait_status;
 	char **env_vars;
-	char *heredoc_tempfile;
 	int tmp_proccess_status;
 	int last_exit_status;
 	int pipe_fds[2];
@@ -190,7 +189,7 @@ t_env *ft_get_env_var_by_name(t_env *head, const char *name);
 char *ft_getenv(t_env *env_list, const char *name);
 void ft_setenv(t_env **env_list, const char *name, const char *value);
 void add_env_var_to_list(t_env **head, t_env *new_var);
-void global_exit_env(t_shell *shell, int status);
+void global_exit(t_shell *shell);
 void free_env_var_list(t_env *env);
 
 /* ========================================================= */

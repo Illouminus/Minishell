@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 10:29:21 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 12:11:10 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void ft_child_process(t_command *current, t_shell *shell, int prev_fd, ch
 {
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell, env);
+	free_shell(shell);
 	exit(shell->last_exit_status);
 }
 

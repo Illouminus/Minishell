@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 09:54:12 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 11:29:27 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,10 @@ int init_shell(t_shell *shell, char **env)
 	shell->command_list = NULL;
 	shell->last_process_id = -2;
 	shell->last_exit_status = 0;
-	shell->heredoc_tempfile = NULL;
 	shell->user_input = NULL;
-	shell->heredoc_tempfile = ft_strdup("heredoc_tempfile");
 	shell->pipe_fds[0] = -2;
 	shell->pipe_fds[1] = -2;
 	return (0);
-}
-void print_env_vars(t_env *head)
-{
-	while (head)
-	{
-		printf("Variable: %s=%s\n", head->env_var_name, head->env_value);
-		head = head->next_env;
-	}
 }
 
 t_env *init_env_vars(char **env)
@@ -56,9 +46,7 @@ t_env *init_env_vars(char **env)
 		add_env_var_to_list(&head, new_var);
 		i++;
 	}
-	// add_env_var_to_list(&head, NULL);
 	if (!head)
 		head = init_default_env_vars();
-	// print_env_vars(head);
 	return head;
 }

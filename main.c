@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 20:59:02 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 11:55:43 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 
 	minishell(&shell, env);
-	free_shell(&shell);
-	exit(shell.last_exit_status);
+	global_exit(&shell);
 	return (0);
 }
