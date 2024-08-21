@@ -6,11 +6,23 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/19 11:14:20 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/21 10:17:49 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool contains_heredoc(const char *input)
+{
+	int i = 0;
+	while (input[i])
+	{
+		if (input[i] == '<' && input[i + 1] == '<')
+			return true;
+		i++;
+	}
+	return false;
+}
 
 // Fonction d'affichage temporaire | A supprimer plus tard
 void ft_print_tokens(t_token *token_list)
@@ -58,7 +70,6 @@ void ft_tokenize_input(char *input, t_shell *shell)
 
 		char *token_value = ft_strndup(&input[start], i - start);
 		ft_create_add_token(shell, type, token_value);
-		// printf("Token Value: %s\n", token_value);
 		free(token_value);
 	}
 }
@@ -78,8 +89,9 @@ int lexer(t_shell *shell)
 		return (EXIT_FAILURE);
 	}
 
+	if (!contains_heredoc(shell->user_input))
+		add_history(shell->user_input);
+
 	ft_tokenize_input(shell->user_input, shell);
-	// ft_print_tokens(shell->token_list);
-	add_history(shell->user_input);
 	return (0);
 }

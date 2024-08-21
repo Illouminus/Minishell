@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/20 11:35:39 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/20 20:59:02 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,6 @@ int main(int argc, char **argv, char **env)
 
 	minishell(&shell, env);
 	free_shell(&shell);
-	if (shell.heredoc_tempfile)
-	{
-		unlink(shell.heredoc_tempfile);
-		free(shell.heredoc_tempfile);
-		shell.heredoc_tempfile = NULL;
-	}
 	exit(shell.last_exit_status);
 	return (0);
 }
