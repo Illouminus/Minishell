@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/26 14:29:15 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/26 15:13:17 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,15 +161,46 @@ void ft_parser_handle_redirection(t_token **current_token, t_shell *shell, t_com
     }
 }
 
+void ft_parser_handle_command(t_token *current_token, char *cmd_value_clean, t_shell *shell, t_command **last_command) 
+{
+    int cmd_nb_args;
+    t_command *new_command;
+
+	new_command = NULL; 
+    // Déterminer le nombre d'arguments pour la commande actuelle
+    cmd_nb_args = ft_determine_nb_args(current_token);
+    
+    // Initialiser la nouvelle commande
+    new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean, shell);
+    // Si une commande précédente existe, on la relie à la nouvelle
+    if (*last_command) 
+	{
+        (*last_command)->next_cmd = new_command;
+        new_command->prev_cmd = *last_command;
+    } 
+	else 
+        shell->command_list = new_command;
+    // Mettre à jour le pointeur de la dernière commande
+    *last_command = new_command;
+}
+
+// Déclaration de la nouvelle fonction
+int ft_parser_handle_empty_command(char *cmd_value_clean, t_token **current_token) 
+{
+    if (*cmd_value_clean == '\0' && (*current_token)->next_tok) {
+        *current_token = (*current_token)->next_tok;
+        (*current_token)->tok_type = TOKEN_TYPE_CMD;
+        return 1;  // Indique qu'on doit continuer avec le prochain token
+    }
+    return 0;  // Indique qu'on ne doit pas sauter de token
+}
 
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
 {
 	t_token *current_token;
-	t_command *new_command;
 	t_command *last_command;
 	char *cmd_value_clean;
-	int cmd_nb_args;
 	int i;
 
 	last_command = NULL;
@@ -184,28 +215,13 @@ int parser(t_shell *shell)
 		{
 			int inside_single_quote = 0;
 			cmd_value_clean = ft_expander(ft_clean_token_value(current_token->tok_value, &inside_single_quote), shell, inside_single_quote);
-			if (*cmd_value_clean == '\0' && current_token->next_tok)
+			if (ft_parser_handle_empty_command(cmd_value_clean, &current_token))
+                continue;
+			if (current_token->tok_type == TOKEN_TYPE_CMD) 
 			{
-				current_token = current_token->next_tok;
-				current_token->tok_type = TOKEN_TYPE_CMD;
-				continue;
-			}
-			if (current_token->tok_type == TOKEN_TYPE_CMD)
-			{
-				cmd_nb_args = ft_determine_nb_args(current_token);
-				i = 0;
-				new_command = ft_new_command_init(new_command, cmd_nb_args, cmd_value_clean, shell);
-				if (last_command)
-				{
-					last_command->next_cmd = new_command;
-					new_command->prev_cmd = last_command;
-				}
-				else
-				{
-					shell->command_list = new_command;
-				}
-				last_command = new_command;
-			}
+                ft_parser_handle_command(current_token, cmd_value_clean, shell, &last_command);
+                i = 0;
+            } 
 			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT || current_token->tok_type == TOKEN_TYPE_REDIR_APPEND || current_token->tok_type == TOKEN_TYPE_HEREDOC)
 				ft_parser_handle_redirection(&current_token, shell, last_command, &inside_single_quote); 
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
@@ -215,9 +231,7 @@ int parser(t_shell *shell)
 			}
 			current_token = current_token->next_tok;
 		}
-		// ft_afficher_command_list(shell->command_list);
 	}
-
 	if (last_command && last_command->cmd_args)
 		last_command->cmd_args[i] = NULL;
 	return (EXIT_SUCCESS);
