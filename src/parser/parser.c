@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/26 15:13:17 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/26 16:04:26 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,13 @@ int ft_parser_handle_empty_command(char *cmd_value_clean, t_token **current_toke
     return 0;  // Indique qu'on ne doit pas sauter de token
 }
 
+
+int ft_check_user_input(t_shell *shell) {
+    if (!shell->user_input || ft_strcmp(shell->user_input, "/0") == 0)
+        return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
+}
+
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
 {
@@ -205,32 +212,27 @@ int parser(t_shell *shell)
 
 	last_command = NULL;
 	current_token = shell->token_list;
-	if (!shell->user_input)
-		return (EXIT_FAILURE);
-	else if (ft_strcmp(shell->user_input, "/0") == 0)
-		return (EXIT_FAILURE);
-	else
+	if (ft_check_user_input(shell) == EXIT_FAILURE)
+        return (EXIT_FAILURE);
+	while (current_token)
 	{
-		while (current_token)
+		int inside_single_quote = 0;
+		cmd_value_clean = ft_expander(ft_clean_token_value(current_token->tok_value, &inside_single_quote), shell, inside_single_quote);
+		if (ft_parser_handle_empty_command(cmd_value_clean, &current_token))
+			continue;
+		if (current_token->tok_type == TOKEN_TYPE_CMD) 
 		{
-			int inside_single_quote = 0;
-			cmd_value_clean = ft_expander(ft_clean_token_value(current_token->tok_value, &inside_single_quote), shell, inside_single_quote);
-			if (ft_parser_handle_empty_command(cmd_value_clean, &current_token))
-                continue;
-			if (current_token->tok_type == TOKEN_TYPE_CMD) 
-			{
-                ft_parser_handle_command(current_token, cmd_value_clean, shell, &last_command);
-                i = 0;
-            } 
-			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT || current_token->tok_type == TOKEN_TYPE_REDIR_APPEND || current_token->tok_type == TOKEN_TYPE_HEREDOC)
-				ft_parser_handle_redirection(&current_token, shell, last_command, &inside_single_quote); 
-			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
-			{
-				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell, inside_single_quote);
-				i++;
-			}
-			current_token = current_token->next_tok;
+			ft_parser_handle_command(current_token, cmd_value_clean, shell, &last_command);
+			i = 0;
+		} 
+		else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT || current_token->tok_type == TOKEN_TYPE_REDIR_APPEND || current_token->tok_type == TOKEN_TYPE_HEREDOC)
+			ft_parser_handle_redirection(&current_token, shell, last_command, &inside_single_quote); 
+		else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
+		{
+			last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell, inside_single_quote);
+			i++;
 		}
+		current_token = current_token->next_tok;
 	}
 	if (last_command && last_command->cmd_args)
 		last_command->cmd_args[i] = NULL;
