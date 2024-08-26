@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 16:26:09 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/26 14:29:15 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,27 +107,25 @@ int ft_determine_nb_args(t_token *token_list)
 }
 char *ft_clean_token_value(const char *token, int *inside_single_quote)
 {
-	size_t len = ft_strlen(token);
-	size_t i = 0;
-	size_t j = 0;
-	int inside_double_quote = 0;
+	size_t len; 
+	size_t i; 
+	size_t j; 
+	char *cleaned;
+	int inside_double_quote;
 
-	char *cleaned = (char *)malloc(len + 1);
+	len = ft_strlen(token);
+	i = 0; 
+	j = 0; 
+	inside_double_quote = 0;
+	cleaned = (char *)malloc(len + 1);
 	if (!cleaned)
-	{
 		return NULL;
-	}
-
 	while (i < len)
 	{
 		if (token[i] == '\'' && !inside_double_quote)
-		{
 			*inside_single_quote = 1;
-		}
 		else if (token[i] == '"' && !(*inside_single_quote))
-		{
 			inside_double_quote = 1;
-		}
 		else
 		{
 			cleaned[j] = token[i];
@@ -135,11 +133,34 @@ char *ft_clean_token_value(const char *token, int *inside_single_quote)
 		}
 		i++;
 	}
-
 	cleaned[j] = '\0';
-
-	return cleaned;
+	return (cleaned);
 }
+
+void ft_parser_handle_redirection(t_token **current_token, t_shell *shell, t_command *last_command, int *inside_single_quote) 
+{
+    char *file_name;
+
+    if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_IN) {
+        file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value, inside_single_quote), shell, *inside_single_quote);
+        add_redirection(last_command, REDIR_IN, file_name);
+    }
+    else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC) {
+        *current_token = (*current_token)->next_tok->next_tok;
+        file_name = ft_heredoc_handler((*current_token)->tok_value);
+        add_redirection(last_command, REDIR_IN, file_name);
+    }
+    else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT) {
+        file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value, inside_single_quote), shell, *inside_single_quote);
+        add_redirection(last_command, REDIR_OUT, file_name);
+    }
+    else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND) {
+        *current_token = (*current_token)->next_tok;
+        file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value, inside_single_quote), shell, *inside_single_quote);
+        add_redirection(last_command, REDIR_APPEND, file_name);
+    }
+}
+
 
 // Identfy commands and their arguments. Recognitiion of operators and pipes. Build an AST at the end
 int parser(t_shell *shell)
@@ -186,30 +207,7 @@ int parser(t_shell *shell)
 				last_command = new_command;
 			}
 			else if (current_token->tok_type == TOKEN_TYPE_REDIR_IN || current_token->tok_type == TOKEN_TYPE_REDIR_OUT || current_token->tok_type == TOKEN_TYPE_REDIR_APPEND || current_token->tok_type == TOKEN_TYPE_HEREDOC)
-			{
-				if (current_token->tok_type == TOKEN_TYPE_REDIR_IN)
-				{
-					char *input_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
-					add_redirection(last_command, REDIR_IN, input_file);
-				}
-				if (current_token->tok_type == TOKEN_TYPE_HEREDOC)
-				{
-					current_token = current_token->next_tok->next_tok;
-					char *input_file_heredoc = ft_heredoc_handler(current_token->tok_value);
-					add_redirection(last_command, REDIR_IN, input_file_heredoc);
-				}
-				else if (current_token->tok_type == TOKEN_TYPE_REDIR_OUT)
-				{
-					char *output_file = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
-					add_redirection(last_command, REDIR_OUT, output_file);
-				}
-				else if (current_token->tok_type == TOKEN_TYPE_REDIR_APPEND)
-				{
-					current_token = current_token->next_tok;
-					char *output_file_append = ft_expander(ft_clean_token_value(current_token->next_tok->tok_value, &inside_single_quote), shell, inside_single_quote);
-					add_redirection(last_command, REDIR_APPEND, output_file_append);
-				}
-			}
+				ft_parser_handle_redirection(&current_token, shell, last_command, &inside_single_quote); 
 			else if (current_token->tok_type == TOKEN_TYPE_ARG && (current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN && current_token->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
 			{
 				last_command->cmd_args[i] = ft_expander(cmd_value_clean, shell, inside_single_quote);
