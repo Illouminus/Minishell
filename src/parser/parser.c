@@ -6,7 +6,7 @@
 /*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/26 16:04:26 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/27 12:20:07 by adrienhors       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,17 +120,14 @@ char *ft_clean_token_value(const char *token, int *inside_single_quote)
 	cleaned = (char *)malloc(len + 1);
 	if (!cleaned)
 		return NULL;
-	while (i < len)
+		while (token[i])
 	{
 		if (token[i] == '\'' && !inside_double_quote)
 			*inside_single_quote = 1;
 		else if (token[i] == '"' && !(*inside_single_quote))
 			inside_double_quote = 1;
 		else
-		{
-			cleaned[j] = token[i];
-			j++;
-		}
+			cleaned[j++] = token[i];
 		i++;
 	}
 	cleaned[j] = '\0';
@@ -187,12 +184,13 @@ void ft_parser_handle_command(t_token *current_token, char *cmd_value_clean, t_s
 // Déclaration de la nouvelle fonction
 int ft_parser_handle_empty_command(char *cmd_value_clean, t_token **current_token) 
 {
-    if (*cmd_value_clean == '\0' && (*current_token)->next_tok) {
+    if (*cmd_value_clean == '\0' && (*current_token)->next_tok) 
+	{
         *current_token = (*current_token)->next_tok;
         (*current_token)->tok_type = TOKEN_TYPE_CMD;
         return 1;  // Indique qu'on doit continuer avec le prochain token
     }
-    return 0;  // Indique qu'on ne doit pas sauter de token
+    return (0);  // Indique qu'on ne doit pas sauter de token
 }
 
 
@@ -209,6 +207,7 @@ int parser(t_shell *shell)
 	t_command *last_command;
 	char *cmd_value_clean;
 	int i;
+	int inside_single_quote; 
 
 	last_command = NULL;
 	current_token = shell->token_list;
@@ -216,11 +215,11 @@ int parser(t_shell *shell)
         return (EXIT_FAILURE);
 	while (current_token)
 	{
-		int inside_single_quote = 0;
+		inside_single_quote = 0;
 		cmd_value_clean = ft_expander(ft_clean_token_value(current_token->tok_value, &inside_single_quote), shell, inside_single_quote);
 		if (ft_parser_handle_empty_command(cmd_value_clean, &current_token))
 			continue;
-		if (current_token->tok_type == TOKEN_TYPE_CMD) 
+		if (current_token->tok_type == TOKEN_TYPE_CMD)
 		{
 			ft_parser_handle_command(current_token, cmd_value_clean, shell, &last_command);
 			i = 0;
