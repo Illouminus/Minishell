@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 12:10:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/30 11:02:45 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static void free_redirections(t_redir **redir)
 static void free_commands(t_command **command_list)
 {
 	t_command *cmd_temp;
-
 	while (*command_list)
 	{
 		cmd_temp = *command_list;
