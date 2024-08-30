@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 11:02:45 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/08/30 13:41:40 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ static void free_commands(t_command **command_list)
 		}
 		if (cmd_temp->redirections)
 			free_redirections(&cmd_temp->redirections);
-		free(cmd_temp->heredoc_marker);
 		free(cmd_temp);
 	}
 	*command_list = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/21 16:46:03 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/30 13:41:34 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ typedef struct s_command
 	t_token *redir_tokens;
 	struct s_command *next_cmd;
 	struct s_command *prev_cmd;
-	char *heredoc_marker;
 	t_redir *redirections;
 	t_redir *last_redirection;
 	int redir_count;
