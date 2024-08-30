@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/30 11:23:36 by ahors            ###   ########.fr       */
+/*   Updated: 2024/08/30 11:37:58 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,15 @@ typedef enum e_redir_type
 	REDIR_OUT,
 	REDIR_APPEND,
 }						t_redir_type;
+
+// Structure pour l'expander
+typedef struct s_expand_state
+{
+    char    **result;
+    int     *j;
+    int     *len;
+}   t_expand_state;
+
 
 // Structure d'un token
 typedef struct s_token
