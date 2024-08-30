@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 11:25:08 by ahors            ###   ########.fr       */
+/*   Updated: 2024/08/30 14:11:15 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,26 @@ int	ft_check_user_input(t_shell *shell)
 void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 		t_command **last_command, int *i)
 {
-	int		inside_single_quote;
-	char	*cmd_value_clean;
+	int				inside_single_quote;
+	char			*cmd_value_clean;
+	t_token_type	t_type;
 
+	t_type = (*current_token)->tok_type;
 	cmd_value_clean = ft_handle_token_expansion(*current_token, shell,
 			&inside_single_quote);
 	if (ft_parser_handle_empty_command(cmd_value_clean, current_token))
 		return ;
-	if ((*current_token)->tok_type == TOKEN_TYPE_CMD)
+	if (t_type == TOKEN_TYPE_CMD)
 	{
 		ft_parser_handle_command(*current_token, cmd_value_clean, shell,
 			last_command);
 		*i = 0;
 	}
-	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_IN
-		|| (*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT
-		|| (*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND
-		|| (*current_token)->tok_type == TOKEN_TYPE_HEREDOC)
+	else if (t_type == TOKEN_TYPE_REDIR_IN || t_type == TOKEN_TYPE_REDIR_OUT
+		|| t_type == TOKEN_TYPE_REDIR_APPEND || t_type == TOKEN_TYPE_HEREDOC)
 		ft_parser_handle_redirection(current_token, shell, *last_command,
 			&inside_single_quote);
-	else if ((*current_token)->tok_type == TOKEN_TYPE_ARG
+	else if (t_type == TOKEN_TYPE_ARG
 		&& ((*current_token)->prev_tok->tok_type != TOKEN_TYPE_REDIR_IN
 			&& (*current_token)->prev_tok->tok_type != TOKEN_TYPE_REDIR_OUT))
 	{

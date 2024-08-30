@@ -6,43 +6,11 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 11:15:37 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/30 11:49:30 by ahors            ###   ########.fr       */
+/*   Updated: 2024/08/30 13:32:16 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
-		t_command *last_command, int *inside_single_quote)
-{
-	char	*file_name;
-
-	if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_IN)
-	{
-		file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value,
-					inside_single_quote), shell, *inside_single_quote);
-		add_redirection(last_command, REDIR_IN, file_name);
-	}
-	else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC)
-	{
-		*current_token = (*current_token)->next_tok->next_tok;
-		file_name = ft_heredoc_handler((*current_token)->tok_value);
-		add_redirection(last_command, REDIR_IN, file_name);
-	}
-	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
-	{
-		file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value,
-					inside_single_quote), shell, *inside_single_quote);
-		add_redirection(last_command, REDIR_OUT, file_name);
-	}
-	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND)
-	{
-		*current_token = (*current_token)->next_tok;
-		file_name = ft_expander(ft_clean_token_value((*current_token)->next_tok->tok_value,
-					inside_single_quote), shell, *inside_single_quote);
-		add_redirection(last_command, REDIR_APPEND, file_name);
-	}
-}
 
 void	ft_parser_handle_command(t_token *current_token, char *cmd_value_clean,
 		t_shell *shell, t_command **last_command)
