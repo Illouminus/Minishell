@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/27 14:38:43 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/08/30 11:05:47 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char *ft_clean_token_value(const char *token, int *inside_single_quote)
 	cleaned = (char *)malloc(len + 1);
 	if (!cleaned)
 		return NULL;
-		while (token[i])
+	while (token[i])
 	{
 		if (token[i] == '\'' && !inside_double_quote)
 			*inside_single_quote = 1;
