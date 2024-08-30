@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_outils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 16:42:06 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/30 10:45:05 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char *ft_absolute_path(char *cmd, t_shell *shell)
 	if (stat(cmd, &path_stat) == -1)
 		handle_error(cmd, "No such file or directory", 127, shell);
 	if (S_ISDIR(path_stat.st_mode))
-		handle_error(cmd, "is a directory", 126, shell);
+		handle_error(cmd, "Is a directory", 126, shell);
 	if (access(cmd, X_OK) == 0)
 		return cmd;
 	if (access(cmd, F_OK) == -1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 16:46:28 by edouard          ###   ########.fr       */
+/*   Updated: 2024/08/30 10:57:42 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ int ft_fd_minus(t_shell *shell, int option)
 
 	if (option == 1)
 	{
-		ft_putstr_fd(curr_dir, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		handle_cd_error("cd", "too many arguments", shell, curr_dir, old_dir);
 	}
 
 	ft_setenv(&shell->env_var_list, "OLDPWD", old_dir);
@@ -70,6 +69,10 @@ int ft_fd_minus(t_shell *shell, int option)
 
 int check_for_arguments(t_command *commands, t_shell *shell)
 {
+	if (commands->cmd_args[1])
+	{
+		return handle_cd_error("cd", "too many arguments", shell, NULL, NULL);
+	}
 	if (commands->cmd_args[0])
 	{
 		if (ft_strcmp(commands->cmd_args[0], "-") == 0)
