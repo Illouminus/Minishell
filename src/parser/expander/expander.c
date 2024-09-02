@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/02 11:03:24 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/02 11:21:29 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,5 @@ char	*ft_expander(char *str, t_shell *shell, int inside_single_quote)
 			add_char_to_result(&result, &j, str[i++]);
 	}
 	result[j] = '\0';
-	free(str);
 	return (result);
 }
