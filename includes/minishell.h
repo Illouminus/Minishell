@@ -3,10 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/08/30 11:37:58 by ahors            ###   ########.fr       */
+/*   Updated: 2024/08/30 13:41:34 by ebaillot         ###   ########.fr       */
+
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +93,19 @@ typedef struct s_redir
 }						t_redir;
 
 // Structure d'une commande
-typedef struct s_command
-{
-	char				*cmd_value;
-	char				**cmd_args;
-	bool				is_builtin_cmd;
-	t_token				*redir_tokens;
-	struct s_command	*next_cmd;
-	struct s_command	*prev_cmd;
-	char				*heredoc_marker;
-	t_redir				*redirections;
-	t_redir				*last_redirection;
-	int					redir_count;
-	struct s_shell		*shell;
-}						t_command;
+typedef struct s_command {
+	char *cmd_value;
+	char **cmd_args;
+	bool is_builtin_cmd;
+	t_token *redir_tokens;
+	struct s_command *next_cmd;
+	struct s_command *prev_cmd;
+	t_redir *redirections;
+	t_redir *last_redirection;
+	int redir_count;
+	struct s_shell *shell;
+} t_command;
+
 
 // Structure pour les variables d'environnement
 typedef struct s_env
