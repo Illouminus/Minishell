@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 11:15:37 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/02 11:24:05 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/02 11:28:29 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_parser_handle_empty_command(char *cmd_value_clean,
 	return (0);
 }
 
-char	*ft_handle_token_expansion(t_token *current_token, t_shell *shell,
+char	*ft_expander_cleaned_token_value(t_token *current_token, t_shell *shell,
 		int *inside_single_quote)
 {
 	*inside_single_quote = 0;

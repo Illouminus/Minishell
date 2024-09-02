@@ -185,7 +185,7 @@ void					ft_parser_handle_command(t_token *current_token,
 							t_command **last_command);
 int						ft_parser_handle_empty_command(char *cmd_value_clean,
 							t_token **current_token);
-char					*ft_handle_token_expansion(t_token *current_token,
+char					*ft_expander_cleaned_token_value(t_token *current_token,
 							t_shell *shell, int *inside_single_quote);
 int						parser(t_shell *shell);
 

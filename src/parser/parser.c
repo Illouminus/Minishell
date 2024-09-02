@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/02 11:00:42 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/02 11:22:33 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,13 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 	t_token_type	t_type;
 
 	t_type = (*current_token)->tok_type;
-	cmd_value_clean = ft_handle_token_expansion(*current_token, shell,
+	cmd_value_clean = ft_expander_cleaned_token_value(*current_token, shell,
 			&inside_single_quote);
 	if (ft_parser_handle_empty_command(cmd_value_clean, current_token))
+	{
+		free(cmd_value_clean);
 		return ;
+	}
 	if (t_type == TOKEN_TYPE_CMD)
 	{
 		ft_parser_handle_command(*current_token, cmd_value_clean, shell,
@@ -49,7 +52,6 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 				inside_single_quote);
 		(*i)++;
 	}
-	free(cmd_value_clean);
 	*current_token = (*current_token)->next_tok;
 }
 
