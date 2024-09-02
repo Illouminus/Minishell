@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tokenise_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:48:52 by ahors             #+#    #+#             */
-/*   Updated: 2024/08/19 16:26:29 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/02 11:45:01 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_token_type ft_determine_token_type(char *input, int start, int is_first_token)
 	else if (input[start] == '>' && input[start + 1] == '>')
 	{
 		type = TOKEN_TYPE_REDIR_APPEND;
-		start++;
+		start += 2;
 	}
 	else if (input[start] == '>')
 	{
