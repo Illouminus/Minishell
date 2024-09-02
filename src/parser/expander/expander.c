@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/02 11:16:48 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/02 11:28:21 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,5 @@ char	*ft_expander(char *str, t_shell *shell, int inside_single_quote)
 			add_char_to_result(&result, &j, str[i++]);
 	}
 	result[j] = '\0';
-	free(str);
 	return (result);
 }

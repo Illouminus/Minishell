@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 11:15:37 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/02 11:22:30 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/02 11:28:29 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ char	*ft_expander_cleaned_token_value(t_token *current_token, t_shell *shell,
 		int *inside_single_quote)
 {
 	*inside_single_quote = 0;
-	return (ft_expander(ft_clean_token_value(current_token->tok_value,
-				inside_single_quote), shell, *inside_single_quote));
+	char *cleaned_token = ft_clean_token_value(current_token->tok_value,
+				inside_single_quote);
+	char *expanded_token = ft_expander(cleaned_token, shell, *inside_single_quote);
+	free(cleaned_token); 
+	return expanded_token;
 }
+
