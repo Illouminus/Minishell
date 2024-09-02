@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 14:11:15 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/02 11:00:42 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 				inside_single_quote);
 		(*i)++;
 	}
+	free(cmd_value_clean);
 	*current_token = (*current_token)->next_tok;
 }
 
