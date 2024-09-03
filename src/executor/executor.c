@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 16:42:30 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/03 12:56:18 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_exec_builtins(t_shell *shell, bool next_cmd)
+void	ft_exec_builtins(t_shell *shell, bool next_cmd)
 {
-	t_command *current = shell->command_list;
+	t_command	*current;
 
+	current = shell->command_list;
 	if (ft_strcmp(current->cmd_value, "echo") == 0)
 		shell->last_exit_status = ft_builtin_echo(current);
 	else if (ft_strcmp(current->cmd_value, "cd") == 0)
@@ -23,9 +24,11 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 	else if (ft_strcmp(current->cmd_value, "pwd") == 0)
 		shell->last_exit_status = ft_builtin_pwd(current);
 	else if (ft_strcmp(current->cmd_value, "export") == 0)
-		shell->last_exit_status = ft_builtin_export(current, &shell->env_var_list);
+		shell->last_exit_status = ft_builtin_export(current,
+				&shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "unset") == 0)
-		shell->last_exit_status = ft_builtin_unset(current, &shell->env_var_list);
+		shell->last_exit_status = ft_builtin_unset(current,
+				&shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
@@ -34,10 +37,10 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 		free_shell(shell);
 }
 
-static void ft_execute_command(t_command *current, t_shell *shell, char **env)
+static void	ft_execute_command(t_command *current, t_shell *shell, char **env)
 {
-	char *path;
-	char **cmd_args;
+	char	*path;
+	char	**cmd_args;
 
 	signal(SIGQUIT, SIG_DFL);
 	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
@@ -63,7 +66,8 @@ static void ft_execute_command(t_command *current, t_shell *shell, char **env)
 	}
 }
 
-static void ft_child_process(t_command *current, t_shell *shell, int prev_fd, char **env)
+static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd,
+		char **env)
 {
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell, env);
@@ -71,7 +75,7 @@ static void ft_child_process(t_command *current, t_shell *shell, int prev_fd, ch
 	exit(shell->last_exit_status);
 }
 
-int ft_parent_process(t_command *current, int prev_fd)
+int	ft_parent_process(t_command *current, int prev_fd)
 {
 	if (prev_fd != 0)
 		close(prev_fd);
@@ -80,18 +84,18 @@ int ft_parent_process(t_command *current, int prev_fd)
 		close(current->shell->pipe_fds[1]);
 		prev_fd = current->shell->pipe_fds[0];
 	}
-	return prev_fd;
+	return (prev_fd);
 }
 
-int ft_executor(t_shell *shell, char **env)
+int	ft_executor(t_shell *shell, char **env)
 {
-	t_command *current;
-	int prev_fd;
+	t_command	*current;
+	int			prev_fd;
+
 	if (shell->command_list == NULL)
-		return 0;
+		return (0);
 	current = shell->command_list;
 	prev_fd = 0;
-
 	if (!current->next_cmd && current->is_builtin_cmd && !current->redirections)
 		ft_exec_builtins(shell, false);
 	else
@@ -107,5 +111,5 @@ int ft_executor(t_shell *shell, char **env)
 		}
 	}
 	wait_commands(shell);
-	return shell->last_exit_status;
+	return (shell->last_exit_status);
 }

@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 15:55:46 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/03 13:45:26 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_free_array(char **array)
+void	ft_free_array(char **array)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!array)
-		return;
-
+		return ;
 	while (array[i])
 	{
 		free(array[i]);
@@ -27,19 +27,24 @@ void ft_free_array(char **array)
 	free(array);
 }
 
-char *ft_getenv(t_env *env_list, const char *name)
+char	*ft_getenv(t_env *env_list, const char *name)
 {
-	t_env *var = ft_get_env_var_by_name(env_list, name);
+	t_env	*var;
+
+	var = ft_get_env_var_by_name(env_list, name);
 	if (var)
 	{
-		return strdup(var->env_value);
+		return (strdup(var->env_value));
 	}
-	return NULL;
+	return (NULL);
 }
 
-void ft_setenv(t_env **env_list, const char *name, const char *value)
+void	ft_setenv(t_env **env_list, const char *name, const char *value)
 {
-	t_env *var = ft_get_env_var_by_name(*env_list, name);
+	t_env	*var;
+	t_env	*new_var;
+
+	var = ft_get_env_var_by_name(*env_list, name);
 	if (var)
 	{
 		free(var->env_value);
@@ -47,9 +52,9 @@ void ft_setenv(t_env **env_list, const char *name, const char *value)
 	}
 	else
 	{
-		t_env *new_var = malloc(sizeof(t_env));
+		new_var = malloc(sizeof(t_env));
 		if (!new_var)
-			return;
+			return ;
 		if (new_var)
 		{
 			new_var->env_var_name = strdup(name);
@@ -62,33 +67,38 @@ void ft_setenv(t_env **env_list, const char *name, const char *value)
 
 void wait_commands(t_shell *shell)
 {
-	signal(SIGINT, SIG_IGN);
-	int result;
+    int result;
 
-	while (errno != ECHILD)
-	{
-		result = wait(&shell->tmp_proccess_status);
-		if (result == shell->last_process_id)
-		{
-			if (WIFEXITED(shell->tmp_proccess_status))
-				shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
-			else
-			{
-				shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
-				if (shell->last_exit_status == 131)
-					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-				else if (shell->last_exit_status == 139)
-					ft_putstr_fd("Segmentation fault (core dumped)\n", STDERR_FILENO);
-				else if (shell->last_exit_status == 141)
-					ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
-			}
-		}
-	}
-	if (g_exit_code == 130)
-		shell->last_exit_status = 130;
+    signal(SIGINT, SIG_IGN);  
+    result = 0;  
+
+    while (result != -1)
+    {
+        result = waitpid(-1, &shell->tmp_proccess_status, 0);
+
+        if (result > 0)
+        {
+            if (result == shell->last_process_id)
+            {
+                if (WIFEXITED(shell->tmp_proccess_status))
+                    shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
+                else
+                    shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
+            }
+        }
+        else if (result == -1 && errno != ECHILD)
+        {
+            perror("waitpid error");
+            break; 
+        }
+    }
+
+    if (g_exit_code == 130)
+        shell->last_exit_status = 130;
 }
 
-void ft_print_env_list(t_env *env_list)
+
+void	ft_print_env_list(t_env *env_list)
 {
 	t_env *current = env_list;
 	while (current)

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 12:27:51 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:47:33 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 				inside_single_quote);
 		(*i)++;
 	}
+	free(cmd_value_clean);
 	*current_token = (*current_token)->next_tok;
 }
 
