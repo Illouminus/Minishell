@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 12:11:44 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:09:10 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,7 @@ char	*ft_expander(char *str, t_shell *shell, int inside_single_quote)
 	if (inside_single_quote)
 	{
 		cmd_value = ft_strdup(str);
-
-		return (cmd_value);	
+		return (cmd_value);
 	}
 	final_len = estimate_final_length(str, shell);
 	result = malloc(final_len + 1);
