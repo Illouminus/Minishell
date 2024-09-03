@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 13:45:26 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 14:02:39 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,42 +65,39 @@ void	ft_setenv(t_env **env_list, const char *name, const char *value)
 	}
 }
 
-void wait_commands(t_shell *shell)
+void	wait_commands(t_shell *shell)
 {
-    int result;
+	int	result;
 
-    signal(SIGINT, SIG_IGN);  
-    result = 0;  
-
-    while (result != -1)
-    {
-        result = waitpid(-1, &shell->tmp_proccess_status, 0);
-
-        if (result > 0)
-        {
-            if (result == shell->last_process_id)
-            {
-                if (WIFEXITED(shell->tmp_proccess_status))
-                    shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
-                else
-                    shell->last_exit_status = 128 + WTERMSIG(shell->tmp_proccess_status);
-            }
-        }
-        else if (result == -1 && errno != ECHILD)
-        {
-            perror("waitpid error");
-            break; 
-        }
-    }
-
-    if (g_exit_code == 130)
-        shell->last_exit_status = 130;
+	signal(SIGINT, SIG_IGN);
+	result = 0;
+	while (result != -1)
+	{
+		result = waitpid(-1, &shell->tmp_proccess_status, 0);
+		if (result == shell->last_process_id)
+		{
+			if (WIFEXITED(shell->tmp_proccess_status))
+				shell->last_exit_status = WEXITSTATUS(
+						shell->tmp_proccess_status);
+			else
+				shell->last_exit_status = 128
+					+ WTERMSIG(shell->tmp_proccess_status);
+		}
+		else if (result == -1 && errno != ECHILD)
+		{
+			perror("waitpid error");
+			break ;
+		}
+	}
+	if (g_exit_code == 130)
+		shell->last_exit_status = 130;
 }
-
 
 void	ft_print_env_list(t_env *env_list)
 {
-	t_env *current = env_list;
+	t_env	*current;
+
+	current = env_list;
 	while (current)
 	{
 		ft_putstr_fd(current->env_var_name, STDOUT_FILENO);

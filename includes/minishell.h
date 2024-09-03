@@ -68,11 +68,10 @@ typedef enum e_redir_type
 // Structure pour l'expander
 typedef struct s_expand_state
 {
-    char    **result;
-    int     *j;
-    int     *len;
-}   t_expand_state;
-
+	char				**result;
+	int					*j;
+	int					*len;
+}						t_expand_state;
 
 // Structure d'un token
 typedef struct s_token
@@ -92,20 +91,27 @@ typedef struct s_redir
 	struct s_redir		*prev;
 }						t_redir;
 
-// Structure d'une commande
-typedef struct s_command {
-	char *cmd_value;
-	char **cmd_args;
-	bool is_builtin_cmd;
-	t_token *redir_tokens;
-	struct s_command *next_cmd;
-	struct s_command *prev_cmd;
-	t_redir *redirections;
-	t_redir *last_redirection;
-	int redir_count;
-	struct s_shell *shell;
-} t_command;
+typedef struct s_error_info
+{
+	const char			*filepath;
+	const char			*error_message;
+	int					exit_code;
+}						t_error_info;
 
+// Structure d'une commande
+typedef struct s_command
+{
+	char				*cmd_value;
+	char				**cmd_args;
+	bool				is_builtin_cmd;
+	t_token				*redir_tokens;
+	struct s_command	*next_cmd;
+	struct s_command	*prev_cmd;
+	t_redir				*redirections;
+	t_redir				*last_redirection;
+	int					redir_count;
+	struct s_shell		*shell;
+}						t_command;
 
 // Structure pour les variables d'environnement
 typedef struct s_env
@@ -210,11 +216,14 @@ void					handle_error(const char *cmd, const char *error_message,
 void					handle_error_non_critical(const char *cmd,
 							const char *error_message, int exit_code,
 							t_shell *shell);
-void					handle_redirection_error(const char *filepath,
-							const char *error_message, int exit_code,
+void					handle_redirection_error(t_error_info error_info,
 							t_shell *shell, int fd);
 int						check_and_open_file(const char *filepath, int flags,
 							mode_t mode, t_shell *shell);
+int						open_redirection(t_redir *redir, int *fd,
+							t_shell *shell);
+t_error_info			init_error_info(const char *filepath,
+							const char *error_message, int exit_code);
 /* Fonctions Intégrées (Built-Ins) */
 int						ft_builtin_cd(t_command *cmd, t_shell *shell);
 int						ft_builtin_echo(t_command *cmd);
