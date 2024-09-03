@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:44:17 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 10:45:05 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:26:45 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ char **ft_construct_cmd_args(char *cmd_name, char **cmd_args)
 	int i;
 
 	count = 0;
-
 	while (cmd_args[count])
 		count++;
 	args = malloc(sizeof(char *) * (count + 2));

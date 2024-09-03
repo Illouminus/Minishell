@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/02 11:00:42 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/03 12:25:45 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 		return ;
 	if (t_type == TOKEN_TYPE_CMD)
 	{
+		if (*last_command && (*last_command)->cmd_args)
+            (*last_command)->cmd_args[*i] = NULL;
 		ft_parser_handle_command(*current_token, cmd_value_clean, shell,
 			last_command);
 		*i = 0;
