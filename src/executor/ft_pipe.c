@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/03 15:50:20 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 15:54:48 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,16 @@ int	open_redirection(t_redir *redir, int *fd, t_shell *shell)
 	return (0);
 }
 
-t_error_info	init_error_info(const char *filepath, const char *error_message, int exit_code)
+t_error_info	init_error_info(const char *filepath, const char *error_message,
+		int exit_code)
 {
-	t_error_info error_info;
+	t_error_info	error_info;
 
 	error_info.filepath = filepath;
 	error_info.error_message = error_message;
 	error_info.exit_code = exit_code;
-
-	return error_info;
+	return (error_info);
 }
-
 
 void	handle_redirection_error(t_error_info error_info, t_shell *shell,
 		int fd)
