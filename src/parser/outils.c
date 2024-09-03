@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 12:06:07 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:01:14 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,14 @@ int	ft_determine_nb_args(t_token *token_list)
 
 	count = 0;
 	current_token = token_list;
-
 	while (current_token != NULL)
-	{	
+	{
 		if (current_token->tok_type == TOKEN_TYPE_ARG)
 			count++;
 		current_token = current_token->next_tok;
 	}
 	return (count);
 }
-
 
 t_command	*ft_new_command_init(t_command *command, int nb_of_args,
 		char *cmd_value_clean, t_shell *shell)

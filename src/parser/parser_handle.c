@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 11:15:37 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/03 12:11:01 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:01:27 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ int	ft_parser_handle_empty_command(char *cmd_value_clean,
 char	*ft_expander_cleaned_token_value(t_token *current_token, t_shell *shell,
 		int *inside_single_quote)
 {
-	*inside_single_quote = 0;
-	char *cleaned_token = ft_clean_token_value(current_token->tok_value,
-				inside_single_quote);
-	char *expanded_token = ft_expander(cleaned_token, shell, *inside_single_quote);
-	free(cleaned_token); 
-	return expanded_token;
-}
+	char	*cleaned_token;
+	char	*expanded_token;
 
+	*inside_single_quote = 0;
+	cleaned_token = ft_clean_token_value(current_token->tok_value,
+			inside_single_quote);
+	expanded_token = ft_expander(cleaned_token, shell, *inside_single_quote);
+	free(cleaned_token);
+	return (expanded_token);
+}
