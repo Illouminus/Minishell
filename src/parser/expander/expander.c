@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 15:32:07 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 15:45:52 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int	estimate_final_length(const char *str, t_shell *shell)
 			env_value = get_env_value(var_name, shell);
 			if (env_value)
 				len += ft_strlen(env_value);
-			else
-				len = 0;
 			free(var_name);
 		}
 		else
@@ -126,7 +124,7 @@ char	*ft_expander(char *str, t_shell *shell, int inside_single_quote)
 	state.j = &j;
 	state.len = &final_len;
 	process_characters(str, &state, shell);
-	if(final_len == 0)
+	if (final_len == 0)
 		result[0] = '\0';
 	else
 		result[j] = '\0';
