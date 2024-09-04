@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 16:01:14 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 12:06:35 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	ft_cmd_is_built_in(char *value)
 	return (0);
 }
 
-// Nombre d'arguments depuis la liste de tokens
 int	ft_determine_nb_args(t_token *token_list)
 {
 	int		count;

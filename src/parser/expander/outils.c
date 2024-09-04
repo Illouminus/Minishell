@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 11:11:31 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 12:07:52 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,21 @@ char	*get_env_value(const char *var_name, t_shell *shell)
 	if (env_var)
 		return (env_var->env_value);
 	return (NULL);
+}
+
+int	ft_check_user_input(t_shell *shell)
+{
+	if (!shell->user_input || ft_strcmp(shell->user_input, "/0") == 0)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int	ft_handle_empty_command(char *cmd_value_clean, t_token **current_token)
+{
+	if (ft_parser_handle_empty_command(cmd_value_clean, current_token))
+	{
+		free(cmd_value_clean);
+		return (1);
+	}
+	return (0);
 }

@@ -3,20 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adrienhors <adrienhors@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 10:39:07 by adrienhors        #+#    #+#             */
-/*   Updated: 2024/07/18 10:48:41 by adrienhors       ###   ########.fr       */
+/*   Updated: 2024/09/04 11:02:53 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minishell.h"
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
-    if ((c >= 9 && c <= 13) || c == 32)
-        return (1); 
-    return (0); 
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
 }

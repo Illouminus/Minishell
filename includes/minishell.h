@@ -73,13 +73,6 @@ typedef struct s_expand_state
 	int					*len;
 }						t_expand_state;
 
-// Structure pour reduire le nombre d'arguments dans la fonction lie au lexer
-typedef struct s_token_context
-{
-	int					start;
-	int					i;
-}						t_token_context;
-
 // Structure d'un token
 typedef struct s_token
 {
@@ -97,6 +90,13 @@ typedef struct s_redir
 	struct s_redir		*next;
 	struct s_redir		*prev;
 }						t_redir;
+
+typedef struct s_error_info
+{
+	char				*filepath;
+	char				*error_message;
+	int					exit_code;
+}						t_error_info;
 
 // Structure d'une commande
 typedef struct s_command
@@ -136,6 +136,13 @@ typedef struct s_shell
 	t_env				*env_var_list;
 }						t_shell;
 
+typedef struct s_parser_data
+{
+	t_shell				*shell;
+	t_command			**last_command;
+	int					*i;
+	int					inside_single_quote;
+}						t_parser_data;
 /*
 -------------------------------------------------------------
 |                       FONCTIONS                           |
@@ -195,7 +202,12 @@ int						ft_parser_handle_empty_command(char *cmd_value_clean,
 char					*ft_expander_cleaned_token_value(t_token *current_token,
 							t_shell *shell, int *inside_single_quote);
 int						parser(t_shell *shell);
+int						ft_handle_empty_command(char *cmd_value_clean,
+							t_token **current_token);
 
+int						ft_check_user_input(t_shell *shell);
+void					ft_handle_command_token(t_token **current_token,
+							t_parser_data *data, char *cmd_value_clean);
 /* ========================================================= */
 /*                        EXECUTION                          */
 /* ========================================================= */
@@ -214,14 +226,16 @@ void					wait_commands(t_shell *shell);
 void					ft_free_array(char **array);
 void					handle_error(const char *cmd, const char *error_message,
 							int exit_code, t_shell *shell);
-void					handle_error_non_critical(const char *cmd,
-							const char *error_message, int exit_code,
-							t_shell *shell);
-void					handle_redirection_error(const char *filepath,
-							const char *error_message, int exit_code,
+void					handle_error_non_critical(char *cmd,
+							char *error_message, int exit_code, t_shell *shell);
+void					handle_redirection_error(t_error_info error_info,
 							t_shell *shell, int fd);
-int						check_and_open_file(const char *filepath, int flags,
+int						check_and_open_file(char *filepath, int flags,
 							mode_t mode, t_shell *shell);
+int						open_redirection(t_redir *redir, int *fd,
+							t_shell *shell);
+t_error_info			init_error_info(char *filepath, char *error_message,
+							int exit_code);
 /* Fonctions Intégrées (Built-Ins) */
 int						ft_builtin_cd(t_command *cmd, t_shell *shell);
 int						ft_builtin_echo(t_command *cmd);
@@ -231,6 +245,10 @@ int						ft_builtin_pwd(t_command *commands);
 int						ft_builtin_unset(t_command *cmd, t_env **env_list);
 void					ft_builtin_exit(t_command *commands, t_shell *shell);
 void					ft_print_env_list(t_env *env_list);
+int						ft_fd_minus(t_shell *shell, int option);
+void					ft_update_pwd(t_shell *shell, char *command);
+int						handle_cd_error(t_error_info error_info, t_shell *shell,
+							char *s1, char *s2);
 
 /* ========================================================= */
 /*                VARIABLES D'ENVIRONNEMENT                  */

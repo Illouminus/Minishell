@@ -6,19 +6,19 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:15 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 14:22:14 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/03 15:59:20 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_builtin_echo(t_command *cmd)
+int	ft_builtin_echo(t_command *cmd)
 {
-	int i;
-	bool newline;
+	int		i;
+	bool	newline;
+
 	i = 0;
 	newline = true;
-
 	if ((cmd->cmd_value && !cmd->cmd_args[0]))
 	{
 		newline = false;

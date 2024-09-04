@@ -12,17 +12,19 @@ SRCS = 	main.c \
 		$(SRC_DIR)/env/env.c \
 		$(SRC_DIR)/env/outils.c \
 		$(SRC_DIR)/executor/builtins/builtin_cd.c \
+		$(SRC_DIR)/executor/builtins/cd_outils.c \
 		$(SRC_DIR)/executor/builtins/builtin_echo.c \
 		$(SRC_DIR)/executor/builtins/builtin_env.c \
 		$(SRC_DIR)/executor/builtins/builtin_exit.c \
 		$(SRC_DIR)/executor/builtins/builtin_export.c \
 		$(SRC_DIR)/executor/builtins/builtin_pwd.c \
 		$(SRC_DIR)/executor/builtins/builtin_unset.c \
-		$(SRC_DIR)/executor/executor_outils.c \
 		$(SRC_DIR)/executor/heredoc/heredoc.c \
 		$(SRC_DIR)/executor/redirection/redirection.c \
 		$(SRC_DIR)/executor/redirection/redirection_outils.c \
+		$(SRC_DIR)/executor/executor_outils.c \
 		$(SRC_DIR)/executor/executor.c \
+		$(SRC_DIR)/executor/ft_pipe.c \
 		$(SRC_DIR)/executor/outils.c \
 		$(SRC_DIR)/init/init_outils.c \
 		$(SRC_DIR)/lexer/lexer.c \
