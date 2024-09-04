@@ -68,11 +68,17 @@ typedef enum e_redir_type
 // Structure pour l'expander
 typedef struct s_expand_state
 {
-    char    **result;
-    int     *j;
-    int     *len;
-}   t_expand_state;
+	char				**result;
+	int					*j;
+	int					*len;
+}						t_expand_state;
 
+// Structure pour reduire le nombre d'arguments dans la fonction lie au lexer
+typedef struct s_token_context
+{
+	int					start;
+	int					i;
+}						t_token_context;
 
 // Structure d'un token
 typedef struct s_token
@@ -93,19 +99,19 @@ typedef struct s_redir
 }						t_redir;
 
 // Structure d'une commande
-typedef struct s_command {
-	char *cmd_value;
-	char **cmd_args;
-	bool is_builtin_cmd;
-	t_token *redir_tokens;
-	struct s_command *next_cmd;
-	struct s_command *prev_cmd;
-	t_redir *redirections;
-	t_redir *last_redirection;
-	int redir_count;
-	struct s_shell *shell;
-} t_command;
-
+typedef struct s_command
+{
+	char				*cmd_value;
+	char				**cmd_args;
+	bool				is_builtin_cmd;
+	t_token				*redir_tokens;
+	struct s_command	*next_cmd;
+	struct s_command	*prev_cmd;
+	t_redir				*redirections;
+	t_redir				*last_redirection;
+	int					redir_count;
+	struct s_shell		*shell;
+}						t_command;
 
 // Structure pour les variables d'environnement
 typedef struct s_env
@@ -172,6 +178,7 @@ int						ft_determine_nb_args(t_token *token_list);
 int						ft_cmd_is_built_in(char *value);
 void					add_redirection(t_command *cmd, int type,
 							char *filename);
+char					*get_env_value(const char *var_name, t_shell *shell);
 
 /* Parsing - Fonctions Principales */
 int						ft_cmd_is_built_in(char *value);

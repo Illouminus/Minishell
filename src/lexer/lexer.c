@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:57:19 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 10:49:58 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,27 @@ void	ft_print_tokens(t_token *token_list)
 	printf("\n\n");
 }
 
+void	ft_process_token(char *input, t_token_context *context,
+		int *is_first_token, t_shell *shell)
+{
+	t_token_type	type;
+	char			*token_value;
+
+	type = ft_determine_token_type(input, context->start, *is_first_token);
+	*is_first_token = (type == TOKEN_TYPE_PIPE);
+	token_value = ft_strndup(&input[context->start], context->i
+			- context->start);
+	ft_create_add_token(shell, type, token_value);
+	free(token_value);
+}
+
 // Fonction principale de tokenisation
 void	ft_tokenize_input(char *input, t_shell *shell)
 {
 	int				i;
 	int				is_first_token;
 	int				inside_quote;
-	int				start;
-	t_token_type	type;
-	char			*token_value;
+	t_token_context	context;
 
 	i = 0;
 	is_first_token = 1;
@@ -58,22 +70,17 @@ void	ft_tokenize_input(char *input, t_shell *shell)
 		i = ft_skip_whitespace(input, i);
 		if (input[i] == '\0')
 			break ;
-		start = i;
+		context.start = i;
 		if (ft_is_special_char(input[i]) && !inside_quote)
-		{
 			i++;
-		}
 		else
 		{
 			i = ft_parse_regular_token(input, i, &inside_quote, shell);
 			if (i == -1)
 				return ;
 		}
-		type = ft_determine_token_type(input, start, is_first_token);
-		is_first_token = (type == TOKEN_TYPE_PIPE);
-		token_value = ft_strndup(&input[start], i - start);
-		ft_create_add_token(shell, type, token_value);
-		free(token_value);
+		context.i = i;
+		ft_process_token(input, &context, &is_first_token, shell);
 	}
 }
 

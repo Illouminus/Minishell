@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 11:28:57 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 11:11:31 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,14 @@ char	*extract_var_name(const char *str, int *i)
 	while (str[*i] && is_var_char(str[*i]))
 		(*i)++;
 	return (ft_substr(str, start, *i - start));
+}
+
+char	*get_env_value(const char *var_name, t_shell *shell)
+{
+	t_env	*env_var;
+
+	env_var = ft_get_env_var_by_name(shell->env_var_list, var_name);
+	if (env_var)
+		return (env_var->env_value);
+	return (NULL);
 }
