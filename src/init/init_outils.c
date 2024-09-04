@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:57:10 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:30:10 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ int	init_shell(t_shell *shell, char **env)
 
 t_env	*init_env_vars(char **env)
 {
-	t_env *head = NULL;
-	t_env *new_var = NULL;
-	int i = 0;
+	t_env	*head;
+	t_env	*new_var;
+	int		i;
 
+	head = NULL;
+	new_var = NULL;
+	i = 0;
 	while (env[i])
 	{
 		new_var = create_env_var_node(env[i]);

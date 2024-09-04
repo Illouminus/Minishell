@@ -6,12 +6,11 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 13:26:25 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:30:38 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	ft_handle_redirection_token(t_token **current_token,
 		t_parser_data *data)
@@ -27,7 +26,7 @@ void	ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
 	(*(data->i))++;
 }
 
-void	ft_process_token(t_token **current_token, t_parser_data *data,
+void	ft_process_token_parser(t_token **current_token, t_parser_data *data,
 		char *cmd_value_clean)
 {
 	t_token_type	t_type;
@@ -57,7 +56,7 @@ void	ft_parser_process_token(t_token **current_token, t_shell *shell,
 			&(data.inside_single_quote));
 	if (ft_handle_empty_command(cmd_value_clean, current_token))
 		return ;
-	ft_process_token(current_token, &data, cmd_value_clean);
+	ft_process_token_parser(current_token, &data, cmd_value_clean);
 	free(cmd_value_clean);
 	*current_token = (*current_token)->next_tok;
 }
