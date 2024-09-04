@@ -3,44 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 09:58:57 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/12 10:03:33 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/04 13:49:01 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <limits.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
 
-static bool ft_is_number(const char *str)
+static bool	ft_is_number(const char *str)
 {
-	while (*str == ' ' || *str == '\t' || *str == '\n' ||
-			 *str == '\v' || *str == '\f' || *str == '\r')
+	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v'
+		|| *str == '\f' || *str == '\r')
 		str++;
-
 	if (*str == '-' || *str == '+')
 		str++;
-
 	while (*str)
 	{
 		if (*str < '0' || *str > '9')
-			return false;
+			return (false);
 		str++;
 	}
-
-	return true;
+	return (true);
 }
 
-static long ft_atol_core(const char *str)
+static long	ft_handle_overflow(int sign)
 {
-	long result = 0;
-	int sign = 1;
+	errno = ERANGE;
+	if (sign == 1)
+		return (LONG_MAX);
+	return (LONG_MIN);
+}
 
-	while (*str == ' ' || *str == '\t' || *str == '\n' ||
-			 *str == '\v' || *str == '\f' || *str == '\r')
+static long	ft_atol_core(const char *str)
+{
+	long	result;
+	int		sign;
+	long	prev_result;
+
+	result = 0;
+	sign = 1;
+	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v'
+		|| *str == '\f' || *str == '\r')
 		str++;
 	if (*str == '-' || *str == '+')
 	{
@@ -50,24 +58,21 @@ static long ft_atol_core(const char *str)
 	}
 	while (*str >= '0' && *str <= '9')
 	{
-		long prev_result = result;
+		prev_result = result;
 		result = result * 10 + (*str - '0');
 		str++;
 		if (result < prev_result)
-		{
-			errno = ERANGE;
-			return (sign == 1 ? LONG_MAX : LONG_MIN);
-		}
+			return (ft_handle_overflow(sign));
 	}
-	return result * sign;
+	return (result * sign);
 }
 
-long ft_atol(const char *str)
+long	ft_atol(const char *str)
 {
 	if (!ft_is_number(str))
 	{
 		errno = ERANGE;
-		return 0;
+		return (0);
 	}
-	return ft_atol_core(str);
+	return (ft_atol_core(str));
 }

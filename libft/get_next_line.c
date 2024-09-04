@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:03:39 by edouard           #+#    #+#             */
-/*   Updated: 2024/06/27 12:04:09 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/04 13:45:47 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *get_remaining(char *stash)
+char	*get_remaining(char *stash)
 {
-	int i;
-	char *remaining;
-	int len;
+	int		i;
+	char	*remaining;
+	int		len;
 
 	i = 0;
 	while (stash[i] != '\n' && stash[i])
@@ -34,10 +34,10 @@ char *get_remaining(char *stash)
 	return (remaining);
 }
 
-char *exrtact_line(char *stash)
+char	*exrtact_line(char *stash)
 {
-	int i;
-	char *line;
+	int		i;
+	char	*line;
 
 	i = 0;
 	if (!*stash)
@@ -52,11 +52,11 @@ char *exrtact_line(char *stash)
 	return (line);
 }
 
-char *read_from_file(char *stash, int fd)
+char	*read_from_file(char *stash, int fd)
 {
-	char *buffer;
-	ssize_t bytes_read;
-	char *temp;
+	char	*buffer;
+	ssize_t	bytes_read;
+	char	*temp;
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -80,10 +80,10 @@ char *read_from_file(char *stash, int fd)
 	return (stash);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *stash;
-	char *line;
+	static char	*stash;
+	char		*line;
 
 	if (BUFFER_SIZE <= 0 || fd < 0 || read(fd, 0, 0))
 		return (NULL);

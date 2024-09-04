@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/21 12:38:38 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/04 13:51:00 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_code;
+int	g_exit_code;
 
-int minishell(t_shell *shell, char **env)
+int	minishell(t_shell *shell, char **env)
 {
 	if (init_shell(shell, env) == 1)
 		return (1);
@@ -43,13 +43,12 @@ int minishell(t_shell *shell, char **env)
 	return (0);
 }
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	t_shell shell;
+	t_shell	shell;
 
 	(void)argc;
 	(void)argv;
-
 	minishell(&shell, env);
 	global_exit(&shell);
 	return (0);
