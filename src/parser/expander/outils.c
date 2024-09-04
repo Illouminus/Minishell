@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 11:28:57 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/04 11:59:47 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,21 @@ char	*extract_var_name(const char *str, int *i)
 	while (str[*i] && is_var_char(str[*i]))
 		(*i)++;
 	return (ft_substr(str, start, *i - start));
+}
+
+int	ft_check_user_input(t_shell *shell)
+{
+	if (!shell->user_input || ft_strcmp(shell->user_input, "/0") == 0)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int	ft_handle_empty_command(char *cmd_value_clean, t_token **current_token)
+{
+	if (ft_parser_handle_empty_command(cmd_value_clean, current_token))
+	{
+		free(cmd_value_clean);
+		return (1);
+	}
+	return (0);
 }

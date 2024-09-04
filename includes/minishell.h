@@ -136,6 +136,13 @@ typedef struct s_shell
 	t_env				*env_var_list;
 }						t_shell;
 
+typedef struct s_parser_data
+{
+	t_shell				*shell;
+	t_command			**last_command;
+	int					*i;
+	int					inside_single_quote;
+}						t_parser_data;
 /*
 -------------------------------------------------------------
 |                       FONCTIONS                           |
@@ -194,7 +201,12 @@ int						ft_parser_handle_empty_command(char *cmd_value_clean,
 char					*ft_expander_cleaned_token_value(t_token *current_token,
 							t_shell *shell, int *inside_single_quote);
 int						parser(t_shell *shell);
+int						ft_handle_empty_command(char *cmd_value_clean,
+							t_token **current_token);
 
+int						ft_check_user_input(t_shell *shell);
+void					ft_handle_command_token(t_token **current_token,
+							t_parser_data *data, char *cmd_value_clean);
 /* ========================================================= */
 /*                        EXECUTION                          */
 /* ========================================================= */
