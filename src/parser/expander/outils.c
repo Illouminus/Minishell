@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 11:59:47 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:27:16 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,13 @@ int	ft_handle_empty_command(char *cmd_value_clean, t_token **current_token)
 		return (1);
 	}
 	return (0);
+}
+char	*get_env_value(const char *var_name, t_shell *shell)
+{
+	t_env	*env_var;
+
+	env_var = ft_get_env_var_by_name(shell->env_var_list, var_name);
+	if (env_var)
+		return (env_var->env_value);
+	return (NULL);
 }

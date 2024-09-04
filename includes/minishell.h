@@ -73,6 +73,13 @@ typedef struct s_expand_state
 	int					*len;
 }						t_expand_state;
 
+// Structure pour reduire le nombre d'arguments dans la fonction lie au lexer
+typedef struct s_token_context
+{
+	int					start;
+	int					i;
+}						t_token_context;
+
 // Structure d'un token
 typedef struct s_token
 {
@@ -185,6 +192,7 @@ int						ft_determine_nb_args(t_token *token_list);
 int						ft_cmd_is_built_in(char *value);
 void					add_redirection(t_command *cmd, int type,
 							char *filename);
+char					*get_env_value(const char *var_name, t_shell *shell);
 
 /* Parsing - Fonctions Principales */
 int						ft_cmd_is_built_in(char *value);
