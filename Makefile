@@ -12,6 +12,7 @@ SRCS = 	main.c \
 		$(SRC_DIR)/env/env.c \
 		$(SRC_DIR)/env/outils.c \
 		$(SRC_DIR)/executor/builtins/builtin_cd.c \
+		$(SRC_DIR)/executor/builtins/cd_outils.c \
 		$(SRC_DIR)/executor/builtins/builtin_echo.c \
 		$(SRC_DIR)/executor/builtins/builtin_env.c \
 		$(SRC_DIR)/executor/builtins/builtin_exit.c \

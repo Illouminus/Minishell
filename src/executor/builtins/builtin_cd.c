@@ -6,115 +6,85 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/08/30 10:57:42 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 10:39:33 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int handle_cd_error(const char *cmd, const char *error_message, t_shell *shell, char *s1, char *s2)
+static char	*get_home_directory(t_shell *shell)
 {
-	handle_error_non_critical(cmd, error_message, 1, shell);
-	free(s1);
-	free(s2);
-	return 1;
-}
+	char	*home;
 
-void ft_update_pwd(t_shell *shell, const char *command)
-{
-	char cwd[4096];
-	char *old_dir;
-
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	home = ft_getenv(shell->env_var_list, "HOME");
+	if (!home)
 	{
-		handle_error_non_critical(command, strerror(errno), 1, shell);
-		return;
+		handle_error_non_critical("cd", "HOME not set", 1, shell);
+		return (NULL);
 	}
-
-	old_dir = ft_getenv(shell->env_var_list, "PWD");
-	if (!old_dir)
-		return;
-
-	ft_setenv(&shell->env_var_list, "OLDPWD", old_dir);
-	free(old_dir);
-	ft_setenv(&shell->env_var_list, "PWD", cwd);
-}
-
-int ft_fd_minus(t_shell *shell, int option)
-{
-	char *curr_dir = ft_getenv(shell->env_var_list, "OLDPWD");
-	char *old_dir = ft_getenv(shell->env_var_list, "PWD");
-
-	if (!curr_dir)
-		return handle_cd_error("cd", "OLDPWD not set", shell, curr_dir, old_dir);
-
-	if (!old_dir)
-		return handle_cd_error("cd", "PWD not set", shell, curr_dir, old_dir);
-
-	if (chdir(curr_dir) == -1)
-		return handle_cd_error("cd", strerror(errno), shell, curr_dir, old_dir);
-
-	if (option == 1)
+	if (ft_strlen(home) == 0)
 	{
-		handle_cd_error("cd", "too many arguments", shell, curr_dir, old_dir);
+		free(home);
+		home = getcwd(NULL, 0);
+		if (!home)
+		{
+			handle_error_non_critical("cd", "getcwd failed", 1, shell);
+			return (NULL);
+		}
 	}
-
-	ft_setenv(&shell->env_var_list, "OLDPWD", old_dir);
-	ft_setenv(&shell->env_var_list, "PWD", curr_dir);
-
-	free(curr_dir);
-	free(old_dir);
-	return 0;
+	return (home);
 }
 
-int check_for_arguments(t_command *commands, t_shell *shell)
+static int	change_directory(char *path, t_shell *shell)
+{
+	if (chdir(path) == -1)
+	{
+		handle_error_non_critical("cd", strerror(errno), 1, shell);
+		return (1);
+	}
+	ft_update_pwd(shell, path);
+	return (0);
+}
+
+static int	handle_cd_no_arguments(t_shell *shell)
+{
+	char	*home;
+	int		result;
+
+	home = get_home_directory(shell);
+	if (!home)
+		return (1);
+	result = change_directory(home, shell);
+	free(home);
+	return (result);
+}
+
+int	check_for_arguments(t_command *commands, t_shell *shell)
 {
 	if (commands->cmd_args[1])
 	{
-		return handle_cd_error("cd", "too many arguments", shell, NULL, NULL);
+		return (handle_cd_error((t_error_info){"cd", "too many arguments", 1},
+			shell, NULL, NULL));
 	}
 	if (commands->cmd_args[0])
 	{
 		if (ft_strcmp(commands->cmd_args[0], "-") == 0)
-			return ft_fd_minus(shell, 1);
+			return (ft_fd_minus(shell, 1));
 		else if (ft_strcmp(commands->cmd_args[0], "--") == 0)
-			return ft_fd_minus(shell, 0);
+			return (ft_fd_minus(shell, 0));
 		else if (chdir(commands->cmd_args[0]) == -1)
 		{
 			handle_error_non_critical("cd", strerror(errno), 1, shell);
-			return 1;
+			return (1);
 		}
-
 		ft_update_pwd(shell, commands->cmd_args[0]);
 	}
-	return 0;
+	return (0);
 }
 
-int ft_builtin_cd(t_command *cmd, t_shell *shell)
+int	ft_builtin_cd(t_command *cmd, t_shell *shell)
 {
-	char *value;
-
 	if (!cmd->cmd_args[0])
-	{
-		value = ft_getenv(shell->env_var_list, "HOME");
-		if (!value)
-			return handle_cd_error("cd", "HOME not set", shell, NULL, NULL);
-		if (ft_strlen(value) == 0)
-		{
-			free(value);
-			value = getcwd(NULL, 0);
-			if (!value)
-				return handle_cd_error("cd", "getcwd failed", shell, NULL, NULL);
-		}
-		if (chdir(value) == -1)
-		{
-			int ret = handle_cd_error("cd", strerror(errno), shell, value, NULL);
-			free(value);
-			return ret;
-		}
-		ft_update_pwd(shell, value);
-		free(value);
-		return 0;
-	}
-	return check_for_arguments(cmd, shell);
+		return (handle_cd_no_arguments(shell));
+	return (check_for_arguments(cmd, shell));
 }

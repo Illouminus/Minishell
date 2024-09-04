@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/03 15:54:48 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 10:13:53 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	open_redirection(t_redir *redir, int *fd, t_shell *shell)
 	return (0);
 }
 
-t_error_info	init_error_info(const char *filepath, const char *error_message,
+t_error_info	init_error_info(char *filepath, char *error_message,
 		int exit_code)
 {
 	t_error_info	error_info;
@@ -59,8 +59,11 @@ void	handle_redirection_error(t_error_info error_info, t_shell *shell,
 {
 	if (fd != -1)
 		close(fd);
-	fprintf(stderr, "minishell: %s: %s\n", error_info.filepath,
-		error_info.error_message);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(error_info.filepath, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(error_info.error_message, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 	shell->last_exit_status = error_info.exit_code;
 	free_shell(shell);
 	exit(error_info.exit_code);

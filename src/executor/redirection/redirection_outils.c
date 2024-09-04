@@ -6,13 +6,13 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:36:00 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:50:32 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 10:11:35 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_file_exists_and_stat(const char *filepath, t_shell *shell,
+static int	check_file_exists_and_stat(char *filepath, t_shell *shell,
 		struct stat *file_stat)
 {
 	t_error_info	error_info;
@@ -30,7 +30,7 @@ static int	check_file_exists_and_stat(const char *filepath, t_shell *shell,
 	return (0);
 }
 
-static int	check_if_directory(const char *filepath,
+static int	check_if_directory(char *filepath,
 		const struct stat *file_stat, t_shell *shell)
 {
 	t_error_info	error_info;
@@ -44,7 +44,7 @@ static int	check_if_directory(const char *filepath,
 	return (0);
 }
 
-static int	check_write_permission(const char *filepath, int flags,
+static int	check_write_permission(char *filepath, int flags,
 		t_shell *shell)
 {
 	t_error_info	error_info;
@@ -58,7 +58,7 @@ static int	check_write_permission(const char *filepath, int flags,
 	return (0);
 }
 
-static int	open_file_with_checks(const char *filepath, int flags, mode_t mode)
+static int	open_file_with_checks(char *filepath, int flags, mode_t mode)
 {
 	int	fd;
 
@@ -68,7 +68,7 @@ static int	open_file_with_checks(const char *filepath, int flags, mode_t mode)
 	return (fd);
 }
 
-int	check_and_open_file(const char *filepath, int flags, mode_t mode,
+int	check_and_open_file(char *filepath, int flags, mode_t mode,
 		t_shell *shell)
 {
 	struct stat		file_stat;
