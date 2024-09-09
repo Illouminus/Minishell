@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 13:51:00 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:30:10 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	minishell(t_shell *shell, char **env)
 		handle_exit(shell);
 		if (lexer(shell) == EXIT_SUCCESS && parser(shell) == EXIT_SUCCESS)
 		{
-			g_exit_code = ft_executor(shell, env);
+			g_exit_code = ft_executor(shell);
 			shell->last_exit_status = g_exit_code;
 		}
 		else

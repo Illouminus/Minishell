@@ -6,13 +6,13 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 11:51:04 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 13:32:48 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:24:38 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_env_node(t_env *env)
+void	free_env_node(t_env *env)
 {
 	free(env->env_var_name);
 	free(env->env_value);
