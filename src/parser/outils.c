@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 13:25:13 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:42:11 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ t_command	*ft_new_command_init(t_command *command, int nb_of_args,
 	}
 	command->cmd_value = ft_strdup(cmd_value_clean);
 	command->cmd_args = malloc((nb_of_args + 1) * sizeof(char *));
+	if (nb_of_args == 0)
+		command->cmd_args[0] = NULL;
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->redir_tokens = NULL;
 	command->prev_cmd = NULL;
