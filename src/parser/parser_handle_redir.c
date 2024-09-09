@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handle_redir.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/09 18:49:17 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:04:11 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,8 @@ int	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
 	{
-		if ((*current_token)->next_tok)
-			handle_redir_out(current_token, shell, last_command,
-				inside_single_quote);
-		else
-		{
-			ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
-			return (1);
-		}
+		handle_redir_out(current_token, shell, last_command,
+			inside_single_quote);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND)
 	{

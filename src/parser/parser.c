@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/09 18:49:04 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:07:26 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,19 @@
 
 int	ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 {
-	return (ft_parser_handle_redirection(current_token, data->shell,
-			*(data->last_command), &(data->inside_single_quote)));
+	if (!(*current_token)->next_tok)
+	{
+		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
+		return (1);
+	}
+	else if (!(*current_token)->next_tok->next_tok)
+	{
+		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
+		return (1);
+	}
+	else
+		return (ft_parser_handle_redirection(current_token, data->shell,
+				*(data->last_command), &(data->inside_single_quote)));
 }
 
 void	ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
