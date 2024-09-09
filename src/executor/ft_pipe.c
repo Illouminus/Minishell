@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/04 10:13:53 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:44:25 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,17 @@ void	handle_redirection_error(t_error_info error_info, t_shell *shell,
 	shell->last_exit_status = error_info.exit_code;
 	free_shell(shell);
 	exit(error_info.exit_code);
+}
+
+int	count_env_vars(t_env *env_list)
+{
+	int	count;
+
+	count = 0;
+	while (env_list)
+	{
+		count++;
+		env_list = env_list->next_env;
+	}
+	return (count);
 }

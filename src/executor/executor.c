@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 12:56:18 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:43:09 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,18 @@ void	ft_exec_builtins(t_shell *shell, bool next_cmd)
 		free_shell(shell);
 }
 
-static void	ft_execute_command(t_command *current, t_shell *shell, char **env)
+static void	ft_execute_command(t_command *current, t_shell *shell)
 {
-	char	*path;
-	char	**cmd_args;
-
 	signal(SIGQUIT, SIG_DFL);
-	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
-	{
-		shell->last_exit_status = 0;
-		free_shell(shell);
-		exit(shell->last_exit_status);
-	}
-	if (current->is_builtin_cmd && current->next_cmd)
-		ft_exec_builtins(shell, true);
-	else
-	{
-		path = ft_get_path(current, shell);
-		if (!path)
-			handle_error(current->cmd_value, "command not found", 127, shell);
-		cmd_args = ft_construct_cmd_args(current->cmd_value, current->cmd_args);
-		if (execve(path, cmd_args, env) == -1)
-		{
-			free(path);
-			ft_free_array(cmd_args);
-			handle_error(current->cmd_value, strerror(errno), 1, shell);
-		}
-	}
+	ft_check_empty_command(current, shell);
+	ft_execute_builtin_if_needed(current, shell);
+	ft_execute_external_command(current, shell);
 }
 
-static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd,
-		char **env)
+static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {
 	handle_redirections(current, prev_fd);
-	ft_execute_command(current, shell, env);
+	ft_execute_command(current, shell);
 	free_shell(shell);
 	exit(shell->last_exit_status);
 }
@@ -87,7 +65,7 @@ int	ft_parent_process(t_command *current, int prev_fd)
 	return (prev_fd);
 }
 
-int	ft_executor(t_shell *shell, char **env)
+int	ft_executor(t_shell *shell)
 {
 	t_command	*current;
 	int			prev_fd;
@@ -104,7 +82,7 @@ int	ft_executor(t_shell *shell, char **env)
 		{
 			ft_pipe(current, shell);
 			if (shell->last_process_id == 0)
-				ft_child_process(current, shell, prev_fd, env);
+				ft_child_process(current, shell, prev_fd);
 			else
 				prev_fd = ft_parent_process(current, prev_fd);
 			current = current->next_cmd;

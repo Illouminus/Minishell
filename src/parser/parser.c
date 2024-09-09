@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 13:30:38 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:38:46 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_handle_redirection_token(t_token **current_token,
 		t_parser_data *data)
 {
 	ft_parser_handle_redirection(current_token, data->shell,
-		*(data->last_command), &(data->inside_single_quote));
+		*(data->last_command), &(data->inside_single_quote) );
 }
 
 void	ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)

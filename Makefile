@@ -23,7 +23,9 @@ SRCS = 	main.c \
 		$(SRC_DIR)/executor/redirection/redirection.c \
 		$(SRC_DIR)/executor/redirection/redirection_outils.c \
 		$(SRC_DIR)/executor/executor_outils.c \
+		$(SRC_DIR)/executor/executor_outils_2.c \
 		$(SRC_DIR)/executor/executor.c \
+		$(SRC_DIR)/executor/env_converter.c \
 		$(SRC_DIR)/executor/ft_pipe.c \
 		$(SRC_DIR)/executor/outils.c \
 		$(SRC_DIR)/init/init_outils.c \

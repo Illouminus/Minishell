@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/04 13:50:09 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:43:27 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ void					ft_handle_command_token(t_token **current_token,
 int						init_shell(t_shell *shell, char **env);
 
 /* Exécution des Commandes */
-int						ft_executor(t_shell *shell, char **env);
+int						ft_executor(t_shell *shell);
 char					**ft_construct_cmd_args(char *cmd_name,
 							char **cmd_args);
 char					*ft_get_path(t_command *current, t_shell *shell);
@@ -242,6 +242,7 @@ int						open_redirection(t_redir *redir, int *fd,
 							t_shell *shell);
 t_error_info			init_error_info(char *filepath, char *error_message,
 							int exit_code);
+char					**convert_env_list_to_array(t_env *env_list);
 /* Fonctions Intégrées (Built-Ins) */
 int						ft_builtin_cd(t_command *cmd, t_shell *shell);
 int						ft_builtin_echo(t_command *cmd);
@@ -255,6 +256,14 @@ int						ft_fd_minus(t_shell *shell, int option);
 void					ft_update_pwd(t_shell *shell, char *command);
 int						handle_cd_error(t_error_info error_info, t_shell *shell,
 							char *s1, char *s2);
+int						count_env_vars(t_env *env_list);
+void					ft_execute_external_command(t_command *current,
+							t_shell *shell);
+void					ft_execute_builtin_if_needed(t_command *current,
+							t_shell *shell);
+void					ft_check_empty_command(t_command *current,
+							t_shell *shell);
+void					ft_exec_builtins(t_shell *shell, bool next_cmd);
 
 /* ========================================================= */
 /*                VARIABLES D'ENVIRONNEMENT                  */
@@ -272,7 +281,7 @@ void					ft_setenv(t_env **env_list, const char *name,
 void					add_env_var_to_list(t_env **head, t_env *new_var);
 void					global_exit(t_shell *shell);
 void					free_env_var_list(t_env *env);
-
+void					free_env_node(t_env *env);
 /* ========================================================= */
 /*                  GESTION DES SIGNAUX                      */
 /* ========================================================= */

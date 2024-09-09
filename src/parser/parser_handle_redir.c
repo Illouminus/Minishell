@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handle_redir.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/03 16:01:32 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/09 18:36:33 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,17 @@ void	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
 		handle_heredoc(current_token, last_command);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
-		handle_redir_out(current_token, shell, last_command,
-			inside_single_quote);
+	{
+		if ((*current_token)->next_tok == NULL)
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+			return ;
+		}
+		else 
+			handle_redir_out(current_token, shell, last_command,
+					inside_single_quote);
+	}
+	
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND)
 	{
 		(*current_token) = (*current_token)->next_tok;
