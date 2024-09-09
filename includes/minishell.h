@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/04 13:50:09 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:40:57 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ char					*get_env_value(const char *var_name, t_shell *shell);
 int						ft_cmd_is_built_in(char *value);
 int						ft_determine_nb_args(t_token *token_list);
 
-void					ft_parser_handle_redirection(t_token **current_token,
+int						ft_parser_handle_redirection(t_token **current_token,
 							t_shell *shell, t_command *last_command,
 							int *inside_single_quote);
 void					ft_parser_handle_command(t_token *current_token,

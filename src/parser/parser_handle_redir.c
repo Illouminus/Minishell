@@ -6,7 +6,7 @@
 /*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/03 16:01:32 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/09 18:43:21 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	handle_redir_append(t_token **current_token, t_shell *shell,
 	free(file_name);
 }
 
-void	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
+int	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
 		t_command *last_command, int *inside_single_quote)
 {
 	if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_IN)
@@ -78,12 +78,21 @@ void	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
 		handle_heredoc(current_token, last_command);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
-		handle_redir_out(current_token, shell, last_command,
-			inside_single_quote);
+	{
+		if ((*current_token)->next_tok)
+			handle_redir_out(current_token, shell, last_command,
+				inside_single_quote);
+		else
+		{
+			ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
+			return (1);
+		}
+	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND)
 	{
 		(*current_token) = (*current_token)->next_tok;
 		handle_redir_append(current_token, shell, last_command,
 			inside_single_quote);
 	}
+	return (0);
 }
