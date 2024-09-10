@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 17:39:36 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 15:40:41 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:56:03 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int	ft_check_user_input(t_shell *shell)
 
 int	ft_handle_empty_command(char *cmd_value_clean, t_token **current_token)
 {
-	if (ft_parser_handle_empty_command(cmd_value_clean, current_token))
+	if (ft_parser_handle_empty_command(cmd_value_clean, current_token) == 1)
 	{
 		free(cmd_value_clean);
-		return (1);
+		return (2);
 	}
 	return (0);
 }

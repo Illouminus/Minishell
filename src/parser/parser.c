@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/09 19:07:26 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/10 10:58:02 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ int	ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
 		return (1);
 	}
-	else if (!(*current_token)->next_tok->next_tok)
+	else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC
+		|| ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND
+			&& !(*current_token)->next_tok->next_tok))
 	{
 		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
 		return (1);
@@ -59,14 +61,21 @@ int	ft_parser_process_token(t_token **current_token, t_shell *shell,
 {
 	char			*cmd_value_clean;
 	t_parser_data	data;
+	int				result;
 
 	data.shell = shell;
 	data.last_command = last_command;
 	data.i = i;
 	cmd_value_clean = ft_expander_cleaned_token_value(*current_token, shell,
 			&(data.inside_single_quote));
-	if (ft_handle_empty_command(cmd_value_clean, current_token))
+	result = ft_handle_empty_command(cmd_value_clean, current_token);
+	if (result == 2)
+		return (0);
+	else if (result == 1)
+	{
+		free(cmd_value_clean);
 		return (1);
+	}
 	if (ft_process_token_parser(current_token, &data, cmd_value_clean) == 1)
 	{
 		free(cmd_value_clean);
