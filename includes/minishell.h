@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/09 18:49:38 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:18:36 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,7 @@ int						handle_cd_error(t_error_info error_info, t_shell *shell,
 int						count_env_vars(t_env *env_list);
 void					ft_execute_external_command(t_command *current,
 							t_shell *shell);
-void					ft_execute_builtin_if_needed(t_command *current,
+bool					ft_execute_builtin_if_needed(t_command *current,
 							t_shell *shell);
 void					ft_check_empty_command(t_command *current,
 							t_shell *shell);

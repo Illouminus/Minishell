@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/09 18:43:09 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:18:53 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ static void	ft_execute_command(t_command *current, t_shell *shell)
 {
 	signal(SIGQUIT, SIG_DFL);
 	ft_check_empty_command(current, shell);
-	ft_execute_builtin_if_needed(current, shell);
-	ft_execute_external_command(current, shell);
+	
+	if (!ft_execute_builtin_if_needed(current, shell))
+	{
+		ft_execute_external_command(current, shell);
+	}
 }
+
 
 static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {

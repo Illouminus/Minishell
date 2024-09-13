@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 16:16:23 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:11:48 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ static void	handle_exit_error(const char *arg, t_shell *shell)
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 	shell->last_exit_status = 2;
-	free_shell(shell);
-	exit(shell->last_exit_status);
+	global_exit(shell);
 }
 
 static int	is_numeric(const char *arg)
