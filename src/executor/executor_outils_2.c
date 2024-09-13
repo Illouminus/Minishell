@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:18:50 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/13 11:18:16 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:29:21 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ bool	ft_execute_builtin_if_needed(t_command *current, t_shell *shell)
 	}
 	return (false);
 }
-
 
 void	ft_execute_external_command(t_command *current, t_shell *shell)
 {

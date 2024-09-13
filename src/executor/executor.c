@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/13 11:18:53 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:29:13 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_exec_builtins(t_shell *shell, bool next_cmd)
 {
 	t_command	*current;
 
+	(void)next_cmd;
 	current = shell->command_list;
 	if (ft_strcmp(current->cmd_value, "echo") == 0)
 		shell->last_exit_status = ft_builtin_echo(current);
@@ -33,27 +34,20 @@ void	ft_exec_builtins(t_shell *shell, bool next_cmd)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		ft_builtin_exit(current, shell);
-	if (next_cmd)
-		free_shell(shell);
 }
 
 static void	ft_execute_command(t_command *current, t_shell *shell)
 {
 	signal(SIGQUIT, SIG_DFL);
 	ft_check_empty_command(current, shell);
-	
 	if (!ft_execute_builtin_if_needed(current, shell))
-	{
 		ft_execute_external_command(current, shell);
-	}
 }
-
 
 static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell);
-	free_shell(shell);
 	exit(shell->last_exit_status);
 }
 
@@ -93,5 +87,6 @@ int	ft_executor(t_shell *shell)
 		}
 	}
 	wait_commands(shell);
+	free_shell(shell);
 	return (shell->last_exit_status);
 }
