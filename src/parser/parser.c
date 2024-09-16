@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/10 10:58:02 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:18:24 by ahors            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ int	ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 {
 	if (!(*current_token)->next_tok)
 	{
-		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
+		ft_putstr_fd("Syntax error: newline unexpected\n", STDOUT_FILENO);
 		return (1);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC
 		|| ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND
 			&& !(*current_token)->next_tok->next_tok))
 	{
-		ft_putstr_fd("parse error near `\\n'\n", STDOUT_FILENO);
+		ft_putstr_fd("Syntax error: newline unexpected\n", STDOUT_FILENO);
 		return (1);
 	}
 	else
