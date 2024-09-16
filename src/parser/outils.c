@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/16 13:12:08 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:44:13 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void add_redirection(t_command **cmd_ptr, int type, char *filename) {
 	t_redir *new_redir;
-    if (*cmd_ptr == NULL) 
-		*cmd_ptr = create_command_add_redirection();
     new_redir = malloc(sizeof(t_redir));
     if (!new_redir) 
 		return ;
@@ -86,7 +84,6 @@ t_command	*ft_new_command_init(t_command *command, int nb_of_args,
 	if (nb_of_args == 0)
 		command->cmd_args[0] = NULL;
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
-	command->redir_tokens = NULL;
 	command->prev_cmd = NULL;
 	command->next_cmd = NULL;
 	command->redirections = NULL;

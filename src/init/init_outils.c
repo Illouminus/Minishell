@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 14:39:14 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:09:52 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	init_shell(t_shell *shell, char **env)
 	shell->last_process_id = -2;
 	shell->last_exit_status = 0;
 	shell->user_input = NULL;
+	shell->expected_cmd = false;
 	shell->pipe_fds[0] = -2;
 	shell->pipe_fds[1] = -2;
 	return (0);

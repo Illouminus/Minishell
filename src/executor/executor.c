@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/13 11:29:13 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 18:47:20 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	ft_execute_command(t_command *current, t_shell *shell)
 
 static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {
+	printf("Nous sommes dans le processus enfant\n");
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell);
 	exit(shell->last_exit_status);
@@ -68,8 +69,14 @@ int	ft_executor(t_shell *shell)
 	t_command	*current;
 	int			prev_fd;
 
+	printf("Command value in executor: %s\n", shell->command_list->cmd_value);
+	//printf("Command args in executor: %s\n", shell->command_list->cmd_args[0]);
+	//printf("Redirection in executor: %s\n", shell->command_list->redirections->filename);
 	if (shell->command_list == NULL)
+	{
+		printf("Command list is NULL\n");
 		return (0);
+	}
 	current = shell->command_list;
 	prev_fd = 0;
 	if (!current->next_cmd && current->is_builtin_cmd && !current->redirections)

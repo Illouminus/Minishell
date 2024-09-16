@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/16 13:10:32 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:09:12 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ typedef struct s_command
 	char				*cmd_value;
 	char				**cmd_args;
 	bool				is_builtin_cmd;
-	t_token				*redir_tokens;
 	struct s_command	*next_cmd;
 	struct s_command	*prev_cmd;
 	t_redir				*redirections;
@@ -138,6 +137,7 @@ typedef struct s_shell
 	char				**env_vars;
 	int					tmp_proccess_status;
 	int					last_exit_status;
+	bool 				expected_cmd;
 	int					pipe_fds[2];
 	t_env				*env_var_list;
 }						t_shell;
@@ -197,7 +197,7 @@ int						ft_cmd_is_built_in(char *value);
 int						ft_determine_nb_args(t_token *token_list);
 
 int						ft_parser_handle_redirection(t_token **current_token,
-							t_shell *shell, t_command *last_command,
+							t_shell *shell, t_command **last_command,
 							int *inside_single_quote);
 void					ft_parser_handle_command(t_token *current_token,
 							char *cmd_value_clean, t_shell *shell,

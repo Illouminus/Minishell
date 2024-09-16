@@ -6,14 +6,14 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/16 11:33:58 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:45:39 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	handle_redir_in(t_token **current_token, t_shell *shell,
-		t_command *last_command, int *inside_single_quote)
+		t_command **last_command, int *inside_single_quote)
 {
 	char	*token_value;
 	char	*clean_token_value;
@@ -22,7 +22,8 @@ void	handle_redir_in(t_token **current_token, t_shell *shell,
 	token_value = (*current_token)->next_tok->tok_value;
 	clean_token_value = ft_clean_token_value(token_value, inside_single_quote);
 	file_name = ft_expander(clean_token_value, shell, *inside_single_quote);
-	add_redirection(&last_command, REDIR_IN, file_name);
+	add_redirection(last_command, REDIR_IN, file_name);
+	*current_token = (*current_token)->next_tok;
 	free(clean_token_value);
 	free(file_name);
 }
@@ -68,24 +69,27 @@ void	handle_redir_append(t_token **current_token, t_shell *shell,
 }
 
 int	ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
-		t_command *last_command, int *inside_single_quote)
+		t_command **last_command, int *inside_single_quote)
 {
+	if((*last_command) == NULL)
+		*last_command = create_command_add_redirection();
+	shell->command_list = *last_command;
 	if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_IN)
 		handle_redir_in(current_token, shell, last_command,
 			inside_single_quote);
 	else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC)
 	{
-		handle_heredoc(current_token, last_command);
+		handle_heredoc(current_token, (*last_command));
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
 	{
-		handle_redir_out(current_token, shell, last_command,
+		handle_redir_out(current_token, shell, (*last_command),
 			inside_single_quote);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND)
 	{
 		(*current_token) = (*current_token)->next_tok;
-		handle_redir_append(current_token, shell, last_command,
+		handle_redir_append(current_token, shell, (*last_command),
 			inside_single_quote);
 	}
 	return (0);
