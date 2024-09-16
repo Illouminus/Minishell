@@ -6,13 +6,25 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/09 17:30:10 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:11:13 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_exit_code;
+
+t_command *create_command_add_redirection() {
+    t_command *cmd;
+	cmd  = malloc(sizeof(t_command));
+    if (!cmd) 
+      return NULL;
+    cmd->cmd_args = NULL;
+    cmd->redirections = NULL;
+    cmd->last_redirection = NULL;
+    cmd->next_cmd = NULL;
+    return cmd;
+}
 
 int	minishell(t_shell *shell, char **env)
 {

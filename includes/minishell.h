@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/13 11:18:36 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:10:32 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,9 +189,8 @@ t_command				*ft_new_command_init(t_command *command, int nb_of_args,
 							char *cmd_value_clean, t_shell *shell);
 int						ft_determine_nb_args(t_token *token_list);
 int						ft_cmd_is_built_in(char *value);
-void					add_redirection(t_command *cmd, int type,
-							char *filename);
 char					*get_env_value(const char *var_name, t_shell *shell);
+t_command				*create_command_add_redirection(void);
 
 /* Parsing - Fonctions Principales */
 int						ft_cmd_is_built_in(char *value);
@@ -308,7 +307,7 @@ char					*ft_expander(char *str, t_shell *shell,
 void					add_char_to_result(char **result, int *j, char c);
 int						is_var_char(char c);
 char					*extract_var_name(const char *str, int *i);
-void					add_redirection(t_command *cmd, int type,
+void					add_redirection(t_command **cmd, int type,
 							char *filename);
 
 #endif // MINISHELL_H
