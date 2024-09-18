@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/16 18:47:20 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/18 11:22:39 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exec_builtins(t_shell *shell, bool next_cmd)
+void ft_exec_builtins(t_shell *shell, bool next_cmd)
 {
-	t_command	*current;
+	t_command *current;
 
 	(void)next_cmd;
 	current = shell->command_list;
@@ -26,17 +26,17 @@ void	ft_exec_builtins(t_shell *shell, bool next_cmd)
 		shell->last_exit_status = ft_builtin_pwd(current);
 	else if (ft_strcmp(current->cmd_value, "export") == 0)
 		shell->last_exit_status = ft_builtin_export(current,
-				&shell->env_var_list);
+																  &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "unset") == 0)
 		shell->last_exit_status = ft_builtin_unset(current,
-				&shell->env_var_list);
+																 &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
 		ft_builtin_exit(current, shell);
 }
 
-static void	ft_execute_command(t_command *current, t_shell *shell)
+static void ft_execute_command(t_command *current, t_shell *shell)
 {
 	signal(SIGQUIT, SIG_DFL);
 	ft_check_empty_command(current, shell);
@@ -44,15 +44,14 @@ static void	ft_execute_command(t_command *current, t_shell *shell)
 		ft_execute_external_command(current, shell);
 }
 
-static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
+static void ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {
-	printf("Nous sommes dans le processus enfant\n");
 	handle_redirections(current, prev_fd);
 	ft_execute_command(current, shell);
 	exit(shell->last_exit_status);
 }
 
-int	ft_parent_process(t_command *current, int prev_fd)
+int ft_parent_process(t_command *current, int prev_fd)
 {
 	if (prev_fd != 0)
 		close(prev_fd);
@@ -64,14 +63,11 @@ int	ft_parent_process(t_command *current, int prev_fd)
 	return (prev_fd);
 }
 
-int	ft_executor(t_shell *shell)
+int ft_executor(t_shell *shell)
 {
-	t_command	*current;
-	int			prev_fd;
+	t_command *current;
+	int prev_fd;
 
-	printf("Command value in executor: %s\n", shell->command_list->cmd_value);
-	//printf("Command args in executor: %s\n", shell->command_list->cmd_args[0]);
-	//printf("Redirection in executor: %s\n", shell->command_list->redirections->filename);
 	if (shell->command_list == NULL)
 	{
 		printf("Command list is NULL\n");

@@ -3,33 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/16 18:23:24 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:12:12 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_exit_code;
+int g_exit_code;
 
-t_command *create_command_add_redirection() {
-    t_command *cmd;
-	cmd  = malloc(sizeof(t_command));
-    if (!cmd) 
-      return NULL;
-	cmd->cmd_value = NULL;
-    cmd->cmd_args = NULL;
-    cmd->redirections = NULL;
-    cmd->last_redirection = NULL;
-    cmd->next_cmd = NULL;
-	cmd->prev_cmd = NULL;
-	cmd->is_builtin_cmd = false;
-    return cmd;
-}
-
-int	minishell(t_shell *shell, char **env)
+int minishell(t_shell *shell, char **env)
 {
 	if (init_shell(shell, env) == 1)
 		return (1);
@@ -58,9 +43,9 @@ int	minishell(t_shell *shell, char **env)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
-	t_shell	shell;
+	t_shell shell;
 
 	(void)argc;
 	(void)argv;

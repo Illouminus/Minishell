@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc -g
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
+CFLAGS =  -I/opt/homebrew/opt/readline/include
 LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline
 
 SRC_DIR = src
@@ -36,6 +36,7 @@ SRCS = 	main.c \
 		$(SRC_DIR)/outils/signals.c \
 		$(SRC_DIR)/outils/ft_isspace.c \
 		$(SRC_DIR)/parser/parser.c \
+		$(SRC_DIR)/parser/parser_outils.c \
 		$(SRC_DIR)/parser/outils.c \
 		$(SRC_DIR)/parser/parser_handle.c \
 		$(SRC_DIR)/parser/parser_handle_redir.c \
