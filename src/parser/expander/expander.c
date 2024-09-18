@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahors <ahors@student.42.fr>                +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 15:45:52 by ahors            ###   ########.fr       */
+/*   Updated: 2024/09/18 14:00:25 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	estimate_final_length(const char *str, t_shell *shell)
+int estimate_final_length(const char *str, t_shell *shell)
 {
-	int		len;
-	int		i;
-	char	*var_name;
-	char	*env_value;
+	int len;
+	int i;
+	char *var_name;
+	char *env_value;
 
 	len = 0;
 	i = 0;
@@ -41,12 +41,12 @@ int	estimate_final_length(const char *str, t_shell *shell)
 	return (len);
 }
 
-void	handle_env_variable(const char *str, int *i, t_expand_state *state,
-		t_shell *shell)
+void handle_env_variable(const char *str, int *i, t_expand_state *state,
+								 t_shell *shell)
 {
-	char	*var_name;
-	char	*env_value;
-	int		env_len;
+	char *var_name;
+	char *env_value;
+	int env_len;
 
 	(*i)++;
 	var_name = extract_var_name(str, i);
@@ -66,10 +66,10 @@ void	handle_env_variable(const char *str, int *i, t_expand_state *state,
 	}
 }
 
-void	handle_exit_status(char **result, int *j, t_shell *shell)
+void handle_exit_status(char **result, int *j, t_shell *shell)
 {
-	char	*exit_status_str;
-	int		exit_len;
+	char *exit_status_str;
+	int exit_len;
 
 	exit_status_str = ft_itoa(shell->last_exit_status);
 	if (exit_status_str)
@@ -81,9 +81,9 @@ void	handle_exit_status(char **result, int *j, t_shell *shell)
 	}
 }
 
-void	process_characters(char *str, t_expand_state *state, t_shell *shell)
+void process_characters(char *str, t_expand_state *state, t_shell *shell)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (str[i])
@@ -104,15 +104,13 @@ void	process_characters(char *str, t_expand_state *state, t_shell *shell)
 	}
 }
 
-char	*ft_expander(char *str, t_shell *shell, int inside_single_quote)
+char *ft_expander(char *str, t_shell *shell, int inside_single_quote)
 {
-	int				i;
-	int				j;
-	int				final_len;
-	char			*result;
-	t_expand_state	state;
+	int j;
+	int final_len;
+	char *result;
+	t_expand_state state;
 
-	i = 0;
 	j = 0;
 	if (inside_single_quote)
 		return (ft_strdup(str));

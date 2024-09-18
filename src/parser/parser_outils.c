@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:11:50 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 13:17:04 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/18 13:59:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_command *create_command_add_redirection(t_shell *shell)
 
 int handle_pipe_token(t_token **current_token, t_parser_data *data)
 {
+	(*current_token)->tok_type = TOKEN_TYPE_CMD;
 	t_command *new_command = create_command_add_redirection(data->shell);
 	if (!new_command)
 	{
