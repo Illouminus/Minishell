@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/18 13:17:14 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/20 11:07:35 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ typedef enum e_redir_type
 	REDIR_APPEND,
 } t_redir_type;
 
-// Structure pour l'expander
 typedef struct s_expand_state
 {
-	char **result;
-	int *j;
-	int *len;
+	char *result;
+	int j;
+	int inside_single_quote;
+	int inside_double_quote;
 } t_expand_state;
 
 // Structure pour reduire le nombre d'arguments dans la fonction lie au lexer
@@ -183,8 +183,7 @@ int lexer(t_shell *shell);
 /* ========================================================= */
 
 /* Parsing - Fonctions Utilitaires */
-char *ft_clean_token_value(const char *token,
-									int *inside_single_quote);
+char *ft_clean_token_value(char *token, t_shell *shell);
 t_command *ft_new_command_init(t_command *command, int nb_of_args,
 										 char *cmd_value_clean, t_shell *shell);
 int ft_determine_nb_args(t_token *token_list);
@@ -197,15 +196,12 @@ int ft_cmd_is_built_in(char *value);
 int ft_determine_nb_args(t_token *token_list);
 
 int ft_parser_handle_redirection(t_token **current_token,
-											t_shell *shell, t_command **last_command,
-											int *inside_single_quote);
+											t_shell *shell, t_command **last_command);
 void ft_parser_handle_command(t_token *current_token,
 										char *cmd_value_clean, t_shell *shell,
 										t_command **last_command);
 int ft_parser_handle_empty_command(char *cmd_value_clean,
 											  t_token **current_token);
-char *ft_expander_cleaned_token_value(t_token *current_token,
-												  t_shell *shell, int *inside_single_quote);
 int parser(t_shell *shell);
 int ft_handle_empty_command(char *cmd_value_clean,
 									 t_token **current_token);
@@ -305,8 +301,7 @@ void handle_exit(t_shell *shell);
 /*                          EXPANDER                         */
 /* ========================================================= */
 
-char *ft_expander(char *str, t_shell *shell,
-						int inside_single_quote);
+char *ft_expander(char *str, t_shell *shell);
 void add_char_to_result(char **result, int *j, char c);
 int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);

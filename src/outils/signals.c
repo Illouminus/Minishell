@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:43:31 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/04 11:03:47 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/20 11:52:41 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_env_vars(t_env **env_var_list)
+static void free_env_vars(t_env **env_var_list)
 {
-	t_env	*env_temp;
+	t_env *env_temp;
 
 	while (*env_var_list)
 	{
@@ -27,7 +27,7 @@ static void	free_env_vars(t_env **env_var_list)
 	*env_var_list = NULL;
 }
 
-void	handle_exit(t_shell *shell)
+void handle_exit(t_shell *shell)
 {
 	if (!shell->user_input)
 	{
@@ -37,10 +37,11 @@ void	handle_exit(t_shell *shell)
 	}
 }
 
-void	handle_sigint(int sig)
+void handle_sigint(int sig)
 {
 	if (sig == SIGINT)
 	{
+		g_exit_code = 130;
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
@@ -48,10 +49,10 @@ void	handle_sigint(int sig)
 	}
 }
 
-void	setup_signal_handlers(void)
+void setup_signal_handlers(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
 
 	sa_int.sa_handler = handle_sigint;
 	sa_int.sa_flags = 0;
@@ -63,7 +64,7 @@ void	setup_signal_handlers(void)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void	global_exit(t_shell *shell)
+void global_exit(t_shell *shell)
 {
 	if (shell->env_var_list)
 		free_env_vars(&shell->env_var_list);

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 11:22:39 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/20 11:47:56 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void ft_exec_builtins(t_shell *shell, bool next_cmd)
 
 static void ft_execute_command(t_command *current, t_shell *shell)
 {
-	signal(SIGQUIT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN); // SIG_DFL : Default signal handler
 	ft_check_empty_command(current, shell);
 	if (!ft_execute_builtin_if_needed(current, shell))
 		ft_execute_external_command(current, shell);
@@ -69,10 +69,7 @@ int ft_executor(t_shell *shell)
 	int prev_fd;
 
 	if (shell->command_list == NULL)
-	{
-		printf("Command list is NULL\n");
 		return (0);
-	}
 	current = shell->command_list;
 	prev_fd = 0;
 	if (!current->next_cmd && current->is_builtin_cmd && !current->redirections)

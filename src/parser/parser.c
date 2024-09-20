@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 13:15:55 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/20 11:07:00 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 	else
 	{
 		result = ft_parser_handle_redirection(current_token, data->shell,
-														  data->last_command, &(data->inside_single_quote));
+														  data->last_command);
 		if (result == 0 && (*(data->last_command))->cmd_value == NULL)
 			data->shell->expected_cmd = true;
 		return (result);
@@ -40,7 +40,7 @@ int ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 void ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
 {
 	(*(data->last_command))->cmd_args[*(data->i)] = ft_expander(cmd_value_clean,
-																					data->shell, data->inside_single_quote);
+																					data->shell);
 	(*(data->i))++;
 }
 
@@ -77,8 +77,7 @@ int ft_parser_process_token(t_token **current_token, t_shell *shell,
 	data.shell = shell;
 	data.last_command = last_command;
 	data.i = i;
-	cmd_value_clean = ft_expander_cleaned_token_value(*current_token, shell,
-																	  &(data.inside_single_quote));
+	cmd_value_clean = ft_expander((*current_token)->tok_value, shell);
 	result = ft_handle_empty_command(cmd_value_clean, current_token);
 	if (result == 2)
 		return (0);

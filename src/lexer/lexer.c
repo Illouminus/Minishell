@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 10:53:32 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/19 18:22:03 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void ft_process_token(char *input, t_token_context *context,
 	free(token_value);
 }
 
-// Fonction principale de tokenisation
 void ft_tokenize_input(char *input, t_shell *shell)
 {
 	int i;
