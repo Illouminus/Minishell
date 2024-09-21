@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:15 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:59:20 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/21 14:00:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_builtin_echo(t_command *cmd)
+int ft_builtin_echo(t_command *cmd)
 {
-	int		i;
-	bool	newline;
+	int i;
+	bool newline;
 
 	i = 0;
 	newline = true;

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/20 11:07:00 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/20 20:22:40 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ int ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 
 void ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
 {
-	(*(data->last_command))->cmd_args[*(data->i)] = ft_expander(cmd_value_clean,
-																					data->shell);
+	(*(data->last_command))->cmd_args[*(data->i)] = ft_strdup(cmd_value_clean);
 	(*(data->i))++;
 }
 

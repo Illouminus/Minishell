@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:12:20 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/13 11:11:48 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/21 14:31:36 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	handle_exit_error(const char *arg, t_shell *shell)
+static void handle_exit_error(const char *arg, t_shell *shell)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
@@ -21,9 +21,9 @@ static void	handle_exit_error(const char *arg, t_shell *shell)
 	global_exit(shell);
 }
 
-static int	is_numeric(const char *arg)
+static int is_numeric(const char *arg)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
@@ -37,9 +37,9 @@ static int	is_numeric(const char *arg)
 	return (1);
 }
 
-static int	get_exit_status(const char *arg, t_shell *shell)
+static int get_exit_status(const char *arg, t_shell *shell)
 {
-	long	stat;
+	long stat;
 
 	if (!is_numeric(arg))
 		handle_exit_error(arg, shell);
@@ -49,19 +49,20 @@ static int	get_exit_status(const char *arg, t_shell *shell)
 	return ((int)stat);
 }
 
-void	ft_builtin_exit(t_command *commands, t_shell *shell)
+void ft_builtin_exit(t_command *commands, t_shell *shell, bool is_main_shell)
 {
 	if (commands->cmd_args[0])
 	{
 		if (commands->cmd_args[1])
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n",
-				STDERR_FILENO);
+							 STDERR_FILENO);
 			shell->last_exit_status = 1;
-			return ;
+			return;
 		}
 		shell->last_exit_status = get_exit_status(commands->cmd_args[0], shell);
 	}
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	if (is_main_shell)
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
 	global_exit(shell);
 }

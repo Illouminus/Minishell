@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/20 11:07:35 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/21 14:30:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ int ft_builtin_env(t_env *env);
 int ft_builtin_export(t_command *cmd, t_env **env_list);
 int ft_builtin_pwd(t_command *commands);
 int ft_builtin_unset(t_command *cmd, t_env **env_list);
-void ft_builtin_exit(t_command *commands, t_shell *shell);
+void ft_builtin_exit(t_command *commands, t_shell *shell, bool is_main_shell);
 void ft_print_env_list(t_env *env_list);
 int ft_fd_minus(t_shell *shell, int option);
 void ft_update_pwd(t_shell *shell, char *command);
@@ -257,11 +257,10 @@ int handle_cd_error(t_error_info error_info, t_shell *shell,
 int count_env_vars(t_env *env_list);
 void ft_execute_external_command(t_command *current,
 											t_shell *shell);
-bool ft_execute_builtin_if_needed(t_command *current,
-											 t_shell *shell);
+bool ft_execute_builtin_if_needed(t_command *current, t_shell *shell, bool is_main_shell);
 void ft_check_empty_command(t_command *current,
 									 t_shell *shell);
-void ft_exec_builtins(t_shell *shell, bool next_cmd);
+void ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell);
 
 /* ========================================================= */
 /*                VARIABLES D'ENVIRONNEMENT                  */
@@ -302,8 +301,6 @@ void handle_exit(t_shell *shell);
 /* ========================================================= */
 
 char *ft_expander(char *str, t_shell *shell);
-void add_char_to_result(char **result, int *j, char c);
-int is_var_char(char c);
 char *extract_var_name(const char *str, int *i);
 void add_redirection(t_command **cmd, int type,
 							char *filename);
