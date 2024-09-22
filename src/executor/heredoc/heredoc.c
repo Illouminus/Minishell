@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:56:01 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/22 18:40:27 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,24 @@
 #define HEREDOC_BUFFER_SIZE 1024
 #define HEREDOC_TEMPFILE "minishell_heredoc"
 
-static int	open_tempfile(void)
+void write_warning(char *arg)
 {
-	int	tmp_fd;
+	ft_putstr_fd("minishell: warning: ", STDERR_FILENO);
+	ft_putstr_fd("here-document delimited by end-of-file (wanted `",
+					 STDERR_FILENO);
+	ft_putstr_fd(arg, STDERR_FILENO);
+	ft_putstr_fd("\')\n", STDERR_FILENO);
+}
+void heredoc_sigint(int signum)
+{
+	(void)signum;
+	g_exit_code = 130;
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	// close(STDIN_FILENO);
+}
+static int open_tempfile(void)
+{
+	int tmp_fd;
 
 	tmp_fd = open(HEREDOC_TEMPFILE, O_CREAT | O_RDWR | O_TRUNC, 0600);
 	if (tmp_fd == -1)
@@ -28,55 +43,86 @@ static int	open_tempfile(void)
 	return (tmp_fd);
 }
 
-static void	write_to_tempfile(int tmp_fd, const char *input_line,
-		ssize_t read_len)
+// Функция для записи строки в временный файл heredoc
+static void write_to_tempfile(int tmp_fd, const char *input_line)
 {
-	char	newline;
-
-	if (input_line[read_len - 1] != '\n')
+	size_t len = strlen(input_line);
+	if (len > 0 && input_line[len - 1] != '\n')
 	{
-		newline = '\n';
-		write(tmp_fd, input_line, read_len);
-		write(tmp_fd, &newline, 1);
+		if (write(tmp_fd, input_line, len) == -1)
+		{
+			perror("minishell: heredoc: write failed");
+		}
+		if (write(tmp_fd, "\n", 1) == -1)
+		{
+			perror("minishell: heredoc: write failed");
+		}
 	}
 	else
 	{
-		write(tmp_fd, input_line, read_len);
+		if (write(tmp_fd, input_line, len) == -1)
+		{
+			perror("minishell: heredoc: write failed");
+		}
 	}
 }
 
-static void	handle_heredoc_input(int tmp_fd, const char *marker)
+static void handle_heredoc_input(int tmp_fd, char *marker, char *heredoc_filename)
 {
-	char	*input_line;
-	ssize_t	read_len;
+	char *line;
 
-	input_line = malloc(HEREDOC_BUFFER_SIZE);
-	if (!input_line)
+	(void)heredoc_filename;
+	// Устанавливаем специфичные обработчики сигналов для heredoc
+	signal(SIGINT, heredoc_sigint);
+	signal(SIGQUIT, SIG_IGN);
+
+	while (g_exit_code != 130)
 	{
-		perror("minishell: heredoc: memory allocation failed");
+		line = readline("> ");
+		if (line == NULL)
+		{
+			if (g_exit_code != 130)
+				write_warning(marker);
+			break;
+		}
+		if (ft_strcmp(line, marker) == 0)
+		{
+			free(line);
+			break;
+		}
+		// Записываем строку в временный файл
+		write_to_tempfile(tmp_fd, line);
+		free(line);
+	}
+
+	// Восстанавливаем обработчики сигналов после завершения heredoc
+	signal(SIGINT, handle_sigint); // Предполагается, что handle_sigint — основной обработчик SIGINT
+	signal(SIGQUIT, SIG_IGN);
+
+	if (g_exit_code == 130)
+	{
+		// Heredoc был прерван, выполняем очистку
+	}
+	else
+	{
+		// Закрываем временный файл после записи
 		close(tmp_fd);
-		exit(1);
 	}
-	while (1)
-	{
-		ft_putstr_fd("heredoc> ", STDOUT_FILENO);
-		read_len = read(STDIN_FILENO, input_line, HEREDOC_BUFFER_SIZE);
-		if (read_len == -1 || ft_strncmp(input_line, marker,
-				ft_strlen(marker)) == 0)
-			break ;
-		write_to_tempfile(tmp_fd, input_line, read_len);
-	}
-	free(input_line);
 }
 
-char	*ft_heredoc_handler(char *marker)
+char *ft_heredoc_handler(char *marker)
 {
-	int	tmp_fd;
-
+	int tmp_fd;
 	tmp_fd = open_tempfile();
 	if (tmp_fd == -1)
 		return (NULL);
-	handle_heredoc_input(tmp_fd, marker);
+	handle_heredoc_input(tmp_fd, marker, HEREDOC_TEMPFILE);
+	if (g_exit_code == 130)
+	{
+		close(tmp_fd);
+		unlink(HEREDOC_TEMPFILE); // Удаляем временный файл при прерывании
+		return (NULL);
+	}
 	close(tmp_fd);
 	return (ft_strdup(HEREDOC_TEMPFILE));
 }
