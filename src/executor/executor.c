@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/21 14:32:00 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/21 16:28:05 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell)
 static void ft_execute_command(t_command *current, t_shell *shell, bool is_main_shell)
 {
 	signal(SIGQUIT, SIG_IGN); // SIG_DFL : Default signal handler
+	// signal(SIGINT, SIG_DFL);
 	ft_check_empty_command(current, shell);
 	if (!ft_execute_builtin_if_needed(current, shell, is_main_shell))
 		ft_execute_external_command(current, shell);

@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/21 14:30:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/22 09:56:31 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ int ft_builtin_unset(t_command *cmd, t_env **env_list);
 void ft_builtin_exit(t_command *commands, t_shell *shell, bool is_main_shell);
 void ft_print_env_list(t_env *env_list);
 int ft_fd_minus(t_shell *shell, int option);
-void ft_update_pwd(t_shell *shell, char *command);
+void ft_update_pwd(t_shell *shell, const char *path);
 int handle_cd_error(t_error_info error_info, t_shell *shell,
 						  char *s1, char *s2);
 int count_env_vars(t_env *env_list);

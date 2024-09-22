@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:43:31 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/20 11:52:41 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/21 15:00:44 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void handle_sigint(int sig)
 	if (sig == SIGINT)
 	{
 		g_exit_code = 130;
-		printf("\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
@@ -51,17 +51,9 @@ void handle_sigint(int sig)
 
 void setup_signal_handlers(void)
 {
-	struct sigaction sa_int;
-	struct sigaction sa_quit;
-
-	sa_int.sa_handler = handle_sigint;
-	sa_int.sa_flags = 0;
-	sigemptyset(&sa_int.sa_mask);
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sa_quit.sa_flags = 0;
-	sigemptyset(&sa_quit.sa_mask);
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handle_sigint);
 }
 
 void global_exit(t_shell *shell)
