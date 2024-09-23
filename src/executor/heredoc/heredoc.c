@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/22 18:40:27 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/23 10:55:41 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,13 @@ void write_warning(char *arg)
 void heredoc_sigint(int signum)
 {
 	(void)signum;
-	g_exit_code = 130;
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	if(signum == SIGINT)
+	{
+		g_exit_code = 130;
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
+	// g_exit_code = 130;
+	// ft_putstr_fd("\n", STDOUT_FILENO);
 	// close(STDIN_FILENO);
 }
 static int open_tempfile(void)
