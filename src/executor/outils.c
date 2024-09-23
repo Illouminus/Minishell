@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:55:15 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:21:21 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,18 @@ void	wait_commands(t_shell *shell)
 	result = 0;
 	while (result != -1)
 	{
-		result = waitpid(-1, &shell->tmp_proccess_status, 0);
+		result = wait(&shell->tmp_proccess_status);
 		if (result == shell->last_process_id)
+			shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
+		if (WIFSIGNALED(shell->tmp_proccess_status) && result > 0)
 		{
-			if (WIFEXITED(shell->tmp_proccess_status))
-				shell->last_exit_status = WEXITSTATUS(
-						shell->tmp_proccess_status);
-			else
-				shell->last_exit_status = 128
-					+ WTERMSIG(shell->tmp_proccess_status);
-		}
-		else if (result == -1 && errno != ECHILD)
-		{
-			perror("waitpid error");
-			break ;
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGQUIT)
+			{
+				ft_putstr_fd("\n", STDOUT_FILENO);
+				ft_putstr_fd("Quit: (core dumped)\n", STDOUT_FILENO);
+			}
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGINT)
+				ft_putstr_fd("\n", STDOUT_FILENO);
 		}
 	}
 	if (g_exit_code == 130)

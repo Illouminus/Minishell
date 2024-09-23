@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/23 10:55:41 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:58:40 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,26 @@
 #define HEREDOC_BUFFER_SIZE 1024
 #define HEREDOC_TEMPFILE "minishell_heredoc"
 
-void write_warning(char *arg)
+void	write_warning(char *arg)
 {
 	ft_putstr_fd("minishell: warning: ", STDERR_FILENO);
 	ft_putstr_fd("here-document delimited by end-of-file (wanted `",
-					 STDERR_FILENO);
+		STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putstr_fd("\')\n", STDERR_FILENO);
 }
-void heredoc_sigint(int signum)
+void	heredoc_sigint(int signum)
 {
-	(void)signum;
-	if(signum == SIGINT)
+	if (signum == SIGINT)
 	{
 		g_exit_code = 130;
 		ft_putstr_fd("\n", STDOUT_FILENO);
+		close(STDIN_FILENO);
 	}
-	// g_exit_code = 130;
-	// ft_putstr_fd("\n", STDOUT_FILENO);
-	// close(STDIN_FILENO);
 }
-static int open_tempfile(void)
+static int	open_tempfile(void)
 {
-	int tmp_fd;
+	int	tmp_fd;
 
 	tmp_fd = open(HEREDOC_TEMPFILE, O_CREAT | O_RDWR | O_TRUNC, 0600);
 	if (tmp_fd == -1)
@@ -48,10 +45,11 @@ static int open_tempfile(void)
 	return (tmp_fd);
 }
 
-// Функция для записи строки в временный файл heredoc
-static void write_to_tempfile(int tmp_fd, const char *input_line)
+static void	write_to_tempfile(int tmp_fd, const char *input_line)
 {
-	size_t len = strlen(input_line);
+	size_t	len;
+
+	len = strlen(input_line);
 	if (len > 0 && input_line[len - 1] != '\n')
 	{
 		if (write(tmp_fd, input_line, len) == -1)
@@ -72,15 +70,14 @@ static void write_to_tempfile(int tmp_fd, const char *input_line)
 	}
 }
 
-static void handle_heredoc_input(int tmp_fd, char *marker, char *heredoc_filename)
+static void	handle_heredoc_input(int tmp_fd, char *marker,
+		char *heredoc_filename, t_shell *shell)
 {
-	char *line;
+	char	*line;
 
 	(void)heredoc_filename;
-	// Устанавливаем специфичные обработчики сигналов для heredoc
 	signal(SIGINT, heredoc_sigint);
 	signal(SIGQUIT, SIG_IGN);
-
 	while (g_exit_code != 130)
 	{
 		line = readline("> ");
@@ -88,25 +85,24 @@ static void handle_heredoc_input(int tmp_fd, char *marker, char *heredoc_filenam
 		{
 			if (g_exit_code != 130)
 				write_warning(marker);
-			break;
+			break ;
 		}
 		if (ft_strcmp(line, marker) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
-		// Записываем строку в временный файл
 		write_to_tempfile(tmp_fd, line);
 		free(line);
 	}
-
-	// Восстанавливаем обработчики сигналов после завершения heredoc
-	signal(SIGINT, handle_sigint); // Предполагается, что handle_sigint — основной обработчик SIGINT
+	signal(SIGINT, heredoc_sigint);
 	signal(SIGQUIT, SIG_IGN);
-
 	if (g_exit_code == 130)
 	{
-		// Heredoc был прерван, выполняем очистку
+		unlink(HEREDOC_TEMPFILE);
+		free_shell(shell);
+		exit(shell->last_exit_status);
+		//printf("G exit code: %d\n", g_exit_code);
 	}
 	else
 	{
@@ -115,19 +111,25 @@ static void handle_heredoc_input(int tmp_fd, char *marker, char *heredoc_filenam
 	}
 }
 
-char *ft_heredoc_handler(char *marker)
+char	*ft_heredoc_handler(char *marker, t_shell *shell)
 {
-	int tmp_fd;
+	int	tmp_fd;
+
+	//shell->temp_stdin = dup(STDIN_FILENO);
 	tmp_fd = open_tempfile();
 	if (tmp_fd == -1)
 		return (NULL);
-	handle_heredoc_input(tmp_fd, marker, HEREDOC_TEMPFILE);
+	handle_heredoc_input(tmp_fd, marker, HEREDOC_TEMPFILE, shell);
+	//printf("G exit code: %d\n", g_exit_code);
 	if (g_exit_code == 130)
 	{
 		close(tmp_fd);
-		unlink(HEREDOC_TEMPFILE); // Удаляем временный файл при прерывании
+		unlink(HEREDOC_TEMPFILE);
+		free_shell(shell); // Удаляем временный файл при прерывании
 		return (NULL);
 	}
 	close(tmp_fd);
+	//dup2(shell->temp_stdin, STDIN_FILENO);
+	//close(shell->temp_stdin);
 	return (ft_strdup(HEREDOC_TEMPFILE));
 }

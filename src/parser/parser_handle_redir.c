@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handle_redir.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/20 10:53:43 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/23 11:03:45 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void handle_heredoc(t_token **current_token, t_command *last_command)
 	char *file_name;
 
 	*current_token = (*current_token)->next_tok->next_tok;
-	file_name = ft_heredoc_handler((*current_token)->tok_value);
+	file_name = ft_heredoc_handler((*current_token)->tok_value, last_command->shell);
 	add_redirection(&last_command, REDIR_IN, file_name);
 	free(file_name);
 }

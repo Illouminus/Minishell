@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/22 09:56:31 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/23 14:48:36 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ typedef struct s_shell
 	int last_exit_status;
 	bool expected_cmd;
 	int pipe_fds[2];
+	int temp_stdin;
 	t_env *env_var_list;
 } t_shell;
 
@@ -292,7 +293,7 @@ void setup_signal_handlers(void);
 /* ========================================================= */
 
 void free_shell(t_shell *shell);
-char *ft_heredoc_handler(char *marker);
+char *ft_heredoc_handler(char *marker, t_shell *shell);
 int ft_isspace(char c);
 void handle_exit(t_shell *shell);
 

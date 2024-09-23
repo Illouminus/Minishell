@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_outils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 11:06:16 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/23 14:48:58 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int init_shell(t_shell *shell, char **env)
 	shell->user_input = NULL;
 	shell->pipe_fds[0] = -2;
 	shell->pipe_fds[1] = -2;
+	shell->temp_stdin = -1;
 	return (0);
 }
 
