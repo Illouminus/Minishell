@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/23 20:01:37 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/24 10:52:32 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,6 @@ void heredoc_sigint(int signum)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_cleanup_after_signal();
 		close(STDIN_FILENO);
-	}
-}
-
-void set_heredoc_signal_handler(void)
-{
-	struct sigaction sa;
-
-	sa.sa_handler = heredoc_sigint;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0; // Можно установить SA_RESTART для автоматического повторения прерванных системных вызовов
-
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-	{
-		perror("minishell: sigaction failed");
-		exit(EXIT_FAILURE);
 	}
 }
 
@@ -104,8 +89,7 @@ static void handle_heredoc_input(int tmp_fd, char *marker,
 
 	//(void)shell;
 	(void)heredoc_filename;
-	// signal(SIGINT, heredoc_sigint);
-	set_heredoc_signal_handler();
+	signal(SIGINT, heredoc_sigint);
 	while (g_exit_code != 130)
 	{
 		line = readline("> ");
@@ -149,7 +133,6 @@ char *ft_heredoc_handler(char *marker, t_shell *shell)
 
 	if (g_exit_code == 130)
 	{
-		// Heredoc был прерван, не продолжаем выполнение команды
 		unlink(HEREDOC_TEMPFILE); // Удаляем временный файл
 		close(shell->temp_stdin);
 		return (NULL); // Traiter le retour NULL plus haut dans le code - cést lui le seq fault

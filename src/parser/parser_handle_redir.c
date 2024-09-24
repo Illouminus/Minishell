@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 13:19:29 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/23 11:03:45 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/24 10:57:43 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,17 @@ void handle_redir_in(t_token **current_token, t_shell *shell,
 	free(file_name);
 }
 
-void handle_heredoc(t_token **current_token, t_command *last_command)
+int handle_heredoc(t_token **current_token, t_command *last_command)
 {
 	char *file_name;
 
 	*current_token = (*current_token)->next_tok->next_tok;
 	file_name = ft_heredoc_handler((*current_token)->tok_value, last_command->shell);
+	if(!file_name)
+		return 1;
 	add_redirection(&last_command, REDIR_IN, file_name);
 	free(file_name);
+	return (0);
 }
 
 void handle_redir_out(t_token **current_token, t_shell *shell,
@@ -70,7 +73,8 @@ int ft_parser_handle_redirection(t_token **current_token, t_shell *shell,
 		handle_redir_in(current_token, shell, last_command);
 	else if ((*current_token)->tok_type == TOKEN_TYPE_HEREDOC)
 	{
-		handle_heredoc(current_token, (*last_command));
+		if(handle_heredoc(current_token, (*last_command)) == 1)
+			return (1);
 	}
 	else if ((*current_token)->tok_type == TOKEN_TYPE_REDIR_OUT)
 	{
