@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/25 14:52:10 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:32:48 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 {
     int result;
 
+	printf("Goin to handle redirection token\n");
     result = 0;
     if (!(*current_token)->next_tok)
     {

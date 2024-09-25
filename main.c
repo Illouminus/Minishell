@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/24 16:31:18 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:35:24 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,8 @@ int	minishell(t_shell *shell, char **env)
 		}
 		else
 		{
-			if (shell->last_exit_status == 0)
-			{
-				g_exit_code = 1;
-				shell->last_exit_status = g_exit_code;
-			}
-			//exit(2);
+			g_exit_code = 1;
+			shell->last_exit_status = g_exit_code;
 		}
 		free_shell(shell);
 	}
