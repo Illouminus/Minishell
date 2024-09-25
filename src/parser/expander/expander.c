@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/21 13:33:35 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/25 14:28:06 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void handle_variable_expansion(const char *str, int *i, t_expand_state *state, t
 	int var_len = strlen(expanded_var);
 	ft_strncpy(&state->result[state->j], expanded_var, var_len);
 	state->j += var_len;
+	free(expanded_var);
 }
 
 void process_characters(char *str, t_expand_state *state, t_shell *shell)

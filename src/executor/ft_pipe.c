@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/23 15:38:03 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:28:02 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void ft_pipe(t_command *current, t_shell *shell)
 			handle_error("pipe", strerror(errno), 1, shell);
 	}
 	shell->last_process_id = fork();
-	//printf("last_process_id: %d\n", shell->last_process_id);
 	if (shell->last_process_id == -1)
 		handle_error("fork", strerror(errno), 1, shell);
 }

@@ -3,39 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/20 20:22:40 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/25 14:52:10 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void handle_error_redirection(char *unexpected_token, t_parser_data *data)
+{
+    ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+    ft_putstr_fd(unexpected_token, STDERR_FILENO);
+    ft_putstr_fd("'\n", STDERR_FILENO);
+    data->shell->last_exit_status = 2;
+}
+
+
+
 int ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 {
-	int result;
+    int result;
 
-	result = 0;
-	if (!(*current_token)->next_tok)
-	{
-		ft_putstr_fd("Syntax error: newline unexpected\n", STDOUT_FILENO);
-		return (1);
-	}
-	else if (((*current_token)->tok_type == TOKEN_TYPE_REDIR_APPEND && !(*current_token)->next_tok->next_tok))
-	{
-		ft_putstr_fd("Syntax error: newline unexpected\n", STDOUT_FILENO);
-		return (1);
-	}
-	else
-	{
-		result = ft_parser_handle_redirection(current_token, data->shell,
-														  data->last_command);
-		if (result == 0 && (*(data->last_command))->cmd_value == NULL)
-			data->shell->expected_cmd = true;
-		return (result);
-	}
+    result = 0;
+    if (!(*current_token)->next_tok)
+    {
+        handle_error_redirection("newline", data);
+        return (1); 
+    }
+    if (!(*current_token)->prev_tok && (*current_token)->tok_type != TOKEN_TYPE_HEREDOC)
+    {
+        handle_error_redirection((*current_token)->next_tok->tok_value, data);
+        return (1);
+    }
+
+    result = ft_parser_handle_redirection(current_token, data->shell, data->last_command);
+    if (result == 0 && (*(data->last_command))->cmd_value == NULL)
+        data->shell->expected_cmd = true;
+
+    return (result);
 }
+
 
 void ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
 {
@@ -46,7 +55,6 @@ void ft_handle_argument_token(t_parser_data *data, char *cmd_value_clean)
 int ft_process_token_parser(t_token **current_token, t_parser_data *data, char *cmd_value_clean)
 {
 	t_token_type t_type;
-
 	t_type = (*current_token)->tok_type;
 
 	if (t_type == TOKEN_TYPE_PIPE)
@@ -85,7 +93,7 @@ int ft_parser_process_token(t_token **current_token, t_shell *shell,
 		free(cmd_value_clean);
 		return (1);
 	}
-	if (ft_process_token_parser(current_token, &data, cmd_value_clean) == 1)
+	if (ft_process_token_parser(current_token, &data, cmd_value_clean) != 0)
 	{
 		free(cmd_value_clean);
 		return (1);
@@ -110,7 +118,7 @@ int parser(t_shell *shell)
 	while (current_token)
 	{
 		if (ft_parser_process_token(&current_token, shell, &last_command,
-											 &i) == 1)
+											 &i) != 0)
 			return (EXIT_FAILURE);
 	}
 	if (last_command && last_command->cmd_args)

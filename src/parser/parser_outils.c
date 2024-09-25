@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_outils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:11:50 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/18 13:59:44 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/24 16:31:29 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,13 @@ t_command *create_command_add_redirection(t_shell *shell)
 
 int handle_pipe_token(t_token **current_token, t_parser_data *data)
 {
-	(*current_token)->tok_type = TOKEN_TYPE_CMD;
+	//(*current_token)->tok_type = TOKEN_TYPE_CMD;
+	if(!(*current_token)->next_tok || !(*current_token)->prev_tok)
+	{
+		ft_putstr_fd(" syntax error near unexpected token `|'", STDERR_FILENO);
+		data->shell->last_exit_status = 2;
+		return 2;
+	}
 	t_command *new_command = create_command_add_redirection(data->shell);
 	if (!new_command)
 	{

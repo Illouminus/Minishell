@@ -6,15 +6,15 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 10:56:44 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/23 16:52:21 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:31:18 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_code;
+int	g_exit_code;
 
-int minishell(t_shell *shell, char **env)
+int	minishell(t_shell *shell, char **env)
 {
 	if (init_shell(shell, env) == 1)
 		return (1);
@@ -35,17 +35,21 @@ int minishell(t_shell *shell, char **env)
 		}
 		else
 		{
-			g_exit_code = 1;
-			shell->last_exit_status = g_exit_code;
+			if (shell->last_exit_status == 0)
+			{
+				g_exit_code = 1;
+				shell->last_exit_status = g_exit_code;
+			}
+			//exit(2);
 		}
 		free_shell(shell);
 	}
 	return (0);
 }
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	t_shell shell;
+	t_shell	shell;
 
 	(void)argc;
 	(void)argv;

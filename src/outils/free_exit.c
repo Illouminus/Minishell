@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/24 11:49:12 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:17:26 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static void	free_commands(t_command **command_list)
 {
 	t_command	*cmd_temp;
 
+	if (!command_list)
+		return ;
 	while (*command_list)
 	{
 		cmd_temp = *command_list;
@@ -106,4 +108,10 @@ void	free_shell(t_shell *shell)
 		free_commands(&shell->command_list);
 	if (shell->token_list)
 		free_tokens(&shell->token_list);
+	if (shell->pipe_fds[0] != -2)
+		close(shell->pipe_fds[0]);
+	if (shell->pipe_fds[1] != -2)
+		close(shell->pipe_fds[1]);
+	if (shell->temp_stdin != -1)
+		close(shell->temp_stdin);
 }

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/03 15:49:30 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:19:17 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,9 @@ void	handle_redirections(t_command *current, int prev_fd)
 	handle_prev_fd_redirection(prev_fd, current->shell);
 	handle_pipe_redirection(current);
 	perform_redirections(input_fd, output_fd, current->shell);
+	if (current->shell->temp_stdin != -1)
+	{
+		close(current->shell->temp_stdin);
+		current->shell->temp_stdin = -1;
+	}
 }

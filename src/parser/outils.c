@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/20 10:49:33 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/25 13:35:40 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ int ft_determine_nb_args(t_token *token_list)
 t_command *ft_new_command_init(t_command *command, int nb_of_args,
 										 char *cmd_value_clean, t_shell *shell)
 {
+	int i;
+
+	i = 0;
 	command = malloc(sizeof(t_command));
 	if (!command)
 	{
@@ -86,6 +89,11 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args,
 	command->cmd_args = malloc((nb_of_args + 1) * sizeof(char *));
 	if (nb_of_args == 0)
 		command->cmd_args[0] = NULL;
+	while(i < nb_of_args)
+	{
+		command->cmd_args[i] = NULL;
+		i++;
+	}
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->prev_cmd = NULL;
 	command->next_cmd = NULL;
