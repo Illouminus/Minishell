@@ -94,6 +94,7 @@ t_command *ft_new_command_init(t_command *command, int nb_of_args,
 		command->cmd_args[i] = NULL;
 		i++;
 	}
+	command->cmd_args[nb_of_args] = NULL;
 	command->is_builtin_cmd = ft_cmd_is_built_in(command->cmd_value);
 	command->prev_cmd = NULL;
 	command->next_cmd = NULL;

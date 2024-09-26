@@ -21,11 +21,17 @@ void	ft_init_cmd_existing(t_command **last_command, char *cmd_value_clean,
 	(*last_command)->cmd_value = ft_strdup(cmd_value_clean);
 	(*last_command)->is_builtin_cmd = ft_cmd_is_built_in((*last_command)->cmd_value);
 	(*last_command)->cmd_args = malloc((cmd_nb_args + 1) * sizeof(char *));
+	if(!(*last_command)->cmd_args)
+	{
+		ft_putstr_fd("Error: failed to allocate memory\n", STDERR_FILENO);
+		exit(EXIT_FAILURE);
+	}
 	while (i < cmd_nb_args)
 	{
 		(*last_command)->cmd_args[i] = NULL;
 		i++;
 	}
+	(*last_command)->cmd_args[cmd_nb_args] = NULL;
 }
 
 void	ft_parser_handle_command(t_token *current_token, char *cmd_value_clean,

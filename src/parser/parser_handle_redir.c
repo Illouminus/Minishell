@@ -41,7 +41,10 @@ int handle_heredoc(t_token **current_token, t_parser_data *data, t_command *last
 	*current_token = (*current_token)->next_tok->next_tok;
 	file_name = ft_heredoc_handler((*current_token)->tok_value, last_command->shell);
 	if (!file_name)
-		return handle_error_parsing("heredoc", data, 1, 1);
+		{
+			ft_putstr_fd("\n", STDERR_FILENO);
+			return (1);
+		}
 	add_redirection(&last_command, REDIR_IN, file_name);
 	free(file_name);
 	return (0);
@@ -70,11 +73,11 @@ int handle_redir_append(t_token **current_token, t_parser_data *data, t_command 
 
 	if (!(*current_token)->next_tok)
 		return handle_error_parsing("newline", data, 2, 1);
-
-	token_value = (*current_token)->next_tok->tok_value;
+	if (!(*current_token)->next_tok->next_tok)
+		return handle_error_parsing("newline", data, 2, 1);
+	token_value = (*current_token)->next_tok->next_tok->tok_value;
 	if ((*current_token)->next_tok->tok_type == TOKEN_TYPE_PIPE)
 		return handle_error_parsing(token_value, data, 2, 1);
-
 	file_name = ft_expander(token_value, data->shell);
 	add_redirection(&last_command, REDIR_APPEND, file_name);
 	(*current_token) = (*current_token)->next_tok;
