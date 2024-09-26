@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/24 10:52:32 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:39:50 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,6 @@
 
 #define HEREDOC_BUFFER_SIZE 1024
 #define HEREDOC_TEMPFILE "minishell_heredoc"
-
-void write_warning(char *arg)
-{
-	ft_putstr_fd("minishell: warning: ", STDERR_FILENO);
-	ft_putstr_fd("here-document delimited by end-of-file (wanted `", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putstr_fd("')\n", STDERR_FILENO);
-}
-
-#include <signal.h>
-
-void heredoc_sigint(int signum)
-{
-	if (signum == SIGINT)
-	{
-		g_exit_code = 130;
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		rl_cleanup_after_signal();
-		close(STDIN_FILENO);
-	}
-}
 
 static int open_tempfile(void)
 {
@@ -82,13 +61,9 @@ void cleanup_heredoc(int fd, t_shell *shell)
 		perror("minishell: heredoc: failed to close temp_stdin");
 }
 
-static void handle_heredoc_input(int tmp_fd, char *marker,
-											const char *heredoc_filename, t_shell *shell)
+static void handle_heredoc_input(int tmp_fd, char *marker, t_shell *shell)
 {
 	char *line;
-
-	//(void)shell;
-	(void)heredoc_filename;
 	signal(SIGINT, heredoc_sigint);
 	while (g_exit_code != 130)
 	{
@@ -101,7 +76,7 @@ static void handle_heredoc_input(int tmp_fd, char *marker,
 		if (line == NULL)
 		{
 			if (g_exit_code != 130)
-				write_warning(marker);
+				exit_by_signal(marker);
 			break;
 		}
 		write_to_tempfile(tmp_fd, line);
@@ -115,33 +90,24 @@ char *ft_heredoc_handler(char *marker, t_shell *shell)
 	int tmp_fd;
 	char *temp_filename;
 
+	if (!is_valid_heredoc_delimiter(marker))
+		return (NULL);
 	shell->temp_stdin = dup(STDIN_FILENO);
 	if (shell->temp_stdin == -1)
-	{
-		perror("minishell: heredoc: dup failed");
 		return (NULL);
-	}
-	// Rajouter un check des tokens si le delimeter est valide ou pas (si c'est un mot ou pas)
 	tmp_fd = open_tempfile();
 	if (tmp_fd == -1)
 	{
 		close(shell->temp_stdin);
 		return (NULL);
 	}
-
-	handle_heredoc_input(tmp_fd, marker, HEREDOC_TEMPFILE, shell);
-
+	handle_heredoc_input(tmp_fd, marker, shell);
 	if (g_exit_code == 130)
 	{
-		unlink(HEREDOC_TEMPFILE); // Удаляем временный файл
+		unlink(HEREDOC_TEMPFILE);
 		close(shell->temp_stdin);
-		return (NULL); // Traiter le retour NULL plus haut dans le code - cést lui le seq fault
-	}
-	temp_filename = ft_strdup(HEREDOC_TEMPFILE);
-	if (!temp_filename)
-	{
-		perror("minishell: heredoc: strdup failed");
 		return (NULL);
 	}
+	temp_filename = ft_strdup(HEREDOC_TEMPFILE);
 	return (temp_filename);
 }
