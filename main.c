@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int	g_exit_code;
+int g_exit_code;
 
-int	minishell(t_shell *shell, char **env)
+int minishell(t_shell *shell, char **env)
 {
 	if (init_shell(shell, env) == 1)
 		return (1);
@@ -35,17 +35,20 @@ int	minishell(t_shell *shell, char **env)
 		}
 		else
 		{
-			g_exit_code = 1;
-			shell->last_exit_status = g_exit_code;
+			if (shell->last_exit_status == 0)
+			{
+				g_exit_code = 1;
+				shell->last_exit_status = g_exit_code;
+			}
 		}
 		free_shell(shell);
 	}
 	return (0);
 }
 
-int	main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
-	t_shell	shell;
+	t_shell shell;
 
 	(void)argc;
 	(void)argv;

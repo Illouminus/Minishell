@@ -29,10 +29,10 @@ static int	ft_check_var_name(const char *var_name)
 	return (0);
 }
 
-static int	ft_export_error(const char *var_name)
+static int	ft_export_error(char *var_name)
 {
 	ft_putstr_fd("export: '", STDERR_FILENO);
-	ft_putstr_fd((char *)var_name, STDERR_FILENO);
+	ft_putstr_fd(var_name, STDERR_FILENO);
 	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 	return (1);
 }

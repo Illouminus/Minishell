@@ -31,8 +31,10 @@ t_command *create_command_add_redirection(t_shell *shell)
 
 int handle_pipe_token(t_token **current_token, t_parser_data *data)
 {
-	if (!(*current_token)->next_tok || !(*current_token)->prev_tok)
-		return (handle_error_parsing((*current_token)->next_tok->tok_value, data, 2, 1));
+	if (!(*current_token)->next_tok)
+		return (handle_error_parsing((*current_token)->tok_value, data, 2, 1));
+	if (!(*current_token)->prev_tok)
+		return (handle_error_parsing((*current_token)->tok_value, data, 2, 1));
 	t_command *new_command = create_command_add_redirection(data->shell);
 	if (!new_command)
 	{
