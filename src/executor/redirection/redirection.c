@@ -6,57 +6,57 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 16:30:02 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:49:49 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	validate_and_open_redirections(t_command *current, t_shell *shell,
-		int *input_fd, int *output_fd)
+static int	validate_and_open_redirections(t_command *current, t_shell *shell)
 {
 	t_redir	*redir;
 
 	redir = current->redirections;
 	while (redir)
 	{
-		if (redir->redirection_type == REDIR_IN)
-		{
-			if (open_redirection(redir, input_fd, shell) == -1)
-				return (-1);
-			
-		}
-		else
-		{
-			if (open_redirection(redir, output_fd, shell) == -1)
-				return (-1);
-		}
+		if (open_redirection(redir, shell) == -1)
+			return (-1);
 		redir = redir->next;
 	}
 	return (0);
 }
 
-static void	perform_redirections(int input_fd, int output_fd, t_shell *shell)
+static void	perform_redirections(t_command *current, t_shell *shell)
 {
+	t_redir			*redir;
 	t_error_info	error_info;
 
-	if (input_fd != -1)
+	redir = current->redirections;
+	while (redir)
 	{
-		if (dup2(input_fd, STDIN_FILENO) == -1)
+		if (redir->redirection_type == REDIR_IN)
 		{
-			error_info = init_error_info(NULL, strerror(errno), 1);
-			handle_redirection_error(error_info, shell, input_fd);
+			if (dup2(redir->fd, STDIN_FILENO) == -1)
+			{
+				error_info = init_error_info(NULL, strerror(errno), 1);
+				handle_redirection_error(error_info, shell, redir->fd);
+			}
+			close(redir->fd);
+			redir->fd = -1;
 		}
-		close(input_fd);
-	}
-	if (output_fd != -1)
-	{
-		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		else
 		{
-			error_info = init_error_info(NULL, strerror(errno), 1);
-			handle_redirection_error(error_info, shell, output_fd);
+			if (dup2(redir->fd,
+					(redir->redirection_type == REDIR_OUT) ? STDOUT_FILENO : STDERR_FILENO) ==
+				-1)
+			{
+				error_info = init_error_info(NULL, strerror(errno), 1);
+				handle_redirection_error(error_info, shell, redir->fd);
+			}
+			close(redir->fd);
+			redir->fd = -1;
 		}
-		close(output_fd);
+		redir = redir->next;
 	}
 }
 
@@ -91,25 +91,15 @@ static void	handle_prev_fd_redirection(int prev_fd, t_shell *shell)
 	}
 }
 
-void	handle_redirections(t_command *current, int prev_fd)
+void handle_redirections(t_command *current, int prev_fd)
 {
-	int	input_fd;
-	int	output_fd;
-
-	input_fd = -1;
-	output_fd = -1;
-	if (validate_and_open_redirections(current, current->shell, &input_fd,
-			&output_fd) == -1)
+	if (validate_and_open_redirections(current, current->shell) == -1)
 	{
 		free_shell(current->shell);
 		exit(1);
 	}
 	handle_prev_fd_redirection(prev_fd, current->shell);
 	handle_pipe_redirection(current);
-	perform_redirections(input_fd, output_fd, current->shell);
-	if (current->shell->temp_stdin != -1)
-	{
-		close(current->shell->temp_stdin);
-		current->shell->temp_stdin = -1;
-	}
+	perform_redirections(current, current->shell);
 }
+

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/25 16:17:26 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:55:29 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ static void	free_redirections(t_redir **redir)
 		{
 			free(temp->filename);
 			temp->filename = NULL;
+		}
+		if(temp->fd != -1)
+		{
+			close(temp->fd);
+			temp->fd = -1;
 		}
 		free(temp);
 		temp = NULL;

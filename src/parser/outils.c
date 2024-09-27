@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 16:22:34 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:48:23 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	add_redirection(t_command **cmd_ptr, int type, char *filename)
 		return ;
 	new_redir->redirection_type = type;
 	new_redir->next = NULL;
+	new_redir->fd = -1;
 	new_redir->prev = (*cmd_ptr)->last_redirection;
 	if ((*cmd_ptr)->last_redirection)
 	{

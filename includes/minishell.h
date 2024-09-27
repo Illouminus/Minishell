@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/27 15:59:49 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:46:24 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,8 +242,7 @@ void					handle_redirection_error(t_error_info error_info,
 							t_shell *shell, int fd);
 int						check_and_open_file(char *filepath, int flags,
 							mode_t mode, t_shell *shell);
-int						open_redirection(t_redir *redir, int *fd,
-							t_shell *shell);
+int						open_redirection(t_redir *redir, t_shell *shell);
 t_error_info			init_error_info(char *filepath, char *error_message,
 							int exit_code);
 char					**convert_env_list_to_array(t_env *env_list);

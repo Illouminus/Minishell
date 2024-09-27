@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:36:00 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:51 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:52:07 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static int	open_file_with_checks(char *filepath, int flags, mode_t mode)
 		perror("open error");
 	return (fd);
 }
+
 
 int	check_and_open_file(char *filepath, int flags, mode_t mode, t_shell *shell)
 {
