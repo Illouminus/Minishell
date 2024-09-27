@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 11:15:37 by ahors             #+#    #+#             */
-/*   Updated: 2024/09/25 14:38:31 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:40:41 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ void	ft_init_cmd_existing(t_command **last_command, char *cmd_value_clean,
 
 	i = 0;
 	(*last_command)->cmd_value = ft_strdup(cmd_value_clean);
-	(*last_command)->is_builtin_cmd = ft_cmd_is_built_in((*last_command)->cmd_value);
+	(*last_command)->is_builtin_cmd = ft_cmd_is_built_in(
+			(*last_command)->cmd_value);
 	(*last_command)->cmd_args = malloc((cmd_nb_args + 1) * sizeof(char *));
-	if(!(*last_command)->cmd_args)
+	if (!(*last_command)->cmd_args)
 	{
 		ft_putstr_fd("Error: failed to allocate memory\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);

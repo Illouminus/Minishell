@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   parser_outils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:11:50 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/26 14:00:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/27 14:38:55 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_command *create_command_add_redirection(t_shell *shell)
+t_command	*create_command_add_redirection(t_shell *shell)
 {
-	t_command *cmd;
+	t_command	*cmd;
+
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
-		return NULL;
+		return (NULL);
 	cmd->cmd_value = NULL;
 	cmd->cmd_args = NULL;
 	cmd->redirections = NULL;
@@ -26,16 +27,18 @@ t_command *create_command_add_redirection(t_shell *shell)
 	cmd->prev_cmd = NULL;
 	cmd->is_builtin_cmd = false;
 	cmd->shell = shell;
-	return cmd;
+	return (cmd);
 }
 
-int handle_pipe_token(t_token **current_token, t_parser_data *data)
+int	handle_pipe_token(t_token **current_token, t_parser_data *data)
 {
+	t_command	*new_command;
+
 	if (!(*current_token)->next_tok)
 		return (handle_error_parsing((*current_token)->tok_value, data, 2, 1));
 	if (!(*current_token)->prev_tok)
 		return (handle_error_parsing((*current_token)->tok_value, data, 2, 1));
-	t_command *new_command = create_command_add_redirection(data->shell);
+	new_command = create_command_add_redirection(data->shell);
 	if (!new_command)
 	{
 		ft_putstr_fd("Error: failed to create new command\n", STDERR_FILENO);
@@ -55,12 +58,14 @@ int handle_pipe_token(t_token **current_token, t_parser_data *data)
 	return (0);
 }
 
-int handle_expected_cmd(t_token **current_token, t_parser_data *data, char *cmd_value_clean)
+int	handle_expected_cmd(t_token **current_token, t_parser_data *data,
+		char *cmd_value_clean)
 {
-	t_token_type t_type = (*current_token)->tok_type;
+	t_token_type	t_type;
 
-	if (t_type == TOKEN_TYPE_REDIR_IN || t_type == TOKEN_TYPE_REDIR_OUT ||
-		 t_type == TOKEN_TYPE_REDIR_APPEND || t_type == TOKEN_TYPE_HEREDOC)
+	t_type = (*current_token)->tok_type;
+	if (t_type == TOKEN_TYPE_REDIR_IN || t_type == TOKEN_TYPE_REDIR_OUT
+		|| t_type == TOKEN_TYPE_REDIR_APPEND || t_type == TOKEN_TYPE_HEREDOC)
 	{
 		if (ft_handle_redirection_token(current_token, data) == 1)
 			return (1);

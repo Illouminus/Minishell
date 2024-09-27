@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/26 15:39:50 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/27 14:42:33 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #define HEREDOC_BUFFER_SIZE 1024
 #define HEREDOC_TEMPFILE "minishell_heredoc"
 
-static int open_tempfile(void)
+static int	open_tempfile(void)
 {
-	int tmp_fd;
+	int	tmp_fd;
 
 	tmp_fd = open(HEREDOC_TEMPFILE, O_CREAT | O_RDWR | O_TRUNC, 0600);
 	if (tmp_fd == -1)
@@ -25,12 +25,12 @@ static int open_tempfile(void)
 		perror("minishell: heredoc: failed to create temporary file");
 		return (-1);
 	}
-	return tmp_fd;
+	return (tmp_fd);
 }
 
-static void write_to_tempfile(int tmp_fd, const char *input_line)
+static void	write_to_tempfile(int tmp_fd, const char *input_line)
 {
-	size_t len;
+	size_t	len;
 
 	len = strlen(input_line);
 	if (len > 0 && input_line[len - 1] != '\n')
@@ -47,7 +47,7 @@ static void write_to_tempfile(int tmp_fd, const char *input_line)
 	}
 }
 
-void cleanup_heredoc(int fd, t_shell *shell)
+void	cleanup_heredoc(int fd, t_shell *shell)
 {
 	if (fd != -1)
 	{
@@ -61,9 +61,10 @@ void cleanup_heredoc(int fd, t_shell *shell)
 		perror("minishell: heredoc: failed to close temp_stdin");
 }
 
-static void handle_heredoc_input(int tmp_fd, char *marker, t_shell *shell)
+static void	handle_heredoc_input(int tmp_fd, char *marker, t_shell *shell)
 {
-	char *line;
+	char	*line;
+
 	signal(SIGINT, heredoc_sigint);
 	while (g_exit_code != 130)
 	{
@@ -71,13 +72,13 @@ static void handle_heredoc_input(int tmp_fd, char *marker, t_shell *shell)
 		if (line && ft_strcmp(line, marker) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		if (line == NULL)
 		{
 			if (g_exit_code != 130)
 				exit_by_signal(marker);
-			break;
+			break ;
 		}
 		write_to_tempfile(tmp_fd, line);
 		free(line);
@@ -85,10 +86,10 @@ static void handle_heredoc_input(int tmp_fd, char *marker, t_shell *shell)
 	cleanup_heredoc(tmp_fd, shell);
 }
 
-char *ft_heredoc_handler(char *marker, t_shell *shell)
+char	*ft_heredoc_handler(char *marker, t_shell *shell)
 {
-	int tmp_fd;
-	char *temp_filename;
+	int		tmp_fd;
+	char	*temp_filename;
 
 	if (!is_valid_heredoc_delimiter(marker))
 		return (NULL);

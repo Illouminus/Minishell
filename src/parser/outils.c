@@ -6,27 +6,25 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:42:13 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/25 13:35:40 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:41:30 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void add_redirection(t_command **cmd_ptr, int type, char *filename)
+void	add_redirection(t_command **cmd_ptr, int type, char *filename)
 {
-	t_redir *new_redir;
+	t_redir	*new_redir;
+
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-		return;
-
+		return ;
 	new_redir->filename = ft_strdup(filename);
 	if (!new_redir->filename)
-		return;
-
+		return ;
 	new_redir->redirection_type = type;
 	new_redir->next = NULL;
 	new_redir->prev = (*cmd_ptr)->last_redirection;
-
 	if ((*cmd_ptr)->last_redirection)
 	{
 		(*cmd_ptr)->last_redirection->next = new_redir;
@@ -38,7 +36,7 @@ void add_redirection(t_command **cmd_ptr, int type, char *filename)
 	(*cmd_ptr)->last_redirection = new_redir;
 }
 
-int ft_cmd_is_built_in(char *value)
+int	ft_cmd_is_built_in(char *value)
 {
 	if (ft_strcmp(value, "cd") == 0)
 		return (1);
@@ -57,10 +55,10 @@ int ft_cmd_is_built_in(char *value)
 	return (0);
 }
 
-int ft_determine_nb_args(t_token *token_list)
+int	ft_determine_nb_args(t_token *token_list)
 {
-	int count;
-	t_token *current_token;
+	int		count;
+	t_token	*current_token;
 
 	count = 0;
 	current_token = token_list;
@@ -73,23 +71,20 @@ int ft_determine_nb_args(t_token *token_list)
 	return (count);
 }
 
-t_command *ft_new_command_init(t_command *command, int nb_of_args,
-										 char *cmd_value_clean, t_shell *shell)
+t_command	*ft_new_command_init(t_command *command, int nb_of_args,
+		char *cmd_value_clean, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	command = malloc(sizeof(t_command));
 	if (!command)
-	{
-		printf("Error in parser, during new_command_init\n");
 		return (NULL);
-	}
 	command->cmd_value = ft_strdup(cmd_value_clean);
 	command->cmd_args = malloc((nb_of_args + 1) * sizeof(char *));
 	if (nb_of_args == 0)
 		command->cmd_args[0] = NULL;
-	while(i < nb_of_args)
+	while (i < nb_of_args)
 	{
 		command->cmd_args[i] = NULL;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 19:38:33 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/23 10:57:04 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:42:04 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int	lexer(t_shell *shell)
 		printf("There was an issue with the user input in lexer\n");
 		return (EXIT_FAILURE);
 	}
-	// if (!contains_heredoc(shell->user_input))
 	add_history(shell->user_input);
 	ft_tokenize_input(shell->user_input, shell);
 	return (0);

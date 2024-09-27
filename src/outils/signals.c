@@ -6,15 +6,15 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:43:31 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/23 12:10:09 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:41:46 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void free_env_vars(t_env **env_var_list)
+static void	free_env_vars(t_env **env_var_list)
 {
-	t_env *env_temp;
+	t_env	*env_temp;
 
 	while (*env_var_list)
 	{
@@ -27,7 +27,7 @@ static void free_env_vars(t_env **env_var_list)
 	*env_var_list = NULL;
 }
 
-void handle_exit(t_shell *shell)
+void	handle_exit(t_shell *shell)
 {
 	if (!shell->user_input)
 	{
@@ -37,7 +37,7 @@ void handle_exit(t_shell *shell)
 	}
 }
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -49,14 +49,14 @@ void handle_sigint(int sig)
 	}
 }
 
-void setup_signal_handlers(void)
+void	setup_signal_handlers(void)
 {
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handle_sigint);
 }
 
-void global_exit(t_shell *shell)
+void	global_exit(t_shell *shell)
 {
 	if (shell->env_var_list)
 		free_env_vars(&shell->env_var_list);

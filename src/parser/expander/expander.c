@@ -6,56 +6,39 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:03:53 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/25 14:28:06 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:43:55 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_expand_state *init_expand_state(char *result)
+char	*expand_variable(const char *str, int *i, t_shell *shell)
 {
-	t_expand_state *state;
+	int		start;
+	char	*var_name;
+	char	*expanded_value;
 
-	state = malloc(sizeof(t_expand_state));
-	if (!state)
-		return (NULL);
-
-	state->result = result;
-	state->j = 0;
-	state->inside_single_quote = 0;
-	state->inside_double_quote = 0;
-
-	return (state);
-}
-
-char *expand_variable(const char *str, int *i, t_shell *shell)
-{
-	int start;
-	char *var_name = NULL;
-	char *expanded_value;
-
+	var_name = NULL;
 	start = *i + 1;
 	while (ft_isalnum(str[start]) || str[start] == '_')
 		start++;
-
 	if (start == *i + 1)
 	{
 		*i += 1;
-		return ft_strdup("$");
+		return (ft_strdup("$"));
 	}
 	var_name = ft_substr(str, *i + 1, start - (*i + 1));
 	*i = start;
 	expanded_value = get_env_value(var_name, shell);
 	free(var_name);
-
 	if (!expanded_value)
-		return ft_strdup("");
-	return expanded_value;
+		return (ft_strdup(""));
+	return (expanded_value);
 }
 
-void get_exit_code(char *result, int *j, t_shell *shell, int *i)
+void	get_exit_code(char *result, int *j, t_shell *shell, int *i)
 {
-	char *exit_code_str;
+	char	*exit_code_str;
 
 	*i += 2;
 	exit_code_str = ft_itoa(shell->last_exit_status);
@@ -64,21 +47,24 @@ void get_exit_code(char *result, int *j, t_shell *shell, int *i)
 	free(exit_code_str);
 }
 
-void handle_variable_expansion(const char *str, int *i, t_expand_state *state, t_shell *shell)
+void	handle_variable_expansion(const char *str, int *i,
+		t_expand_state *state, t_shell *shell)
 {
-	char *expanded_var = expand_variable(str, i, shell);
+	char	*expanded_var;
+	int		var_len;
+
+	expanded_var = expand_variable(str, i, shell);
 	if (!expanded_var)
 		expanded_var = ft_strdup("");
-
-	int var_len = strlen(expanded_var);
+	var_len = strlen(expanded_var);
 	ft_strncpy(&state->result[state->j], expanded_var, var_len);
 	state->j += var_len;
 	free(expanded_var);
 }
 
-void process_characters(char *str, t_expand_state *state, t_shell *shell)
+void	process_characters(char *str, t_expand_state *state, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -103,22 +89,21 @@ void process_characters(char *str, t_expand_state *state, t_shell *shell)
 	state->result[state->j] = '\0';
 }
 
-char *ft_expander(char *str, t_shell *shell)
+char	*ft_expander(char *str, t_shell *shell)
 {
-	char *result;
-	t_expand_state *state;
+	char			*result;
+	t_expand_state	*state;
+
 	result = malloc(10000);
-
 	if (!result)
-		return NULL;
+		return (NULL);
 	state = init_expand_state(result);
-
 	if (!state)
 	{
 		free(result);
-		return NULL;
+		return (NULL);
 	}
 	process_characters(str, state, shell);
 	free(state);
-	return result;
+	return (result);
 }
