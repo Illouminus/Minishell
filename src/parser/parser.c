@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:18:35 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 15:51:33 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:10:50 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,6 @@ int	ft_handle_redirection_token(t_token **current_token, t_parser_data *data)
 	result = 0;
 	if (!(*current_token)->next_tok)
 		return (handle_error_parsing("newline", data, 2, 1));
-	// if (!(*current_token)->prev_tok
-	// 	&& (*current_token)->tok_type != TOKEN_TYPE_HEREDOC)
-	// {
-	// 	return (handle_error_parsing((*current_token)->next_tok->tok_value,
-	// 			data, 2, 1));
-	// }
-		
 	result = ft_parser_handle_redirection(current_token, data,
 			data->last_command);
 	if (result == 0 && (*(data->last_command))->cmd_value == NULL)

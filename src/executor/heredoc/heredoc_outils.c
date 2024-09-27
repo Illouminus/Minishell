@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:26:04 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:42:29 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 18:12:49 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	heredoc_sigint(int signum)
 	if (signum == SIGINT)
 	{
 		g_exit_code = 130;
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		//ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_cleanup_after_signal();
 		close(STDIN_FILENO);
 	}
