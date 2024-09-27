@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/25 16:08:17 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:29:32 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,9 @@ void	ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell)
 		ft_builtin_exit(current, shell, is_main_shell);
 }
 
-void	sig_handler(int signo)
-{
-	printf("GOing to handle signal\n");
-	// looks for ctrl-c which has a value of 2
-	if (signo == SIGINT)
-		printf("\nreceived SIGINT\n");
-	// looks for ctrl-\ which has a value of 9
-	else if (signo == SIGQUIT)
-		printf("\nreceived SIGQUIT\n");
-}
-
 static void	ft_execute_command(t_command *current, t_shell *shell,
 		bool is_main_shell)
 {
-	// if (signal(SIGINT, sig_handler) == SIG_ERR)
-	// 	printf("\ncan't catch SIGINT\n");
-	//signal(SIGQUIT, sig_handler);
 	signal(SIGQUIT, SIG_DFL);
 	ft_check_empty_command(current, shell);
 	if (!ft_execute_builtin_if_needed(current, shell, is_main_shell))
