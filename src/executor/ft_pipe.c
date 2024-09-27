@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:33 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 16:34:02 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,17 @@ int	open_redirection(t_redir *redir, int *fd, t_shell *shell)
 	else
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	if (flags == O_RDONLY)
+	{
 		*fd = check_and_open_file(redir->filename, flags, 0, shell);
+		if (fd >= 0)
+			dup2(*fd, STDIN_FILENO);
+	}
 	else
+	{
 		*fd = check_and_open_file(redir->filename, flags, 0644, shell);
+		if (fd >= 0)
+			dup2(*fd, STDOUT_FILENO);
+	}
 	if (*fd == -1)
 		return (-1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:39 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 17:01:52 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,11 @@ void	ft_setenv(t_env **env_list, const char *name, const char *value)
 void	wait_commands(t_shell *shell)
 {
 	int	result;
+	int	i;
 
 	signal(SIGINT, SIG_IGN);
 	result = 0;
+	i = 0;
 	while (result != -1)
 	{
 		result = wait(&shell->tmp_proccess_status);
@@ -78,13 +80,17 @@ void	wait_commands(t_shell *shell)
 			shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
 		if (WIFSIGNALED(shell->tmp_proccess_status) && result > 0)
 		{
-			if (WTERMSIG(shell->tmp_proccess_status) == SIGQUIT)
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGQUIT && i == 0)
 			{
+				i++;
 				ft_putstr_fd("\n", STDOUT_FILENO);
 				ft_putstr_fd("Quit: (core dumped)\n", STDOUT_FILENO);
 			}
-			if (WTERMSIG(shell->tmp_proccess_status) == SIGINT)
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGINT && i == 0)
+			{
+				i++;
 				ft_putstr_fd("\n", STDOUT_FILENO);
+			}
 		}
 	}
 	if (g_exit_code == 130)

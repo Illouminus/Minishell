@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:53 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 16:30:02 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static int	validate_and_open_redirections(t_command *current, t_shell *shell,
 		{
 			if (open_redirection(redir, input_fd, shell) == -1)
 				return (-1);
+			
 		}
 		else
 		{

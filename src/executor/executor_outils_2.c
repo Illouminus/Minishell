@@ -6,17 +6,19 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:18:50 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:44 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 16:01:50 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_check_empty_command(t_command *current, t_shell *shell)
+void	ft_check_empty_command(t_command *current, t_shell *shell, int prev_fd)
 {
 	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
 	{
 		shell->last_exit_status = 0;
+		ft_parent_process(current, prev_fd);
+		
 		free_shell(shell);
 		exit(shell->last_exit_status);
 	}

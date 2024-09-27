@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:36 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 16:46:12 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell)
 }
 
 static void	ft_execute_command(t_command *current, t_shell *shell,
-		bool is_main_shell)
+		bool is_main_shell, int prev_fd)
 {
 	signal(SIGQUIT, SIG_DFL);
-	ft_check_empty_command(current, shell);
+	ft_check_empty_command(current, shell, prev_fd);
 	if (!ft_execute_builtin_if_needed(current, shell, is_main_shell))
 		ft_execute_external_command(current, shell);
 }
@@ -44,7 +44,7 @@ static void	ft_execute_command(t_command *current, t_shell *shell,
 static void	ft_child_process(t_command *current, t_shell *shell, int prev_fd)
 {
 	handle_redirections(current, prev_fd);
-	ft_execute_command(current, shell, false);
+	ft_execute_command(current, shell, false, prev_fd);
 	exit(shell->last_exit_status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/27 14:51:02 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:59:49 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ int						ft_handle_quotes(t_shell *shell, char *input, int i,
 							int *inside_quote);
 t_token_type			ft_determine_token_type(char *input, int start,
 							int is_first_token);
+int						ft_parent_process(t_command *current, int prev_fd);
 
 /* Tokens - Fonctions Principales */
 void					ft_tokenize_input(char *input, t_shell *shell);
@@ -266,7 +267,7 @@ void					ft_execute_external_command(t_command *current,
 bool					ft_execute_builtin_if_needed(t_command *current,
 							t_shell *shell, bool is_main_shell);
 void					ft_check_empty_command(t_command *current,
-							t_shell *shell);
+							t_shell *shell, int prev_fd);
 void					ft_exec_builtins(t_command *current, t_shell *shell,
 							bool is_main_shell);
 

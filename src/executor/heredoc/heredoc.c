@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 13:38:46 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:42:33 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/27 16:21:10 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@ char	*ft_heredoc_handler(char *marker, t_shell *shell)
 		return (NULL);
 	}
 	temp_filename = ft_strdup(HEREDOC_TEMPFILE);
+	close(shell->temp_stdin);
 	return (temp_filename);
 }
