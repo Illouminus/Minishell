@@ -69,10 +69,8 @@ int ft_executor(t_shell *shell)
 		return (0);
 	current = shell->command_list;
 	prev_fd = 0;
-	if (!current->next_cmd && current->is_builtin_cmd && !current->redirections)
-		ft_exec_builtins(current, shell, true);
-	// if (!current->next_cmd && current->is_builtin_cmd)
-	// 	handle_builtin_with_redirections(current, shell);
+	if (!current->next_cmd && current->is_builtin_cmd)
+		handle_builtin_with_redirections(current, shell);
 	else
 	{
 		while (current)

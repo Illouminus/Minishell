@@ -62,18 +62,28 @@ static void perform_redirections(t_command *current, t_shell *shell)
 
 static void handle_pipe_redirection(t_command *current)
 {
-	t_error_info error_info;
+    // Проверяем, есть ли перенаправление на STDOUT
+    bool has_stdout_redirection = false;
+    t_redir *redir = current->redirections;
+    while (redir)
+    {
+        if (redir->redirection_type == REDIR_OUT || redir->redirection_type == REDIR_APPEND)
+        {
+            has_stdout_redirection = true;
+            break;
+        }
+        redir = redir->next;
+    }
 
-	if (current->next_cmd)
-	{
-		if (dup2(current->shell->pipe_fds[1], STDOUT_FILENO) == -1)
-		{
-			error_info = init_error_info(NULL, strerror(errno), 1);
-			handle_redirection_error(error_info, current->shell, -1);
-		}
-		close(current->shell->pipe_fds[0]);
-		close(current->shell->pipe_fds[1]);
-	}
+    if (current->next_cmd && !has_stdout_redirection)
+    {
+        if (dup2(current->shell->pipe_fds[1], STDOUT_FILENO) == -1)
+        {
+            // Обработка ошибки
+        }
+        close(current->shell->pipe_fds[0]);
+        close(current->shell->pipe_fds[1]);
+    }
 }
 
 static void handle_prev_fd_redirection(int prev_fd, t_shell *shell)

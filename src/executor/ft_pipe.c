@@ -34,7 +34,6 @@ int open_redirection(t_redir *redir, t_shell *shell)
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
 	else
 		flags = O_WRONLY | O_CREAT | O_APPEND;
-
 	if (flags == O_RDONLY)
 	{
 		redir->fd = check_and_open_file(redir->filename, flags, 0, shell);

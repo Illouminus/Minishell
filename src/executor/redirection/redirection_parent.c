@@ -99,6 +99,11 @@ void handle_builtin_with_redirections(t_command *cmd, t_shell *shell)
 	int saved_stdin;
 	int saved_stdout;
 
+	if(cmd->redirections == NULL)
+	{
+		ft_exec_builtins(cmd, shell, true);
+		return;
+	}
 	if (save_standard_fds(&saved_stdin, &saved_stdout) != 0)
 		return;
 	if (apply_redirections(cmd->redirections) != 0)
