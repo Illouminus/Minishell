@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init_outils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:50:38 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 14:42:14 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/28 16:21:21 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	init_shell(t_shell *shell, char **env)
+int init_shell(t_shell *shell, char **env)
 {
 	shell->env_var_list = init_env_vars(env);
 	if (shell->env_var_list == NULL)
@@ -26,14 +26,15 @@ int	init_shell(t_shell *shell, char **env)
 	shell->pipe_fds[0] = -2;
 	shell->pipe_fds[1] = -2;
 	shell->temp_stdin = -1;
+	shell->heredoc_counter = 0;
 	return (0);
 }
 
-t_env	*init_env_vars(char **env)
+t_env *init_env_vars(char **env)
 {
-	t_env	*head;
-	t_env	*new_var;
-	int		i;
+	t_env *head;
+	t_env *new_var;
+	int i;
 
 	head = NULL;
 	new_var = NULL;
