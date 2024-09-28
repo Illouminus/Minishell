@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/28 16:21:19 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/28 18:01:55 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,4 +331,7 @@ char *combine_paths(const char *current_path,
 char **split_path_segments(const char *path);
 void free_segments(char **segments);
 char *ft_generate_unique_heredoc_filename(t_shell *shell);
+int save_standard_fds(int *saved_stdin, int *saved_stdout);
+int restore_standard_fds(int saved_stdin, int saved_stdout);
+void handle_builtin_with_redirections(t_command *cmd, t_shell *shell);
 #endif // MINISHELL_H

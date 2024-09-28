@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 18:49:49 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/28 18:16:19 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	validate_and_open_redirections(t_command *current, t_shell *shell)
+static int validate_and_open_redirections(t_command *current, t_shell *shell)
 {
-	t_redir	*redir;
+	t_redir *redir;
 
 	redir = current->redirections;
 	while (redir)
@@ -26,10 +26,10 @@ static int	validate_and_open_redirections(t_command *current, t_shell *shell)
 	return (0);
 }
 
-static void	perform_redirections(t_command *current, t_shell *shell)
+static void perform_redirections(t_command *current, t_shell *shell)
 {
-	t_redir			*redir;
-	t_error_info	error_info;
+	t_redir *redir;
+	t_error_info error_info;
 
 	redir = current->redirections;
 	while (redir)
@@ -47,8 +47,8 @@ static void	perform_redirections(t_command *current, t_shell *shell)
 		else
 		{
 			if (dup2(redir->fd,
-					(redir->redirection_type == REDIR_OUT) ? STDOUT_FILENO : STDERR_FILENO) ==
-				-1)
+						(redir->redirection_type == REDIR_OUT) ? STDOUT_FILENO : STDERR_FILENO) ==
+				 -1)
 			{
 				error_info = init_error_info(NULL, strerror(errno), 1);
 				handle_redirection_error(error_info, shell, redir->fd);
@@ -60,9 +60,9 @@ static void	perform_redirections(t_command *current, t_shell *shell)
 	}
 }
 
-static void	handle_pipe_redirection(t_command *current)
+static void handle_pipe_redirection(t_command *current)
 {
-	t_error_info	error_info;
+	t_error_info error_info;
 
 	if (current->next_cmd)
 	{
@@ -76,9 +76,9 @@ static void	handle_pipe_redirection(t_command *current)
 	}
 }
 
-static void	handle_prev_fd_redirection(int prev_fd, t_shell *shell)
+static void handle_prev_fd_redirection(int prev_fd, t_shell *shell)
 {
-	t_error_info	error_info;
+	t_error_info error_info;
 
 	if (prev_fd != 0)
 	{
@@ -102,4 +102,3 @@ void handle_redirections(t_command *current, int prev_fd)
 	handle_pipe_redirection(current);
 	perform_redirections(current, current->shell);
 }
-

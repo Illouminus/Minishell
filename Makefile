@@ -23,6 +23,8 @@ SRCS = 	main.c \
 		$(SRC_DIR)/executor/heredoc/heredoc.c \
 		$(SRC_DIR)/executor/heredoc/heredoc_outils.c \
 		$(SRC_DIR)/executor/redirection/redirection.c \
+		$(SRC_DIR)/executor/redirection/redirection_parent.c \
+		$(SRC_DIR)/executor/redirection/outils_redir_parent.c \
 		$(SRC_DIR)/executor/redirection/redirection_outils.c \
 		$(SRC_DIR)/executor/executor_outils.c \
 		$(SRC_DIR)/executor/executor_outils_2.c \

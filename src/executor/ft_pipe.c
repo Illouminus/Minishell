@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:41:19 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/27 18:52:09 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/28 18:16:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pipe(t_command *current, t_shell *shell)
+void ft_pipe(t_command *current, t_shell *shell)
 {
 	if (current->next_cmd)
 	{
@@ -26,16 +26,16 @@ void	ft_pipe(t_command *current, t_shell *shell)
 
 int open_redirection(t_redir *redir, t_shell *shell)
 {
-	int	flags;
+	int flags;
 
 	if (redir->redirection_type == REDIR_IN)
 		flags = O_RDONLY;
 	else if (redir->redirection_type == REDIR_OUT)
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	else 
+	else
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 
-	if(flags == O_RDONLY)
+	if (flags == O_RDONLY)
 	{
 		redir->fd = check_and_open_file(redir->filename, flags, 0, shell);
 		if (redir->fd >= 0)
@@ -52,11 +52,10 @@ int open_redirection(t_redir *redir, t_shell *shell)
 	return (0);
 }
 
-
-t_error_info	init_error_info(char *filepath, char *error_message,
-		int exit_code)
+t_error_info init_error_info(char *filepath, char *error_message,
+									  int exit_code)
 {
-	t_error_info	error_info;
+	t_error_info error_info;
 
 	error_info.filepath = filepath;
 	error_info.error_message = error_message;
@@ -64,8 +63,8 @@ t_error_info	init_error_info(char *filepath, char *error_message,
 	return (error_info);
 }
 
-void	handle_redirection_error(t_error_info error_info, t_shell *shell,
-		int fd)
+void handle_redirection_error(t_error_info error_info, t_shell *shell,
+										int fd)
 {
 	if (fd != -1)
 		close(fd);
@@ -79,9 +78,9 @@ void	handle_redirection_error(t_error_info error_info, t_shell *shell,
 	exit(error_info.exit_code);
 }
 
-int	count_env_vars(t_env *env_list)
+int count_env_vars(t_env *env_list)
 {
-	int	count;
+	int count;
 
 	count = 0;
 	while (env_list)
