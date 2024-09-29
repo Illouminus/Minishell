@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:22:12 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/28 18:14:36 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/29 09:12:51 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int ft_parent_process(t_command *current, int prev_fd)
 	{
 		close(current->shell->pipe_fds[1]);
 		prev_fd = current->shell->pipe_fds[0];
+		current->shell->pipe_fds[1] = -2;
 	}
 	return (prev_fd);
 }
@@ -83,6 +84,8 @@ int ft_executor(t_shell *shell)
 			current = current->next_cmd;
 		}
 	}
+	if (prev_fd != 0)
+		close(prev_fd);
 	wait_commands(shell);
 	free_shell(shell);
 	return (shell->last_exit_status);
