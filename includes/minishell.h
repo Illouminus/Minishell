@@ -6,7 +6,7 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:39:56 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/28 18:01:55 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/29 08:19:36 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,4 +334,5 @@ char *ft_generate_unique_heredoc_filename(t_shell *shell);
 int save_standard_fds(int *saved_stdin, int *saved_stdout);
 int restore_standard_fds(int saved_stdin, int saved_stdout);
 void handle_builtin_with_redirections(t_command *cmd, t_shell *shell);
+int validate_and_open_redirections(t_command *current, t_shell *shell);
 #endif // MINISHELL_H

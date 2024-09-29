@@ -6,13 +6,13 @@
 /*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:21:43 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/28 18:16:19 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/29 08:19:24 by edouard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int validate_and_open_redirections(t_command *current, t_shell *shell)
+int validate_and_open_redirections(t_command *current, t_shell *shell)
 {
 	t_redir *redir;
 
@@ -62,28 +62,28 @@ static void perform_redirections(t_command *current, t_shell *shell)
 
 static void handle_pipe_redirection(t_command *current)
 {
-    // Проверяем, есть ли перенаправление на STDOUT
-    bool has_stdout_redirection = false;
-    t_redir *redir = current->redirections;
-    while (redir)
-    {
-        if (redir->redirection_type == REDIR_OUT || redir->redirection_type == REDIR_APPEND)
-        {
-            has_stdout_redirection = true;
-            break;
-        }
-        redir = redir->next;
-    }
+	// Проверяем, есть ли перенаправление на STDOUT
+	bool has_stdout_redirection = false;
+	t_redir *redir = current->redirections;
+	while (redir)
+	{
+		if (redir->redirection_type == REDIR_OUT || redir->redirection_type == REDIR_APPEND)
+		{
+			has_stdout_redirection = true;
+			break;
+		}
+		redir = redir->next;
+	}
 
-    if (current->next_cmd && !has_stdout_redirection)
-    {
-        if (dup2(current->shell->pipe_fds[1], STDOUT_FILENO) == -1)
-        {
-            // Обработка ошибки
-        }
-        close(current->shell->pipe_fds[0]);
-        close(current->shell->pipe_fds[1]);
-    }
+	if (current->next_cmd && !has_stdout_redirection)
+	{
+		if (dup2(current->shell->pipe_fds[1], STDOUT_FILENO) == -1)
+		{
+			// Обработка ошибки
+		}
+		close(current->shell->pipe_fds[0]);
+		close(current->shell->pipe_fds[1]);
+	}
 }
 
 static void handle_prev_fd_redirection(int prev_fd, t_shell *shell)
