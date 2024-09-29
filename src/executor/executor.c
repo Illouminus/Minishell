@@ -22,10 +22,10 @@ void ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell)
 		shell->last_exit_status = ft_builtin_pwd(current);
 	else if (ft_strcmp(current->cmd_value, "export") == 0)
 		shell->last_exit_status = ft_builtin_export(current,
-																  &shell->env_var_list);
+													&shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "unset") == 0)
 		shell->last_exit_status = ft_builtin_unset(current,
-																 &shell->env_var_list);
+												   &shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "env") == 0)
 		shell->last_exit_status = ft_builtin_env(shell->env_var_list);
 	else if (ft_strcmp(current->cmd_value, "exit") == 0)
@@ -33,7 +33,7 @@ void ft_exec_builtins(t_command *current, t_shell *shell, bool is_main_shell)
 }
 
 static void ft_execute_command(t_command *current, t_shell *shell,
-										 bool is_main_shell, int prev_fd)
+							   bool is_main_shell, int prev_fd)
 {
 	signal(SIGQUIT, SIG_DFL);
 	ft_check_empty_command(current, shell, prev_fd);
@@ -56,7 +56,6 @@ int ft_parent_process(t_command *current, int prev_fd)
 	{
 		close(current->shell->pipe_fds[1]);
 		prev_fd = current->shell->pipe_fds[0];
-		current->shell->pipe_fds[1] = -2;
 	}
 	return (prev_fd);
 }
@@ -84,8 +83,6 @@ int ft_executor(t_shell *shell)
 			current = current->next_cmd;
 		}
 	}
-	if (prev_fd != 0)
-		close(prev_fd);
 	wait_commands(shell);
 	free_shell(shell);
 	return (shell->last_exit_status);

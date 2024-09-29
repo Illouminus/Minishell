@@ -14,11 +14,10 @@
 
 void ft_check_empty_command(t_command *current, t_shell *shell, int prev_fd)
 {
+	(void)prev_fd;
 	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
 	{
 		shell->last_exit_status = 0;
-		ft_parent_process(current, prev_fd);
-
 		free_shell(shell);
 		exit(shell->last_exit_status);
 	}
