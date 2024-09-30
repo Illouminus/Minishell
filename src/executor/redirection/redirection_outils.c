@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_outils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:36:00 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/28 15:05:24 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/30 10:38:35 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int check_file_exists_and_stat(char *filepath, t_shell *shell,
-												  struct stat *file_stat)
+static int	check_file_exists_and_stat(char *filepath, t_shell *shell,
+		struct stat *file_stat)
 {
-	t_error_info error_info;
+	t_error_info	error_info;
 
 	if (access(filepath, F_OK) == 0)
 	{
@@ -30,10 +30,10 @@ static int check_file_exists_and_stat(char *filepath, t_shell *shell,
 	return (0);
 }
 
-static int check_if_directory(char *filepath, const struct stat *file_stat,
-										t_shell *shell)
+static int	check_if_directory(char *filepath, const struct stat *file_stat,
+		t_shell *shell)
 {
-	t_error_info error_info;
+	t_error_info	error_info;
 
 	if (S_ISDIR(file_stat->st_mode))
 	{
@@ -44,9 +44,9 @@ static int check_if_directory(char *filepath, const struct stat *file_stat,
 	return (0);
 }
 
-static int check_write_permission(char *filepath, int flags, t_shell *shell)
+static int	check_write_permission(char *filepath, int flags, t_shell *shell)
 {
-	t_error_info error_info;
+	t_error_info	error_info;
 
 	if ((flags & O_WRONLY) && access(filepath, W_OK) == -1)
 	{
@@ -57,9 +57,9 @@ static int check_write_permission(char *filepath, int flags, t_shell *shell)
 	return (0);
 }
 
-static int open_file_with_checks(char *filepath, int flags, mode_t mode)
+static int	open_file_with_checks(char *filepath, int flags, mode_t mode)
 {
-	int fd;
+	int	fd;
 
 	fd = open(filepath, flags, mode);
 	if (fd == -1)
@@ -67,11 +67,11 @@ static int open_file_with_checks(char *filepath, int flags, mode_t mode)
 	return (fd);
 }
 
-int check_and_open_file(char *filepath, int flags, mode_t mode, t_shell *shell)
+int	check_and_open_file(char *filepath, int flags, mode_t mode, t_shell *shell)
 {
-	struct stat file_stat;
-	int file_exists;
-	t_error_info error_info;
+	struct stat		file_stat;
+	int				file_exists;
+	t_error_info	error_info;
 
 	file_exists = check_file_exists_and_stat(filepath, shell, &file_stat);
 	if (file_exists == -1)

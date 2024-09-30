@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   free_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 18:15:23 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/28 16:21:14 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/30 10:38:14 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void free_redirections(t_redir **redir)
+static void	free_redirections(t_redir **redir)
 {
-	t_redir *temp;
+	t_redir	*temp;
 
 	while (*redir)
 	{
 		temp = *redir;
 		*redir = (*redir)->next;
-		if (temp->filename && ft_strncmp(temp->filename, "/tmp/minishell_heredoc_", 21) == 0)
+		if (temp->filename && ft_strncmp(temp->filename,
+				"/tmp/minishell_heredoc_", 21) == 0)
 			unlink(temp->filename);
 		if (temp->filename)
 		{
@@ -38,9 +39,9 @@ static void free_redirections(t_redir **redir)
 	*redir = NULL;
 }
 
-static void free_command_args(char **cmd_args)
+static void	free_command_args(char **cmd_args)
 {
-	char **args;
+	char	**args;
 
 	if (cmd_args)
 	{
@@ -55,15 +56,15 @@ static void free_command_args(char **cmd_args)
 		free(cmd_args);
 		cmd_args = NULL;
 	}
-	return;
+	return ;
 }
 
-static void free_commands(t_command **command_list)
+static void	free_commands(t_command **command_list)
 {
-	t_command *cmd_temp;
+	t_command	*cmd_temp;
 
 	if (!command_list)
-		return;
+		return ;
 	while (*command_list)
 	{
 		cmd_temp = *command_list;
@@ -83,9 +84,9 @@ static void free_commands(t_command **command_list)
 	*command_list = NULL;
 }
 
-static void free_tokens(t_token **token_list)
+static void	free_tokens(t_token **token_list)
 {
-	t_token *tok_temp;
+	t_token	*tok_temp;
 
 	while (*token_list)
 	{
@@ -102,10 +103,10 @@ static void free_tokens(t_token **token_list)
 	*token_list = NULL;
 }
 
-void free_shell(t_shell *shell)
+void	free_shell(t_shell *shell)
 {
 	if (!shell)
-		return;
+		return ;
 	if (shell->command_list)
 		free_commands(&shell->command_list);
 	if (shell->token_list)

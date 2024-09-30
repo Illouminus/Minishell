@@ -6,7 +6,7 @@
 /*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 14:48:27 by edouard           #+#    #+#             */
-/*   Updated: 2024/09/27 17:01:52 by ebaillot         ###   ########.fr       */
+/*   Updated: 2024/09/30 11:07:46 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ void	ft_free_array(char **array)
 		i++;
 	}
 	free(array);
-}
-
-char	*ft_getenv(t_env *env_list, const char *name)
-{
-	t_env	*var;
-
-	var = ft_get_env_var_by_name(env_list, name);
-	if (var)
-	{
-		return (strdup(var->env_value));
-	}
-	return (NULL);
 }
 
 void	ft_setenv(t_env **env_list, const char *name, const char *value)
@@ -65,14 +53,31 @@ void	ft_setenv(t_env **env_list, const char *name, const char *value)
 	}
 }
 
+void	print_message_sigquit(int is_siqquit, int *quit_printed,
+		int *int_printed)
+{
+	if (is_siqquit && !*quit_printed)
+	{
+		*quit_printed = 1;
+		ft_putstr_fd("\nQuit: (core dumped)\n", STDOUT_FILENO);
+	}
+	if (!is_siqquit && !*int_printed)
+	{
+		*int_printed = 1;
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
+}
+
 void	wait_commands(t_shell *shell)
 {
 	int	result;
-	int	i;
+	int	quit_printed;
+	int	int_printed;
 
 	signal(SIGINT, SIG_IGN);
 	result = 0;
-	i = 0;
+	quit_printed = 0;
+	int_printed = 0;
 	while (result != -1)
 	{
 		result = wait(&shell->tmp_proccess_status);
@@ -80,17 +85,11 @@ void	wait_commands(t_shell *shell)
 			shell->last_exit_status = WEXITSTATUS(shell->tmp_proccess_status);
 		if (WIFSIGNALED(shell->tmp_proccess_status) && result > 0)
 		{
-			if (WTERMSIG(shell->tmp_proccess_status) == SIGQUIT && i == 0)
-			{
-				i++;
-				ft_putstr_fd("\n", STDOUT_FILENO);
-				ft_putstr_fd("Quit: (core dumped)\n", STDOUT_FILENO);
-			}
-			if (WTERMSIG(shell->tmp_proccess_status) == SIGINT && i == 0)
-			{
-				i++;
-				ft_putstr_fd("\n", STDOUT_FILENO);
-			}
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGQUIT
+				&& !quit_printed)
+				print_message_sigquit(1, &quit_printed, &int_printed);
+			if (WTERMSIG(shell->tmp_proccess_status) == SIGINT && !int_printed)
+				print_message_sigquit(0, &quit_printed, &int_printed);
 		}
 	}
 	if (g_exit_code == 130)

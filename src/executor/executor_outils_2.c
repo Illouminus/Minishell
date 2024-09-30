@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor_outils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edouard <edouard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ebaillot <ebaillot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:18:50 by ebaillot          #+#    #+#             */
-/*   Updated: 2024/09/28 17:48:31 by edouard          ###   ########.fr       */
+/*   Updated: 2024/09/30 10:48:21 by ebaillot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_check_empty_command(t_command *current, t_shell *shell, int prev_fd)
+void	ft_check_empty_command(t_command *current, t_shell *shell, int prev_fd)
 {
 	(void)prev_fd;
 	if (current->cmd_value == NULL || ft_strlen(current->cmd_value) == 0)
@@ -23,8 +23,8 @@ void ft_check_empty_command(t_command *current, t_shell *shell, int prev_fd)
 	}
 }
 
-bool ft_execute_builtin_if_needed(t_command *current, t_shell *shell,
-											 bool is_main_shell)
+bool	ft_execute_builtin_if_needed(t_command *current, t_shell *shell,
+		bool is_main_shell)
 {
 	if (current->is_builtin_cmd)
 	{
@@ -34,11 +34,11 @@ bool ft_execute_builtin_if_needed(t_command *current, t_shell *shell,
 	return (false);
 }
 
-void ft_execute_external_command(t_command *current, t_shell *shell)
+void	ft_execute_external_command(t_command *current, t_shell *shell)
 {
-	char *path;
-	char **cmd_args;
-	char **env_array;
+	char	*path;
+	char	**cmd_args;
+	char	**env_array;
 
 	env_array = convert_env_list_to_array(shell->env_var_list);
 	path = ft_get_path(current, shell);
